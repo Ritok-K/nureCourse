@@ -16,14 +16,25 @@ namespace WeaponAlmanac.Data_Model
             m_commonCollectionPath = commonCollectionPath;
         }
 
+
+        #region Properties_CollectionPath
         internal string CommonCollectionPath => Path.GetFullPath(m_commonCollectionPath);
         internal string OwnCollectionPath => Path.GetFullPath(m_ownCollectionPath);
 
         internal string OwnWeaponCollectionPath => Path.Combine(OwnCollectionPath, c_weaponDirectory);
         internal string WeaponCommonCollectionPath => Path.Combine(CommonCollectionPath, c_weaponDirectory);
         internal string CollectorsCommonCollectionPath => Path.Combine(CommonCollectionPath, c_collectorsDirectory);
+        #endregion
+
+        internal void InitDirectories()
+        {
+            Directory.CreateDirectory(WeaponCommonCollectionPath);
+            Directory.CreateDirectory(CollectorsCommonCollectionPath);
+            Directory.CreateDirectory(OwnWeaponCollectionPath);
+        }
 
 
+        #region Set Object
         internal void SetWeapon(Weapon weapon)
         {
             SaveWeapon(WeaponCommonCollectionPath, weapon);
@@ -38,7 +49,9 @@ namespace WeaponAlmanac.Data_Model
         {
             SaveCollector(CollectorsCommonCollectionPath, collector);
         }
+        #endregion
 
+        #region Remove Object
         internal void RemoveWeapon(string weaponId)
         {
             RemoveDataModelObject(WeaponCommonCollectionPath, weaponId);
@@ -53,7 +66,9 @@ namespace WeaponAlmanac.Data_Model
         {
             RemoveDataModelObject(CollectorsCommonCollectionPath, collectorId);
         }
+        #endregion
 
+        #region Get Collection
         internal List<Weapon> GetWeapon()
         {
             return LoadWeaponCollection(WeaponCommonCollectionPath);
@@ -67,13 +82,6 @@ namespace WeaponAlmanac.Data_Model
         internal List<Weapon> GetOwnWeapon()
         {
             return LoadWeaponCollection(OwnWeaponCollectionPath);
-        }
-
-        internal void InitDirectories()
-        {
-            Directory.CreateDirectory(WeaponCommonCollectionPath);
-            Directory.CreateDirectory(CollectorsCommonCollectionPath);
-            Directory.CreateDirectory(OwnWeaponCollectionPath);
         }
 
         List<Weapon> LoadWeaponCollection(string path)
@@ -111,7 +119,9 @@ namespace WeaponAlmanac.Data_Model
 
             return list;
         }
+        #endregion
 
+        #region Utility object methods
         void SaveWeapon(string path, Weapon weapon)
         {
             var filePath = GetFilePath(path, weapon.Id);
@@ -141,6 +151,7 @@ namespace WeaponAlmanac.Data_Model
         {
             return Path.Combine(path, Path.ChangeExtension(objectId, c_fileExtension));
         }
+        #endregion
 
         string m_ownCollectionPath;
         string m_commonCollectionPath;
