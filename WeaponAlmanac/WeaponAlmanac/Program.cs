@@ -19,6 +19,7 @@ namespace WeaponAlmanac
         {
             Repository = new DataModelRepository(@".\Data\OwnCollection",
                                                  @".\Data\CommonCollection");
+            Repository.InitDirectories();
 
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
