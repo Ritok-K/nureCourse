@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Text.Json;
+using WeaponAlmanac.Data_Model.Serializers;
 
 namespace WeaponAlmanac.Data_Model
 {
@@ -83,19 +84,28 @@ namespace WeaponAlmanac.Data_Model
         {
             return LoadWeaponCollection(OwnWeaponCollectionPath);
         }
+        #endregion
+
+        #region Utility object methods
 
         List<Weapon> LoadWeaponCollection(string path)
         {
             var list = new List<Weapon>();
             var files = Directory.GetFiles(path);
 
-            foreach(string file in files)
+            var jsonOptions = new JsonSerializerOptions()
+            {
+                WriteIndented = true,
+                Converters = { new BitmapJsonConverter(), new DateJsonConverter() }
+            };
+
+            foreach (string file in files)
             {
                 if(Path.GetExtension(file) == c_fileExtension)
                 {
                     var json = File.ReadAllText(file);
 
-                    list.Add(JsonSerializer.Deserialize<Weapon>(json));
+                    list.Add(JsonSerializer.Deserialize<Weapon>(json, jsonOptions));
                 }
             }
 
@@ -107,26 +117,35 @@ namespace WeaponAlmanac.Data_Model
             var list = new List<Collector>();
             var files = Directory.GetFiles(path);
 
+            var jsonOptions = new JsonSerializerOptions()
+            {
+                WriteIndented = true,
+            };
+
             foreach (string file in files)
             {
                 if (Path.GetExtension(file) == c_fileExtension)
                 {
                     var json = File.ReadAllText(file);
 
-                    list.Add(JsonSerializer.Deserialize<Collector>(json));
+                    list.Add(JsonSerializer.Deserialize<Collector>(json, jsonOptions));
                 }
             }
 
             return list;
         }
-        #endregion
 
-        #region Utility object methods
         void SaveWeapon(string path, Weapon weapon)
         {
             var filePath = GetFilePath(path, weapon.Id);
 
-            var json = JsonSerializer.Serialize<Weapon>(weapon);
+            var jsonOptions = new JsonSerializerOptions() 
+            {
+                WriteIndented = true, 
+                Converters = { new BitmapJsonConverter(), new DateJsonConverter() }
+            };
+
+            var json = JsonSerializer.Serialize<Weapon>(weapon, jsonOptions);
             File.WriteAllText(filePath, json);
         }
 
@@ -134,7 +153,12 @@ namespace WeaponAlmanac.Data_Model
         {
             var filePath = GetFilePath(path, collector.Id);
 
-            var json = JsonSerializer.Serialize<Collector>(collector);
+            var jsonOptions = new JsonSerializerOptions()
+            {
+                WriteIndented = true,
+            };
+
+            var json = JsonSerializer.Serialize<Collector>(collector, jsonOptions);
             File.WriteAllText(filePath, json);
         }
 

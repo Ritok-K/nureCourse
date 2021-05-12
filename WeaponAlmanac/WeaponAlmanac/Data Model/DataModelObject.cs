@@ -8,6 +8,6 @@ namespace WeaponAlmanac.Data_Model
 {
     public abstract class DataModelObject
     {
-        public string Id { get; protected set; }
+        public string Id { get; protected set; } = Guid.NewGuid().ToString("B");
     }
 }
