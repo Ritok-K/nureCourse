@@ -24,6 +24,8 @@ namespace WeaponAlmanac
         static void TestRepository()
         {
 #if DEBUG
+            var weaponCount = Repository.GetWeapon().Count;
+
             var weapon = new Weapon() 
             {
                 Country = "UA",
@@ -36,19 +38,19 @@ namespace WeaponAlmanac
             Repository.SetWeapon(weapon);
 
             var weaponList = Repository.GetWeapon();
-            Debug.Assert(weaponList.Count == 1);
-            Debug.Assert(weaponList[0].Country == "UA");
-            Debug.Assert(weaponList[0].Name == "Sword");
-            Debug.Assert(weaponList[0].Description == "Supper");
-            Debug.Assert(weaponList[0].Material == "Steel");
-            Debug.Assert(weaponList[0].IsRare);
-            Debug.Assert(weaponList[0].ManufactureDate.Year == DateTime.Now.Year);
-            Debug.Assert(weaponList[0].ManufactureDate.Month == DateTime.Now.Month);
-            Debug.Assert(weaponList[0].ManufactureDate.Day == DateTime.Now.Day);
+            Debug.Assert(weaponList.Count == weaponCount + 1);
+            Debug.Assert(weaponList[0].Country == weapon.Country);
+            Debug.Assert(weaponList[0].Name == weapon.Name);
+            Debug.Assert(weaponList[0].Description == weapon.Description);
+            Debug.Assert(weaponList[0].Material == weapon.Material);
+            Debug.Assert(weaponList[0].IsRare == weapon.IsRare);
+            Debug.Assert(weaponList[0].ManufactureDate.Year == weapon.ManufactureDate.Year);
+            Debug.Assert(weaponList[0].ManufactureDate.Month == weapon.ManufactureDate.Month);
+            Debug.Assert(weaponList[0].ManufactureDate.Day == weapon.ManufactureDate.Day);
 
             Repository.RemoveWeapon(weapon.Id);
             weaponList = Repository.GetWeapon();
-            Debug.Assert(weaponList.Count == 0);
+            Debug.Assert(weaponList.Count == weaponCount);
 #endif
         }
 
