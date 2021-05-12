@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WeaponAlmanac.Data_Model;
+using WeaponAlmanac.UI;
 
 namespace WeaponAlmanac
 {

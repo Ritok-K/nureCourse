@@ -1,5 +1,5 @@
 ﻿
-namespace WeaponAlmanac
+namespace WeaponAlmanac.UI
 {
     partial class MainForm
     {
