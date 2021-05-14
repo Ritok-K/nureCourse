@@ -54,14 +54,15 @@ namespace WeaponAlmanac.UI
             this.m_headerPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.m_headerPanel.Location = new System.Drawing.Point(0, 0);
             this.m_headerPanel.Name = "m_headerPanel";
-            this.m_headerPanel.Size = new System.Drawing.Size(800, 44);
+            this.m_headerPanel.Padding = new System.Windows.Forms.Padding(3);
+            this.m_headerPanel.Size = new System.Drawing.Size(882, 45);
             this.m_headerPanel.TabIndex = 0;
             // 
             // m_searchButton
             // 
             this.m_searchButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.m_searchButton.AutoSize = true;
-            this.m_searchButton.Location = new System.Drawing.Point(694, 11);
+            this.m_searchButton.Location = new System.Drawing.Point(773, 9);
             this.m_searchButton.Name = "m_searchButton";
             this.m_searchButton.Size = new System.Drawing.Size(94, 30);
             this.m_searchButton.TabIndex = 3;
@@ -71,7 +72,7 @@ namespace WeaponAlmanac.UI
             // m_ownCollectionButton
             // 
             this.m_ownCollectionButton.AutoSize = true;
-            this.m_ownCollectionButton.Location = new System.Drawing.Point(218, 11);
+            this.m_ownCollectionButton.Location = new System.Drawing.Point(221, 9);
             this.m_ownCollectionButton.Name = "m_ownCollectionButton";
             this.m_ownCollectionButton.Size = new System.Drawing.Size(120, 30);
             this.m_ownCollectionButton.TabIndex = 2;
@@ -81,7 +82,7 @@ namespace WeaponAlmanac.UI
             // m_collectorsButton
             // 
             this.m_collectorsButton.AutoSize = true;
-            this.m_collectorsButton.Location = new System.Drawing.Point(112, 11);
+            this.m_collectorsButton.Location = new System.Drawing.Point(115, 9);
             this.m_collectorsButton.Name = "m_collectorsButton";
             this.m_collectorsButton.Size = new System.Drawing.Size(100, 30);
             this.m_collectorsButton.TabIndex = 1;
@@ -91,7 +92,7 @@ namespace WeaponAlmanac.UI
             // m_weaponButton
             // 
             this.m_weaponButton.AutoSize = true;
-            this.m_weaponButton.Location = new System.Drawing.Point(12, 11);
+            this.m_weaponButton.Location = new System.Drawing.Point(12, 9);
             this.m_weaponButton.Name = "m_weaponButton";
             this.m_weaponButton.Size = new System.Drawing.Size(94, 30);
             this.m_weaponButton.TabIndex = 0;
@@ -106,9 +107,10 @@ namespace WeaponAlmanac.UI
             this.m_footerPanel.Controls.Add(this.m_deleteButton);
             this.m_footerPanel.Controls.Add(this.m_addButton);
             this.m_footerPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.m_footerPanel.Location = new System.Drawing.Point(0, 411);
+            this.m_footerPanel.Location = new System.Drawing.Point(0, 511);
             this.m_footerPanel.Name = "m_footerPanel";
-            this.m_footerPanel.Size = new System.Drawing.Size(800, 39);
+            this.m_footerPanel.Padding = new System.Windows.Forms.Padding(3);
+            this.m_footerPanel.Size = new System.Drawing.Size(882, 42);
             this.m_footerPanel.TabIndex = 1;
             // 
             // m_editButton
@@ -143,9 +145,9 @@ namespace WeaponAlmanac.UI
             this.m_listView.BackColor = System.Drawing.Color.LightPink;
             this.m_listView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.m_listView.HideSelection = false;
-            this.m_listView.Location = new System.Drawing.Point(0, 44);
+            this.m_listView.Location = new System.Drawing.Point(0, 45);
             this.m_listView.Name = "m_listView";
-            this.m_listView.Size = new System.Drawing.Size(800, 367);
+            this.m_listView.Size = new System.Drawing.Size(882, 466);
             this.m_listView.TabIndex = 2;
             this.m_listView.UseCompatibleStateImageBehavior = false;
             // 
@@ -153,11 +155,11 @@ namespace WeaponAlmanac.UI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(882, 553);
             this.Controls.Add(this.m_listView);
             this.Controls.Add(this.m_footerPanel);
             this.Controls.Add(this.m_headerPanel);
-            this.MinimumSize = new System.Drawing.Size(300, 300);
+            this.MinimumSize = new System.Drawing.Size(600, 400);
             this.Name = "MainForm";
             this.Text = "Weapon Almanac";
             this.m_headerPanel.ResumeLayout(false);
