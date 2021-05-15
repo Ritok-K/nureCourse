@@ -68,6 +68,7 @@ namespace WeaponAlmanac.UI
             this.m_searchButton.TabIndex = 3;
             this.m_searchButton.Text = "Search";
             this.m_searchButton.UseVisualStyleBackColor = true;
+            this.m_searchButton.Click += new System.EventHandler(this.OnSearchClick);
             // 
             // m_ownCollectionButton
             // 
@@ -78,6 +79,7 @@ namespace WeaponAlmanac.UI
             this.m_ownCollectionButton.TabIndex = 2;
             this.m_ownCollectionButton.Text = "Own Collection";
             this.m_ownCollectionButton.UseVisualStyleBackColor = true;
+            this.m_ownCollectionButton.Click += new System.EventHandler(this.OnOwnWeaponClick);
             // 
             // m_collectorsButton
             // 
@@ -88,6 +90,7 @@ namespace WeaponAlmanac.UI
             this.m_collectorsButton.TabIndex = 1;
             this.m_collectorsButton.Text = "Collectors";
             this.m_collectorsButton.UseVisualStyleBackColor = true;
+            this.m_collectorsButton.Click += new System.EventHandler(this.OnCollectorsClick);
             // 
             // m_weaponButton
             // 
@@ -98,6 +101,7 @@ namespace WeaponAlmanac.UI
             this.m_weaponButton.TabIndex = 0;
             this.m_weaponButton.Text = "Weapon";
             this.m_weaponButton.UseVisualStyleBackColor = true;
+            this.m_weaponButton.Click += new System.EventHandler(this.OnWeaponClick);
             // 
             // m_footerPanel
             // 
@@ -121,6 +125,7 @@ namespace WeaponAlmanac.UI
             this.m_editButton.TabIndex = 2;
             this.m_editButton.Text = "Edit";
             this.m_editButton.UseVisualStyleBackColor = true;
+            this.m_editButton.Click += new System.EventHandler(this.OnEditClick);
             // 
             // m_deleteButton
             // 
@@ -130,6 +135,7 @@ namespace WeaponAlmanac.UI
             this.m_deleteButton.TabIndex = 1;
             this.m_deleteButton.Text = "Delete";
             this.m_deleteButton.UseVisualStyleBackColor = true;
+            this.m_deleteButton.Click += new System.EventHandler(this.OnDeleteClick);
             // 
             // m_addButton
             // 
@@ -139,6 +145,7 @@ namespace WeaponAlmanac.UI
             this.m_addButton.TabIndex = 0;
             this.m_addButton.Text = "Add";
             this.m_addButton.UseVisualStyleBackColor = true;
+            this.m_addButton.Click += new System.EventHandler(this.OnAddClick);
             // 
             // m_listView
             // 
@@ -150,6 +157,7 @@ namespace WeaponAlmanac.UI
             this.m_listView.Size = new System.Drawing.Size(882, 466);
             this.m_listView.TabIndex = 2;
             this.m_listView.UseCompatibleStateImageBehavior = false;
+            this.m_listView.ItemActivate += new System.EventHandler(this.OnItemActivated);
             // 
             // MainForm
             // 
