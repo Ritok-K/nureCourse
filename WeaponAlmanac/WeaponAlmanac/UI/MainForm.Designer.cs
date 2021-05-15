@@ -31,7 +31,7 @@ namespace WeaponAlmanac.UI
         {
             this.m_headerPanel = new System.Windows.Forms.Panel();
             this.m_searchButton = new System.Windows.Forms.Button();
-            this.m_ownCollectionButton = new System.Windows.Forms.Button();
+            this.m_ownWeaponButton = new System.Windows.Forms.Button();
             this.m_collectorsButton = new System.Windows.Forms.Button();
             this.m_weaponButton = new System.Windows.Forms.Button();
             this.m_footerPanel = new System.Windows.Forms.Panel();
@@ -48,7 +48,7 @@ namespace WeaponAlmanac.UI
             this.m_headerPanel.AutoSize = true;
             this.m_headerPanel.BackColor = System.Drawing.Color.Aqua;
             this.m_headerPanel.Controls.Add(this.m_searchButton);
-            this.m_headerPanel.Controls.Add(this.m_ownCollectionButton);
+            this.m_headerPanel.Controls.Add(this.m_ownWeaponButton);
             this.m_headerPanel.Controls.Add(this.m_collectorsButton);
             this.m_headerPanel.Controls.Add(this.m_weaponButton);
             this.m_headerPanel.Dock = System.Windows.Forms.DockStyle.Top;
@@ -56,7 +56,7 @@ namespace WeaponAlmanac.UI
             this.m_headerPanel.Name = "m_headerPanel";
             this.m_headerPanel.Padding = new System.Windows.Forms.Padding(3);
             this.m_headerPanel.Size = new System.Drawing.Size(882, 45);
-            this.m_headerPanel.TabIndex = 0;
+            this.m_headerPanel.TabIndex = 1;
             // 
             // m_searchButton
             // 
@@ -70,16 +70,16 @@ namespace WeaponAlmanac.UI
             this.m_searchButton.UseVisualStyleBackColor = true;
             this.m_searchButton.Click += new System.EventHandler(this.OnSearchClick);
             // 
-            // m_ownCollectionButton
+            // m_ownWeaponButton
             // 
-            this.m_ownCollectionButton.AutoSize = true;
-            this.m_ownCollectionButton.Location = new System.Drawing.Point(221, 9);
-            this.m_ownCollectionButton.Name = "m_ownCollectionButton";
-            this.m_ownCollectionButton.Size = new System.Drawing.Size(120, 30);
-            this.m_ownCollectionButton.TabIndex = 2;
-            this.m_ownCollectionButton.Text = "Own Collection";
-            this.m_ownCollectionButton.UseVisualStyleBackColor = true;
-            this.m_ownCollectionButton.Click += new System.EventHandler(this.OnOwnWeaponClick);
+            this.m_ownWeaponButton.AutoSize = true;
+            this.m_ownWeaponButton.Location = new System.Drawing.Point(221, 9);
+            this.m_ownWeaponButton.Name = "m_ownWeaponButton";
+            this.m_ownWeaponButton.Size = new System.Drawing.Size(120, 30);
+            this.m_ownWeaponButton.TabIndex = 2;
+            this.m_ownWeaponButton.Text = "Own Collection";
+            this.m_ownWeaponButton.UseVisualStyleBackColor = true;
+            this.m_ownWeaponButton.Click += new System.EventHandler(this.OnOwnWeaponClick);
             // 
             // m_collectorsButton
             // 
@@ -115,7 +115,7 @@ namespace WeaponAlmanac.UI
             this.m_footerPanel.Name = "m_footerPanel";
             this.m_footerPanel.Padding = new System.Windows.Forms.Padding(3);
             this.m_footerPanel.Size = new System.Drawing.Size(882, 42);
-            this.m_footerPanel.TabIndex = 1;
+            this.m_footerPanel.TabIndex = 2;
             // 
             // m_editButton
             // 
@@ -155,7 +155,7 @@ namespace WeaponAlmanac.UI
             this.m_listView.Location = new System.Drawing.Point(0, 45);
             this.m_listView.Name = "m_listView";
             this.m_listView.Size = new System.Drawing.Size(882, 466);
-            this.m_listView.TabIndex = 2;
+            this.m_listView.TabIndex = 0;
             this.m_listView.UseCompatibleStateImageBehavior = false;
             this.m_listView.ItemActivate += new System.EventHandler(this.OnItemActivated);
             // 
@@ -187,7 +187,7 @@ namespace WeaponAlmanac.UI
         private System.Windows.Forms.Button m_deleteButton;
         private System.Windows.Forms.Button m_addButton;
         private System.Windows.Forms.Button m_searchButton;
-        private System.Windows.Forms.Button m_ownCollectionButton;
+        private System.Windows.Forms.Button m_ownWeaponButton;
         private System.Windows.Forms.Button m_collectorsButton;
         private System.Windows.Forms.Button m_weaponButton;
     }

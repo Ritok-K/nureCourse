@@ -23,25 +23,66 @@ namespace WeaponAlmanac.UI
         enum ContentMode
         {
             Weapon,
-            Collector,
+            Collectors,
             OwnWeapon
         }
 
-        UIMode Mode { get; set; } = UIMode.User;
 
-        ContentMode Content { get; set; } = ContentMode.Weapon;
+        UIMode Mode 
+        {
+            get => m_mode; 
+            set { if (m_mode != value) { m_mode = value; UpdateState(); } }
+        }
+
+        ContentMode Content
+        {
+            get => m_content;
+            set { if (m_content != value) { m_content = value; UpdateState(); } }
+        }
+
+        bool IsListEditable => (Mode == UIMode.User) ? Content == ContentMode.OwnWeapon :
+                                                       Content != ContentMode.OwnWeapon;
+        bool IsOwnWeaponEnabled => (Mode == UIMode.User) && (Content != ContentMode.OwnWeapon);
+        bool IsWeaponEnabled => (Content != ContentMode.Weapon);
+        bool IsCollectorsEnabled => (Content != ContentMode.Collectors);
+        bool IsSearchEnabled => true;
 
         public MainForm()
         {
+            m_mode = UIMode.User;
+            m_content = ContentMode.Weapon;
+
             InitializeComponent();
-            UpdateControlsState();
+
+            UpdateListContent();
+            UpdateState();
         }
 
         #region Helper Methods
 
-        void UpdateControlsState()
+        void UpdateListContent()
         {
+            switch(Content)
+            {
+                case ContentMode.Weapon:
+                    break;
+                case ContentMode.Collectors:
+                    break;
+                case ContentMode.OwnWeapon:
+                    break;
+            }
+        }
 
+        void UpdateState()
+        {
+            m_footerPanel.Visible = IsListEditable;
+            m_addButton.Enabled = IsListEditable;
+            m_deleteButton.Enabled = IsListEditable;
+            m_editButton.Enabled = IsListEditable;
+            m_ownWeaponButton.Enabled = IsOwnWeaponEnabled;
+            m_weaponButton.Enabled = IsWeaponEnabled;
+            m_collectorsButton.Enabled = IsCollectorsEnabled;
+            m_searchButton.Enabled = IsSearchEnabled;
         }
 
         #endregion
@@ -89,5 +130,8 @@ namespace WeaponAlmanac.UI
         }
 
         #endregion
+
+        UIMode m_mode;
+        ContentMode m_content;
     }
 }
