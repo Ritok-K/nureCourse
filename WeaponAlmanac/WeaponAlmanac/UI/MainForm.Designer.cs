@@ -149,7 +149,7 @@ namespace WeaponAlmanac.UI
             // 
             // m_listView
             // 
-            this.m_listView.BackColor = System.Drawing.Color.LightPink;
+            this.m_listView.BackColor = System.Drawing.SystemColors.Control;
             this.m_listView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.m_listView.HideSelection = false;
             this.m_listView.Location = new System.Drawing.Point(0, 45);
@@ -158,6 +158,7 @@ namespace WeaponAlmanac.UI
             this.m_listView.TabIndex = 0;
             this.m_listView.UseCompatibleStateImageBehavior = false;
             this.m_listView.ItemActivate += new System.EventHandler(this.OnItemActivated);
+            this.m_listView.SizeChanged += new System.EventHandler(this.OnListSizeChanged);
             // 
             // MainForm
             // 

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WeaponAlmanac.Data_Model;
 
 namespace WeaponAlmanac.UI
 {
@@ -65,10 +66,89 @@ namespace WeaponAlmanac.UI
             switch(Content)
             {
                 case ContentMode.Weapon:
+                    PopulateWeaponList(Program.Repository.GetWeapon());
                     break;
                 case ContentMode.Collectors:
+                    PopulateCollectorsList(Program.Repository.GetCollectors());
                     break;
                 case ContentMode.OwnWeapon:
+                    PopulateWeaponList(Program.Repository.GetOwnWeapon());
+                    break;
+            }
+
+            UpdateListItemSize();
+        }
+
+        void PopulateWeaponList(IList<Weapon> weapon)
+        {
+            m_listView.Items.Clear();
+            m_listView.FullRowSelect = true;
+            m_listView.GridLines = true;
+            m_listView.Sorting = SortOrder.Ascending;
+            m_listView.View = View.Tile;
+            m_listView.Columns.Clear();
+            m_listView.Columns.Add(Properties.Resources.WeaponNameColumn, -2, HorizontalAlignment.Left);
+            m_listView.Columns.Add(Properties.Resources.WeaponDescriptionColumn, -2, HorizontalAlignment.Left);
+            m_listView.Columns.Add(Properties.Resources.WeaponIsRareColumn, -2, HorizontalAlignment.Left);
+
+            var items = new List<ListViewItem>();
+            foreach (var w in weapon)
+            {
+                var item = new ListViewItem(new string[] { w.Name,
+                                                           w.Description, 
+                                                           w.IsRare ? Properties.Resources.IsRareItem :
+                                                                      Properties.Resources.IsNotRareItem })
+                {
+                    Tag = w,
+                    Name = w.Name,
+                };
+                items.Add(item);
+            }
+
+            m_listView.Items.AddRange(items.ToArray());
+        }
+
+        void PopulateCollectorsList(IList<Collector> collectors)
+        {
+            m_listView.Items.Clear();
+            m_listView.FullRowSelect = true;
+            m_listView.GridLines = true;
+            m_listView.Sorting = SortOrder.Ascending;
+            m_listView.View = View.Details;
+            m_listView.Columns.Clear();
+            m_listView.Columns.Add(Properties.Resources.CollectorNameColumn, -2, HorizontalAlignment.Left);
+            m_listView.Columns.Add(Properties.Resources.CollectorPhoneColumn, -2, HorizontalAlignment.Left);
+            m_listView.Columns.Add(Properties.Resources.CollectorEMailColumn, -2, HorizontalAlignment.Left);
+            m_listView.Columns.Add(Properties.Resources.CollecrorHasRareColumn, -2, HorizontalAlignment.Left);
+
+            var items = new List<ListViewItem>();
+            foreach (var c in collectors)
+            {
+                var item = new ListViewItem(new string[] { c.Name,
+                                                           c.Phone,
+                                                           c.EMail, 
+                                                           c.RareIds.Count==0 ? Properties.Resources.NoItem :
+                                                                                Properties.Resources.YesItem })
+                {
+                    Tag = c,
+                    Name = c.Name,
+                };
+                items.Add(item);
+            }
+
+            m_listView.Items.AddRange(items.ToArray());
+        }
+
+        void UpdateListItemSize()
+        {
+            switch (Content)
+            {
+                case ContentMode.Weapon:
+                case ContentMode.OwnWeapon:
+                    m_listView.TileSize = new Size(m_listView.Width - SystemInformation.VerticalScrollBarWidth, 80);
+                    break;
+                case ContentMode.Collectors:
+                    m_listView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
                     break;
             }
         }
@@ -91,17 +171,20 @@ namespace WeaponAlmanac.UI
 
         private void OnWeaponClick(object sender, EventArgs e)
         {
-
+            Content = ContentMode.Weapon;
+            UpdateListContent();
         }
 
         private void OnCollectorsClick(object sender, EventArgs e)
         {
-
+            Content = ContentMode.Collectors;
+            UpdateListContent();
         }
 
         private void OnOwnWeaponClick(object sender, EventArgs e)
         {
-
+            Content = ContentMode.OwnWeapon;
+            UpdateListContent();
         }
 
         private void OnAddClick(object sender, EventArgs e)
@@ -127,6 +210,11 @@ namespace WeaponAlmanac.UI
         private void OnItemActivated(object sender, EventArgs e)
         {
 
+        }
+
+        private void OnListSizeChanged(object sender, EventArgs e)
+        {
+            UpdateListItemSize();
         }
 
         #endregion
