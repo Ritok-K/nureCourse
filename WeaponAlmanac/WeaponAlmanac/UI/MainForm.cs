@@ -11,8 +11,6 @@ using WeaponAlmanac.Data_Model;
 
 namespace WeaponAlmanac.UI
 {
-    
-
     public partial class MainForm : Form
     {
         enum UIMode
