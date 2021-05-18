@@ -42,6 +42,7 @@ namespace WeaponAlmanac.UI
         bool IsListEditable => (Mode == UIMode.User) ? Content == ContentMode.OwnWeapon :
                                                        Content != ContentMode.OwnWeapon;
         bool IsOwnWeaponEnabled => (Mode == UIMode.User) && (Content != ContentMode.OwnWeapon);
+        bool IsOwnWeaponVisible => (Mode == UIMode.User);
         bool IsWeaponEnabled => (Content != ContentMode.Weapon);
         bool IsCollectorsEnabled => (Content != ContentMode.Collectors);
         bool IsSearchEnabled => true;
@@ -158,9 +159,55 @@ namespace WeaponAlmanac.UI
             m_deleteButton.Enabled = IsListEditable;
             m_editButton.Enabled = IsListEditable;
             m_ownWeaponButton.Enabled = IsOwnWeaponEnabled;
+            m_ownWeaponButton.Visible = IsOwnWeaponVisible;
             m_weaponButton.Enabled = IsWeaponEnabled;
             m_collectorsButton.Enabled = IsCollectorsEnabled;
             m_searchButton.Enabled = IsSearchEnabled;
+        }
+
+        void SwitchUIMode()
+        {
+            switch(Mode)
+            {
+                case UIMode.User:
+                    if (Content==ContentMode.OwnWeapon)
+                    {
+                        Content = ContentMode.Weapon;
+                        UpdateListContent();
+                    }
+                    Mode = UIMode.Administator;
+                    break;
+
+                case UIMode.Administator:
+                    Mode = UIMode.User;
+                    break;
+            }
+        }
+
+        #endregion
+
+        #region Overrides
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == (Keys.Control | Keys.Shift| Keys.A))
+            {
+                SwitchUIMode();
+
+                switch (Mode)
+                {
+                    case UIMode.User:
+                        MessageBox.Show(Properties.Resources.UserModeActicated, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        break;
+                    case UIMode.Administator:
+                        MessageBox.Show(Properties.Resources.AdministrationModeActivated, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        break;
+                }
+
+                return true;
+            }
+
+            return base.ProcessCmdKey(ref msg, keyData);
         }
 
         #endregion

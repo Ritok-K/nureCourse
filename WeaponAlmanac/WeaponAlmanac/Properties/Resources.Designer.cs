@@ -61,6 +61,15 @@ namespace WeaponAlmanac.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You are in almanac administrator mode now..
+        /// </summary>
+        internal static string AdministrationModeActivated {
+            get {
+                return ResourceManager.GetString("AdministrationModeActivated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Has Rare.
         /// </summary>
         internal static string CollecrorHasRareColumn {
@@ -120,6 +129,15 @@ namespace WeaponAlmanac.Properties {
         internal static string NoItem {
             get {
                 return ResourceManager.GetString("NoItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You are in user mode now..
+        /// </summary>
+        internal static string UserModeActicated {
+            get {
+                return ResourceManager.GetString("UserModeActicated", resourceCulture);
             }
         }
         
