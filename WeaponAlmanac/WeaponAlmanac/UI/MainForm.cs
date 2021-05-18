@@ -140,7 +140,7 @@ namespace WeaponAlmanac.UI
             m_listView.Items.AddRange(items.ToArray());
         }
 
-        void DeletSelectedListDataModelObjects()
+        void DeleteSelectedListDataModelObjects()
         {
             var itemIdsToDelete = new List<DataModelObject>();
             foreach(ListViewItem item in m_listView.SelectedItems)
@@ -181,7 +181,7 @@ namespace WeaponAlmanac.UI
 
         void RemoveListItem(DataModelObject dataModelObject)
         {
-            foreach (ListViewItem item in m_listView.SelectedItems)
+            foreach (ListViewItem item in m_listView.Items)
             {
                 if ((item.Tag as DataModelObject).Id == dataModelObject.Id)
                 {
@@ -295,7 +295,7 @@ namespace WeaponAlmanac.UI
             var confirmRes = MessageBox.Show(Properties.Resources.ConfirmDeletion, this.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (confirmRes == DialogResult.Yes)
             {
-                DeletSelectedListDataModelObjects();
+                DeleteSelectedListDataModelObjects();
             }
         }
 
