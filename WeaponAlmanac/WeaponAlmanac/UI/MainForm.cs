@@ -41,6 +41,8 @@ namespace WeaponAlmanac.UI
 
         bool IsListEditable => (Mode == UIMode.User) ? Content == ContentMode.OwnWeapon :
                                                        Content != ContentMode.OwnWeapon;
+        bool IsDeleteEnabled => IsListEditable && m_listView.SelectedItems.Count > 0;
+        bool IsEditEnabled => IsListEditable && m_listView.SelectedItems.Count > 0;
         bool IsOwnWeaponEnabled => (Mode == UIMode.User) && (Content != ContentMode.OwnWeapon);
         bool IsOwnWeaponVisible => (Mode == UIMode.User);
         bool IsWeaponEnabled => (Content != ContentMode.Weapon);
@@ -138,6 +140,57 @@ namespace WeaponAlmanac.UI
             m_listView.Items.AddRange(items.ToArray());
         }
 
+        void DeletSelectedListDataModelObjects()
+        {
+            var itemIdsToDelete = new List<DataModelObject>();
+            foreach(ListViewItem item in m_listView.SelectedItems)
+            {
+                itemIdsToDelete.Add(item.Tag as DataModelObject);
+            }
+
+            DeleteDataModelObjects(itemIdsToDelete);
+        }
+
+        void DeleteDataModelObjects(IList<DataModelObject> dataModelObjects)
+        {
+            switch (Content)
+            {
+                case ContentMode.Weapon:
+                    foreach (var dataModelObject in dataModelObjects)
+                    {
+                        Program.Repository.RemoveWeapon(dataModelObject.Id);
+                        RemoveListItem(dataModelObject);
+                    }
+                    break;
+                case ContentMode.Collectors:
+                    foreach (var dataModelObject in dataModelObjects)
+                    {
+                        Program.Repository.RemoveCollector(dataModelObject.Id);
+                        RemoveListItem(dataModelObject);
+                    }
+                    break;
+                case ContentMode.OwnWeapon:
+                    foreach (var dataModelObject in dataModelObjects)
+                    {
+                        Program.Repository.RemoveOwnWeapon(dataModelObject.Id);
+                        RemoveListItem(dataModelObject);
+                    }
+                    break;
+            }
+        }
+
+        void RemoveListItem(DataModelObject dataModelObject)
+        {
+            foreach (ListViewItem item in m_listView.SelectedItems)
+            {
+                if ((item.Tag as DataModelObject).Id == dataModelObject.Id)
+                {
+                    m_listView.Items.Remove(item);
+                    break;
+                }
+            }
+        }
+
         void UpdateListItemSize()
         {
             switch (Content)
@@ -156,8 +209,8 @@ namespace WeaponAlmanac.UI
         {
             m_footerPanel.Visible = IsListEditable;
             m_addButton.Enabled = IsListEditable;
-            m_deleteButton.Enabled = IsListEditable;
-            m_editButton.Enabled = IsListEditable;
+            m_deleteButton.Enabled = IsDeleteEnabled;
+            m_editButton.Enabled = IsEditEnabled;
             m_ownWeaponButton.Enabled = IsOwnWeaponEnabled;
             m_ownWeaponButton.Visible = IsOwnWeaponVisible;
             m_weaponButton.Enabled = IsWeaponEnabled;
@@ -239,7 +292,11 @@ namespace WeaponAlmanac.UI
 
         private void OnDeleteClick(object sender, EventArgs e)
         {
-
+            var confirmRes = MessageBox.Show(Properties.Resources.ConfirmDeletion, this.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (confirmRes == DialogResult.Yes)
+            {
+                DeletSelectedListDataModelObjects();
+            }
         }
 
         private void OnEditClick(object sender, EventArgs e)
@@ -260,6 +317,11 @@ namespace WeaponAlmanac.UI
         private void OnListSizeChanged(object sender, EventArgs e)
         {
             UpdateListItemSize();
+        }
+
+        private void OnSelectionChanged(object sender, EventArgs e)
+        {
+            UpdateState();
         }
 
         #endregion

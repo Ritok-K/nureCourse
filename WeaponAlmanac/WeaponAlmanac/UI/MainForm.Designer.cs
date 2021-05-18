@@ -158,6 +158,7 @@ namespace WeaponAlmanac.UI
             this.m_listView.TabIndex = 0;
             this.m_listView.UseCompatibleStateImageBehavior = false;
             this.m_listView.ItemActivate += new System.EventHandler(this.OnItemActivated);
+            this.m_listView.SelectedIndexChanged += new System.EventHandler(this.OnSelectionChanged);
             this.m_listView.SizeChanged += new System.EventHandler(this.OnListSizeChanged);
             // 
             // MainForm
