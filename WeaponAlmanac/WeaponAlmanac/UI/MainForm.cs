@@ -140,6 +140,32 @@ namespace WeaponAlmanac.UI
             m_listView.Items.AddRange(items.ToArray());
         }
 
+        void AddDataModelObject()
+        {
+            switch (Content)
+            {
+                case ContentMode.Weapon:
+                    break;
+                case ContentMode.Collectors:
+                    {
+                        var collector = new Collector();
+                        using (var collectorForm = new CollectorForm() { Collector = collector })
+                        {
+                            var dialogResult = collectorForm.ShowDialog(this);
+                            if (dialogResult == DialogResult.OK)
+                            {
+                                Program.Repository.SetCollector(collector);
+                                UpdateListContent();
+                            }
+                        }
+                    }
+                    break;
+                case ContentMode.OwnWeapon:
+                    break;
+            }
+
+        }
+
         void DeleteSelectedListDataModelObjects()
         {
             var itemIdsToDelete = new List<DataModelObject>();
@@ -287,7 +313,7 @@ namespace WeaponAlmanac.UI
 
         private void OnAddClick(object sender, EventArgs e)
         {
-
+            AddDataModelObject();
         }
 
         private void OnDeleteClick(object sender, EventArgs e)
