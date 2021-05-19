@@ -163,10 +163,43 @@ namespace WeaponAlmanac.UI
                 case ContentMode.OwnWeapon:
                     break;
             }
-
         }
 
-        void DeleteSelectedListDataModelObjects()
+        void EditSelectedDataModelObject()
+        {
+            if (m_listView.SelectedItems.Count > 0)
+            {
+                var dataModelObject = m_listView.SelectedItems[0].Tag as DataModelObject;
+                EditDataModelObject(dataModelObject);
+            }
+        }
+
+        void EditDataModelObject(DataModelObject dataModelObject)
+        {
+            switch (Content)
+            {
+                case ContentMode.Weapon:
+                    break;
+                case ContentMode.Collectors:
+                    {
+                        var collector = dataModelObject as Collector;
+                        using (var collectorForm = new CollectorForm() { Collector = collector })
+                        {
+                            var dialogResult = collectorForm.ShowDialog(this);
+                            if (dialogResult == DialogResult.OK)
+                            {
+                                Program.Repository.SetCollector(collector);
+                                UpdateListContent();
+                            }
+                        }
+                    }
+                    break;
+                case ContentMode.OwnWeapon:
+                    break;
+            }
+        }
+
+        void DeleteSelectedDataModelObjects()
         {
             var itemIdsToDelete = new List<DataModelObject>();
             foreach(ListViewItem item in m_listView.SelectedItems)
@@ -321,13 +354,13 @@ namespace WeaponAlmanac.UI
             var confirmRes = MessageBox.Show(Properties.Resources.ConfirmDeletion, this.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (confirmRes == DialogResult.Yes)
             {
-                DeleteSelectedListDataModelObjects();
+                DeleteSelectedDataModelObjects();
             }
         }
 
         private void OnEditClick(object sender, EventArgs e)
         {
-
+            EditSelectedDataModelObject();
         }
 
         private void OnSearchClick(object sender, EventArgs e)

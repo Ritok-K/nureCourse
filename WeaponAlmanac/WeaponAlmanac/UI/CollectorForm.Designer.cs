@@ -38,6 +38,8 @@ namespace WeaponAlmanac.UI
             this.m_phoneLabel = new System.Windows.Forms.Label();
             this.m_phoneTextBox = new System.Windows.Forms.TextBox();
             this.m_okButton = new System.Windows.Forms.Button();
+            this.m_rareWeaponListView = new System.Windows.Forms.ListView();
+            this.m_rareWeaponLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // m_nameLabel
@@ -51,6 +53,8 @@ namespace WeaponAlmanac.UI
             // 
             // m_nameTextBox
             // 
+            this.m_nameTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.m_nameTextBox.Location = new System.Drawing.Point(95, 32);
             this.m_nameTextBox.Name = "m_nameTextBox";
             this.m_nameTextBox.Size = new System.Drawing.Size(421, 27);
@@ -67,6 +71,8 @@ namespace WeaponAlmanac.UI
             // 
             // m_countryTextBox
             // 
+            this.m_countryTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.m_countryTextBox.Location = new System.Drawing.Point(95, 80);
             this.m_countryTextBox.Name = "m_countryTextBox";
             this.m_countryTextBox.Size = new System.Drawing.Size(421, 27);
@@ -99,6 +105,8 @@ namespace WeaponAlmanac.UI
             // 
             // m_phoneTextBox
             // 
+            this.m_phoneTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.m_phoneTextBox.Location = new System.Drawing.Point(348, 125);
             this.m_phoneTextBox.Name = "m_phoneTextBox";
             this.m_phoneTextBox.Size = new System.Drawing.Size(168, 27);
@@ -106,12 +114,36 @@ namespace WeaponAlmanac.UI
             // 
             // m_okButton
             // 
-            this.m_okButton.Location = new System.Drawing.Point(422, 357);
+            this.m_okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.m_okButton.Location = new System.Drawing.Point(422, 366);
             this.m_okButton.Name = "m_okButton";
             this.m_okButton.Size = new System.Drawing.Size(94, 29);
             this.m_okButton.TabIndex = 8;
             this.m_okButton.Text = "Ok";
             this.m_okButton.UseVisualStyleBackColor = true;
+            this.m_okButton.Click += new System.EventHandler(this.OnOkClick);
+            // 
+            // m_rareWeaponListView
+            // 
+            this.m_rareWeaponListView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.m_rareWeaponListView.HideSelection = false;
+            this.m_rareWeaponListView.Location = new System.Drawing.Point(43, 195);
+            this.m_rareWeaponListView.Name = "m_rareWeaponListView";
+            this.m_rareWeaponListView.Size = new System.Drawing.Size(473, 152);
+            this.m_rareWeaponListView.TabIndex = 9;
+            this.m_rareWeaponListView.UseCompatibleStateImageBehavior = false;
+            this.m_rareWeaponListView.View = System.Windows.Forms.View.Details;
+            // 
+            // m_rareWeaponLabel
+            // 
+            this.m_rareWeaponLabel.AutoSize = true;
+            this.m_rareWeaponLabel.Location = new System.Drawing.Point(29, 169);
+            this.m_rareWeaponLabel.Name = "m_rareWeaponLabel";
+            this.m_rareWeaponLabel.Size = new System.Drawing.Size(202, 20);
+            this.m_rareWeaponLabel.TabIndex = 10;
+            this.m_rareWeaponLabel.Text = "Owns following rare weapon:";
             // 
             // CollectorForm
             // 
@@ -119,6 +151,8 @@ namespace WeaponAlmanac.UI
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(547, 408);
+            this.Controls.Add(this.m_rareWeaponLabel);
+            this.Controls.Add(this.m_rareWeaponListView);
             this.Controls.Add(this.m_okButton);
             this.Controls.Add(this.m_phoneTextBox);
             this.Controls.Add(this.m_phoneLabel);
@@ -130,7 +164,9 @@ namespace WeaponAlmanac.UI
             this.Controls.Add(this.m_nameLabel);
             this.MinimumSize = new System.Drawing.Size(565, 455);
             this.Name = "CollectorForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Collector";
+            this.Load += new System.EventHandler(this.OnLoad);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -147,5 +183,7 @@ namespace WeaponAlmanac.UI
         private System.Windows.Forms.Label m_phoneLabel;
         private System.Windows.Forms.TextBox m_phoneTextBox;
         private System.Windows.Forms.Button m_okButton;
+        private System.Windows.Forms.ListView m_rareWeaponListView;
+        private System.Windows.Forms.Label m_rareWeaponLabel;
     }
 }
