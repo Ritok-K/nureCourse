@@ -76,12 +76,12 @@ namespace WeaponAlmanac.UI
             this.m_countryTextBox.Location = new System.Drawing.Point(95, 80);
             this.m_countryTextBox.Name = "m_countryTextBox";
             this.m_countryTextBox.Size = new System.Drawing.Size(421, 27);
-            this.m_countryTextBox.TabIndex = 3;
+            this.m_countryTextBox.TabIndex = 2;
             // 
             // m_emailLabel
             // 
             this.m_emailLabel.AutoSize = true;
-            this.m_emailLabel.Location = new System.Drawing.Point(29, 128);
+            this.m_emailLabel.Location = new System.Drawing.Point(287, 128);
             this.m_emailLabel.Name = "m_emailLabel";
             this.m_emailLabel.Size = new System.Drawing.Size(46, 20);
             this.m_emailLabel.TabIndex = 4;
@@ -89,15 +89,17 @@ namespace WeaponAlmanac.UI
             // 
             // m_emailTextBox
             // 
-            this.m_emailTextBox.Location = new System.Drawing.Point(95, 125);
+            this.m_emailTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.m_emailTextBox.Location = new System.Drawing.Point(348, 125);
             this.m_emailTextBox.Name = "m_emailTextBox";
-            this.m_emailTextBox.Size = new System.Drawing.Size(163, 27);
-            this.m_emailTextBox.TabIndex = 5;
+            this.m_emailTextBox.Size = new System.Drawing.Size(168, 27);
+            this.m_emailTextBox.TabIndex = 4;
             // 
             // m_phoneLabel
             // 
             this.m_phoneLabel.AutoSize = true;
-            this.m_phoneLabel.Location = new System.Drawing.Point(285, 128);
+            this.m_phoneLabel.Location = new System.Drawing.Point(29, 128);
             this.m_phoneLabel.Name = "m_phoneLabel";
             this.m_phoneLabel.Size = new System.Drawing.Size(50, 20);
             this.m_phoneLabel.TabIndex = 6;
@@ -105,12 +107,10 @@ namespace WeaponAlmanac.UI
             // 
             // m_phoneTextBox
             // 
-            this.m_phoneTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.m_phoneTextBox.Location = new System.Drawing.Point(348, 125);
+            this.m_phoneTextBox.Location = new System.Drawing.Point(95, 125);
             this.m_phoneTextBox.Name = "m_phoneTextBox";
             this.m_phoneTextBox.Size = new System.Drawing.Size(168, 27);
-            this.m_phoneTextBox.TabIndex = 7;
+            this.m_phoneTextBox.TabIndex = 3;
             // 
             // m_okButton
             // 
@@ -118,7 +118,7 @@ namespace WeaponAlmanac.UI
             this.m_okButton.Location = new System.Drawing.Point(422, 366);
             this.m_okButton.Name = "m_okButton";
             this.m_okButton.Size = new System.Drawing.Size(94, 29);
-            this.m_okButton.TabIndex = 8;
+            this.m_okButton.TabIndex = 0;
             this.m_okButton.Text = "Ok";
             this.m_okButton.UseVisualStyleBackColor = true;
             this.m_okButton.Click += new System.EventHandler(this.OnOkClick);
@@ -132,7 +132,7 @@ namespace WeaponAlmanac.UI
             this.m_rareWeaponListView.Location = new System.Drawing.Point(43, 195);
             this.m_rareWeaponListView.Name = "m_rareWeaponListView";
             this.m_rareWeaponListView.Size = new System.Drawing.Size(473, 152);
-            this.m_rareWeaponListView.TabIndex = 9;
+            this.m_rareWeaponListView.TabIndex = 5;
             this.m_rareWeaponListView.UseCompatibleStateImageBehavior = false;
             this.m_rareWeaponListView.View = System.Windows.Forms.View.Details;
             // 
