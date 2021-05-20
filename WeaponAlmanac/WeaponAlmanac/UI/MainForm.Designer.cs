@@ -149,7 +149,7 @@ namespace WeaponAlmanac.UI
             // 
             // m_listView
             // 
-            this.m_listView.BackColor = System.Drawing.SystemColors.Control;
+            this.m_listView.BackColor = System.Drawing.SystemColors.Window;
             this.m_listView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.m_listView.HideSelection = false;
             this.m_listView.Location = new System.Drawing.Point(0, 45);

@@ -89,7 +89,8 @@ namespace WeaponAlmanac.UI
                 }
 
                 m_rareWeaponListView.Items.AddRange(items.ToArray());
-                m_rareWeaponListView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+                m_rareWeaponListView.AutoResizeColumns(items.Count > 0 ? ColumnHeaderAutoResizeStyle.ColumnContent : 
+                                                                         ColumnHeaderAutoResizeStyle.HeaderSize);
             }
         }
 
