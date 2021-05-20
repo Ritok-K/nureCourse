@@ -170,11 +170,20 @@ namespace WeaponAlmanac.UI
             if (m_listView.SelectedItems.Count > 0)
             {
                 var dataModelObject = m_listView.SelectedItems[0].Tag as DataModelObject;
-                EditDataModelObject(dataModelObject);
+                ShowDataModelObject(dataModelObject, false);
             }
         }
 
-        void EditDataModelObject(DataModelObject dataModelObject)
+        void ViewSelectedDataModelObject()
+        {
+            if (m_listView.SelectedItems.Count > 0)
+            {
+                var dataModelObject = m_listView.SelectedItems[0].Tag as DataModelObject;
+                ShowDataModelObject(dataModelObject, true);
+            }
+        }
+
+        void ShowDataModelObject(DataModelObject dataModelObject, bool viewOnlyMode)
         {
             switch (Content)
             {
@@ -183,10 +192,10 @@ namespace WeaponAlmanac.UI
                 case ContentMode.Collectors:
                     {
                         var collector = dataModelObject as Collector;
-                        using (var collectorForm = new CollectorForm() { Collector = collector })
+                        using (var collectorForm = new CollectorForm() { Collector = collector, ViewOnly = viewOnlyMode })
                         {
                             var dialogResult = collectorForm.ShowDialog(this);
-                            if (dialogResult == DialogResult.OK)
+                            if ((dialogResult == DialogResult.OK) && !viewOnlyMode)
                             {
                                 Program.Repository.SetCollector(collector);
                                 UpdateListContent();
@@ -370,7 +379,14 @@ namespace WeaponAlmanac.UI
 
         private void OnItemActivated(object sender, EventArgs e)
         {
-
+            if (IsListEditable)
+            {
+                EditSelectedDataModelObject();
+            }
+            else
+            {
+                ViewSelectedDataModelObject();
+            }
         }
 
         private void OnListSizeChanged(object sender, EventArgs e)
