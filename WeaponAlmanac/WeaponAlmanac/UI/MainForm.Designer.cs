@@ -181,6 +181,7 @@ namespace WeaponAlmanac.UI
             this.MinimumSize = new System.Drawing.Size(600, 400);
             this.Name = "MainForm";
             this.Text = "Weapon Almanac";
+            this.Load += new System.EventHandler(this.OnLoad);
             this.m_headerPanel.ResumeLayout(false);
             this.m_headerPanel.PerformLayout();
             this.m_footerPanel.ResumeLayout(false);

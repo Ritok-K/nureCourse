@@ -20,7 +20,7 @@ namespace WeaponAlmanac
             Repository.InitDirectories();
 
             //PopulateRepository();
-            TestRepository();
+            //TestRepository();
         }
 
         static void PopulateRepository()
