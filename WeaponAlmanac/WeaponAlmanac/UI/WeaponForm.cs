@@ -96,7 +96,7 @@ namespace WeaponAlmanac.UI
 
         #region Event Handlers
 
-        private void OnLoda(object sender, EventArgs e)
+        private void OnLoad(object sender, EventArgs e)
         {
             UpdateControls(false);
             UpdateState();

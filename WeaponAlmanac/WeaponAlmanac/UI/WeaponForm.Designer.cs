@@ -242,7 +242,7 @@ namespace WeaponAlmanac.UI
             this.Name = "WeaponForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Weapon";
-            this.Load += new System.EventHandler(this.OnLoda);
+            this.Load += new System.EventHandler(this.OnLoad);
             ((System.ComponentModel.ISupportInitialize)(this.m_pictureBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

@@ -23,9 +23,9 @@ namespace WeaponAlmanac.UI
 
         #region Helper Methods
 
-        void UpdateData(bool save)
+        void UpdateControls(bool saveData)
         {
-            if (save)
+            if (saveData)
             {
                 Filter.Name = m_nameTextBox.Text.Trim();
                 Filter.Country = m_countryTextBox.Text.Trim();
@@ -55,12 +55,12 @@ namespace WeaponAlmanac.UI
 
         private void OnLoad(object sender, EventArgs e)
         {
-            UpdateData(false);
+            UpdateControls(false);
         }
 
         private void OnOkClick(object sender, EventArgs e)
         {
-            UpdateData(true);
+            UpdateControls(true);
 
             DialogResult = DialogResult.OK;
         }
@@ -73,7 +73,7 @@ namespace WeaponAlmanac.UI
             m_manifacturedFromTextBox.Text = string.Empty;
             m_manifacturedToTextBox.Text = string.Empty;
 
-            UpdateData(true);
+            UpdateControls(true);
 
             DialogResult = DialogResult.OK;
         }

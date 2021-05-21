@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WeaponAlmanac.Data_Model;
+using WeaponAlmanac.Data_Model.Filters;
 
 namespace WeaponAlmanac.UI
 {
