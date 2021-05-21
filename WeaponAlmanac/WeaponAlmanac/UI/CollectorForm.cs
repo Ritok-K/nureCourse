@@ -115,6 +115,22 @@ namespace WeaponAlmanac.UI
 
         #endregion
 
+        #region Overrides
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (ViewOnly && (keyData == Keys.Escape))
+            {
+                Close();
+
+                return true;
+            }
+
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+        #endregion
+
         #region Event Handlers
 
         private void OnLoad(object sender, EventArgs e)

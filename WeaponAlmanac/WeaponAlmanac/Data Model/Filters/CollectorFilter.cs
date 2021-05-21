@@ -12,6 +12,10 @@ namespace WeaponAlmanac.Data_Model.Filters
         public string Country { get; set; }
         public bool? HasRareWeapon { get; set; } = null;
 
+        public bool IsEmpty => string.IsNullOrEmpty(Name) &&
+                               string.IsNullOrEmpty(Country) &&
+                               !HasRareWeapon.HasValue;
+
         public bool Pass(Collector collector)
         {
             bool res = true;

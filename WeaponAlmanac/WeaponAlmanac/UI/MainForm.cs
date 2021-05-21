@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WeaponAlmanac.Data_Model;
+using WeaponAlmanac.Data_Model.Filters;
 
 namespace WeaponAlmanac.UI
 {
@@ -49,11 +50,16 @@ namespace WeaponAlmanac.UI
         bool IsWeaponEnabled => (Content != ContentMode.Weapon);
         bool IsCollectorsEnabled => (Content != ContentMode.Collectors);
         bool IsSearchEnabled => true;
+        bool IsSearchActive => (Content == ContentMode.Collectors) ? !m_collectorFilter.IsEmpty :
+                                                                     !m_weaponFilter.IsEmpty;
 
         public MainForm()
         {
             m_mode = UIMode.User;
             m_content = ContentMode.Weapon;
+
+            m_collectorFilter = new CollectorFilter();
+            m_weaponFilter = new WeaponFilter();
 
             InitializeComponent();
         }
@@ -65,17 +71,18 @@ namespace WeaponAlmanac.UI
             switch(Content)
             {
                 case ContentMode.Weapon:
-                    PopulateWeaponList(Program.Repository.GetWeapon());
+                    PopulateWeaponList(Program.Repository.GetWeapon(m_weaponFilter));
                     break;
                 case ContentMode.Collectors:
-                    PopulateCollectorsList(Program.Repository.GetCollectors());
+                    PopulateCollectorsList(Program.Repository.GetCollectors(m_collectorFilter));
                     break;
                 case ContentMode.OwnWeapon:
-                    PopulateWeaponList(Program.Repository.GetOwnWeapon());
+                    PopulateWeaponList(Program.Repository.GetOwnWeapon(m_weaponFilter));
                     break;
             }
 
             UpdateListItemSize();
+            m_listView.Select();
         }
 
         void PopulateWeaponList(IList<Weapon> weapon)
@@ -339,6 +346,10 @@ namespace WeaponAlmanac.UI
             m_weaponButton.Enabled = IsWeaponEnabled;
             m_collectorsButton.Enabled = IsCollectorsEnabled;
             m_searchButton.Enabled = IsSearchEnabled;
+            m_searchButton.BackColor = IsSearchActive ? SystemColors.Highlight : SystemColors.ButtonFace;
+            m_searchButton.ForeColor = IsSearchActive ? SystemColors.HighlightText : SystemColors.WindowText;
+            m_listView.BackColor = IsSearchActive ? SystemColors.Info : SystemColors.Control;
+            m_listView.ForeColor = IsSearchActive ? SystemColors.InfoText : SystemColors.ControlText;
         }
 
         void SwitchUIMode()
@@ -356,6 +367,40 @@ namespace WeaponAlmanac.UI
 
                 case UIMode.Administator:
                     Mode = UIMode.User;
+                    break;
+            }
+        }
+
+        void SetupFilter()
+        {
+            switch(Content)
+            {
+                case ContentMode.Weapon:
+                case ContentMode.OwnWeapon:
+                    {
+                        using (var searchForm = new WeaponSearchFilterForm() { Filter = m_weaponFilter })
+                        {
+                            var dialogResult = searchForm.ShowDialog(this);
+                            if (dialogResult == DialogResult.OK)
+                            {
+                                UpdateListContent();
+                                UpdateState();
+                            }
+                        }
+                    }
+                    break;
+                case ContentMode.Collectors:
+                    {
+                        using (var searchForm = new CollectorSearchFilterForm() { Filter = m_collectorFilter })
+                        {
+                            var dialogResult = searchForm.ShowDialog(this);
+                            if (dialogResult == DialogResult.OK)
+                            {
+                                UpdateListContent();
+                                UpdateState();
+                            }
+                        }
+                    }
                     break;
             }
         }
@@ -484,7 +529,15 @@ namespace WeaponAlmanac.UI
 
         private void OnSearchClick(object sender, EventArgs e)
         {
-
+            try
+            {
+                SetupFilter();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format(Properties.Resources.ExceptionError, ex.Message),
+                                this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void OnItemActivated(object sender, EventArgs e)
@@ -535,7 +588,14 @@ namespace WeaponAlmanac.UI
 
         #endregion
 
+        #region Member Variables
+
         UIMode m_mode;
         ContentMode m_content;
+
+        CollectorFilter m_collectorFilter;
+        WeaponFilter m_weaponFilter;
+
+        #endregion
     }
 }

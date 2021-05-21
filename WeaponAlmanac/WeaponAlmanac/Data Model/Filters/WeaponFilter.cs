@@ -11,8 +11,18 @@ namespace WeaponAlmanac.Data_Model.Filters
         public string Name { get; set; }
         public string Description { get; set; }
         public string Country { get; set; }
-        public int ManufactureStartDate { get; set; } = DataModelUtils.InvalidDate;
-        public int ManufactureEndDate { get; set; } = DataModelUtils.InvalidDate;
+        public int ManufacturedStartDate { get; set; } = DataModelUtils.InvalidDate;
+        public int ManufacturedEndDate { get; set; } = DataModelUtils.InvalidDate;
+        public bool HasManufacturedStartDate => ManufacturedStartDate != DataModelUtils.InvalidDate;
+        public bool HasManufacturedEndDate => ManufacturedStartDate != DataModelUtils.InvalidDate;
+        public bool HasValidManufacturedDate => HasManufacturedStartDate &&
+                                                HasManufacturedEndDate &&
+                                               (ManufacturedStartDate <= ManufacturedEndDate);
+
+        public bool IsEmpty => string.IsNullOrEmpty(Name) &&
+                               string.IsNullOrEmpty(Description) &&
+                               string.IsNullOrEmpty(Country) &&
+                               !HasValidManufacturedDate;
 
         public bool Pass(Weapon weapon)
         {
@@ -33,11 +43,10 @@ namespace WeaponAlmanac.Data_Model.Filters
                 res = weapon.Country.Contains(Country, StringComparison.OrdinalIgnoreCase);
             }
 
-            if (res && (ManufactureStartDate != DataModelUtils.InvalidDate) &&
-                       (ManufactureEndDate != DataModelUtils.InvalidDate))
+            if (res && HasValidManufacturedDate)
             {
-                res = weapon.ManufactureDate >= ManufactureStartDate &&
-                      weapon.ManufactureDate <= ManufactureEndDate;
+                res = weapon.ManufactureDate >= ManufacturedStartDate &&
+                      weapon.ManufactureDate <= ManufacturedEndDate;
             }
 
             return res;
