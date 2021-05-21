@@ -27,7 +27,7 @@ namespace WeaponAlmanac.Data_Model
         {
             var res = InvalidDate;
             
-            year.Trim();
+            year = year.Trim();
             if (!string.IsNullOrEmpty(year))
             {
                 var values = year.Split(" ", StringSplitOptions.RemoveEmptyEntries);
