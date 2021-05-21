@@ -13,7 +13,12 @@ namespace WeaponAlmanac.Data_Model.Serializers
     {
         public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            var date = DateTime.ParseExact(reader.GetString(), "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            var date = DateTime.Now;
+            if (!DateTime.TryParseExact(reader.GetString(), "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out date))
+            {
+                date = DataModelObject.InvalidDate;
+            }
+
             return date;
         }
 

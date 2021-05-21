@@ -56,9 +56,6 @@ namespace WeaponAlmanac.UI
             m_content = ContentMode.Weapon;
 
             InitializeComponent();
-
-            UpdateListContent();
-            UpdateState();
         }
 
         #region Helper Methods
@@ -393,6 +390,12 @@ namespace WeaponAlmanac.UI
         #endregion
 
         #region Event Handlers
+
+        private void OnLoad(object sender, EventArgs e)
+        {
+            UpdateState();
+            UpdateListContent();
+        }
 
         private void OnWeaponClick(object sender, EventArgs e)
         {
