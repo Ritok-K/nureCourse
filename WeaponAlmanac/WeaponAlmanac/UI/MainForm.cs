@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -88,25 +89,42 @@ namespace WeaponAlmanac.UI
             m_listView.Sorting = SortOrder.Ascending;
             m_listView.View = View.Tile;
             m_listView.Columns.Clear();
-            m_listView.Columns.Add(Properties.Resources.WeaponNameColumn, -2, HorizontalAlignment.Left);
-            m_listView.Columns.Add(Properties.Resources.WeaponDescriptionColumn, -2, HorizontalAlignment.Left);
-            m_listView.Columns.Add(Properties.Resources.WeaponIsRareColumn, -2, HorizontalAlignment.Left);
+            m_listView.Columns.Add(Properties.Resources.WeaponNameColumn);
+            m_listView.Columns.Add(Properties.Resources.WeaponDescriptionColumn);
+            m_listView.Columns.Add(Properties.Resources.WeaponYearColumn);
+            m_listView.Columns.Add(Properties.Resources.WeaponIsRareColumn);
 
             var items = new List<ListViewItem>();
             foreach (var w in weapon)
             {
                 var item = new ListViewItem(new string[] { w.Name,
-                                                           w.Description, 
+                                                           w.Description,
+                                                           w.HasManufactureDate ? w.ManufactureDate.ToString("yyyy", CultureInfo.CurrentUICulture) :
+                                                                                  string.Empty,
                                                            w.IsRare ? Properties.Resources.IsRareItem :
                                                                       Properties.Resources.IsNotRareItem })
                 {
                     Tag = w,
                     Name = w.Name,
+                    ImageKey = w.Id,
                 };
                 items.Add(item);
             }
 
             m_listView.Items.AddRange(items.ToArray());
+            PopulateImageList(weapon);
+        }
+
+        void PopulateImageList(IList<Weapon> weapon)
+        {
+            m_listViewImageList.Images.Clear();
+            foreach(var w in weapon)
+            {
+                if (w.Image != null)
+                {
+                    m_listViewImageList.Images.Add(w.Id, w.Image);
+                }
+            }
         }
 
         void PopulateCollectorsList(IList<Collector> collectors)

@@ -52,7 +52,8 @@ namespace WeaponAlmanac.UI
                 Weapon.Material = m_materialTextBox.Text;
                 Weapon.Description = m_descriptionTextBox.Text;
                 Weapon.IssuedNumber = uint.Parse(m_issuedNumberTextBox.Text);
-                Weapon.ManufactureDate = DateTime.ParseExact(m_manufacturedYearTextBox.Text, "yyyy", CultureInfo.CurrentUICulture);
+                Weapon.ManufactureDate = string.IsNullOrEmpty(m_manufacturedYearTextBox.Text) ? DataModelObject.InvalidDate : 
+                                          DateTime.ParseExact(m_manufacturedYearTextBox.Text, "yyyy", CultureInfo.CurrentUICulture);
                 Weapon.IsRare = m_rareCheckBox.Checked;
 
                 Weapon.Image?.Dispose();
@@ -65,7 +66,8 @@ namespace WeaponAlmanac.UI
                 m_materialTextBox.Text = Weapon.Material;
                 m_descriptionTextBox.Text = Weapon.Description;
                 m_issuedNumberTextBox.Text = Weapon.IssuedNumber.ToString();
-                m_manufacturedYearTextBox.Text = Weapon.ManufactureDate.ToString("yyyy", CultureInfo.CurrentUICulture);
+                m_manufacturedYearTextBox.Text = Weapon.HasManufactureDate ? Weapon.ManufactureDate.ToString("yyyy", CultureInfo.CurrentUICulture) :
+                                                                             string.Empty;
                 m_rareCheckBox.Checked = Weapon.IsRare;
 
                 m_bitmap = (Weapon.Image?.Clone() as Bitmap);

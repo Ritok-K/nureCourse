@@ -29,6 +29,7 @@ namespace WeaponAlmanac.UI
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.m_headerPanel = new System.Windows.Forms.Panel();
             this.m_searchButton = new System.Windows.Forms.Button();
             this.m_ownWeaponButton = new System.Windows.Forms.Button();
@@ -39,6 +40,7 @@ namespace WeaponAlmanac.UI
             this.m_deleteButton = new System.Windows.Forms.Button();
             this.m_addButton = new System.Windows.Forms.Button();
             this.m_listView = new System.Windows.Forms.ListView();
+            this.m_listViewImageList = new System.Windows.Forms.ImageList(this.components);
             this.m_headerPanel.SuspendLayout();
             this.m_footerPanel.SuspendLayout();
             this.SuspendLayout();
@@ -152,6 +154,7 @@ namespace WeaponAlmanac.UI
             this.m_listView.BackColor = System.Drawing.SystemColors.Window;
             this.m_listView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.m_listView.HideSelection = false;
+            this.m_listView.LargeImageList = this.m_listViewImageList;
             this.m_listView.Location = new System.Drawing.Point(0, 45);
             this.m_listView.Name = "m_listView";
             this.m_listView.Size = new System.Drawing.Size(882, 466);
@@ -160,6 +163,12 @@ namespace WeaponAlmanac.UI
             this.m_listView.ItemActivate += new System.EventHandler(this.OnItemActivated);
             this.m_listView.SelectedIndexChanged += new System.EventHandler(this.OnSelectionChanged);
             this.m_listView.SizeChanged += new System.EventHandler(this.OnListSizeChanged);
+            // 
+            // m_listViewImageList
+            // 
+            this.m_listViewImageList.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
+            this.m_listViewImageList.ImageSize = new System.Drawing.Size(70, 70);
+            this.m_listViewImageList.TransparentColor = System.Drawing.Color.Transparent;
             // 
             // MainForm
             // 
@@ -192,6 +201,7 @@ namespace WeaponAlmanac.UI
         private System.Windows.Forms.Button m_ownWeaponButton;
         private System.Windows.Forms.Button m_collectorsButton;
         private System.Windows.Forms.Button m_weaponButton;
+        private System.Windows.Forms.ImageList m_listViewImageList;
     }
 }
 

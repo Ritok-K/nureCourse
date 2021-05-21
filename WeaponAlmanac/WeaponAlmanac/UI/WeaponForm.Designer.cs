@@ -168,7 +168,7 @@ namespace WeaponAlmanac.UI
             // 
             this.m_rareCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.m_rareCheckBox.AutoSize = true;
-            this.m_rareCheckBox.Location = new System.Drawing.Point(316, 392);
+            this.m_rareCheckBox.Location = new System.Drawing.Point(317, 392);
             this.m_rareCheckBox.Name = "m_rareCheckBox";
             this.m_rareCheckBox.Size = new System.Drawing.Size(113, 24);
             this.m_rareCheckBox.TabIndex = 13;
@@ -209,7 +209,7 @@ namespace WeaponAlmanac.UI
             // m_pictureBrowseFileDialog
             // 
             this.m_pictureBrowseFileDialog.DefaultExt = "jpg";
-            this.m_pictureBrowseFileDialog.Filter = "All Images (*.jpg, *.png)|*.jpg;*.png";
+            this.m_pictureBrowseFileDialog.Filter = "All Images (*.jpg, *.png, *.gif)|*.jpg;*.png;*.gif";
             // 
             // WeaponForm
             // 

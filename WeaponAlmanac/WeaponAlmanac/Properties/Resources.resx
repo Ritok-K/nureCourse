@@ -160,6 +160,9 @@
   <data name="WeaponNameColumn" xml:space="preserve">
     <value>Name</value>
   </data>
+  <data name="WeaponYearColumn" xml:space="preserve">
+    <value>Manufactured Year</value>
+  </data>
   <data name="YesItem" xml:space="preserve">
     <value>Yes</value>
   </data>

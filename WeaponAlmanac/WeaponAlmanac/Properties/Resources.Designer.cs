@@ -187,6 +187,15 @@ namespace WeaponAlmanac.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Manufactured Year.
+        /// </summary>
+        internal static string WeaponYearColumn {
+            get {
+                return ResourceManager.GetString("WeaponYearColumn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Yes.
         /// </summary>
         internal static string YesItem {
