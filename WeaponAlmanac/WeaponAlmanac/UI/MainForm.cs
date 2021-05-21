@@ -96,8 +96,7 @@ namespace WeaponAlmanac.UI
             {
                 var item = new ListViewItem(new string[] { w.Name,
                                                            w.Description,
-                                                           w.HasManufactureDate ? w.ManufactureDate.ToString("yyyy", CultureInfo.CurrentUICulture) :
-                                                                                  string.Empty,
+                                                           DataModelUtils.FormatYear(w.ManufactureDate),
                                                            w.IsRare ? Properties.Resources.IsRareItem :
                                                                       Properties.Resources.IsNotRareItem })
                 {

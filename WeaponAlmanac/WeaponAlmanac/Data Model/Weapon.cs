@@ -16,9 +16,7 @@ namespace WeaponAlmanac.Data_Model
         public string Name { get; set; }
         public string Description { get; set; }
         public string Country { get; set; }
-        public DateTime ManufactureDate { get; set; } = DateTime.Now;
-        [JsonIgnore]
-        public bool HasManufactureDate => ManufactureDate != InvalidDate;
+        public int ManufactureDate { get; set; } = DataModelUtils.InvalidDate;
         public uint IssuedNumber { get; set; } = 0;
         public string Material { get; set; }
         public bool IsRare { get; set; } = false;

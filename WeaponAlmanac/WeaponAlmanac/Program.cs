@@ -86,9 +86,7 @@ namespace WeaponAlmanac
             Debug.Assert(weaponList[index].Description == weapon.Description);
             Debug.Assert(weaponList[index].Material == weapon.Material);
             Debug.Assert(weaponList[index].IsRare == weapon.IsRare);
-            Debug.Assert(weaponList[index].ManufactureDate.Year == weapon.ManufactureDate.Year);
-            Debug.Assert(weaponList[index].ManufactureDate.Month == weapon.ManufactureDate.Month);
-            Debug.Assert(weaponList[index].ManufactureDate.Day == weapon.ManufactureDate.Day);
+            Debug.Assert(weaponList[index].ManufactureDate == weapon.ManufactureDate);
 
             Repository.RemoveWeapon(weapon.Id);
             weaponList = Repository.GetWeapon();

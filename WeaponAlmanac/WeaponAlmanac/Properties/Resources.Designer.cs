@@ -223,6 +223,24 @@ namespace WeaponAlmanac.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0}.
+        /// </summary>
+        internal static string YearACFormat {
+            get {
+                return ResourceManager.GetString("YearACFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} BC.
+        /// </summary>
+        internal static string YearBCFormat {
+            get {
+                return ResourceManager.GetString("YearBCFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Yes.
         /// </summary>
         internal static string YesItem {

@@ -172,6 +172,12 @@
   <data name="WeaponYearColumn" xml:space="preserve">
     <value>Manufactured Year</value>
   </data>
+  <data name="YearACFormat" xml:space="preserve">
+    <value>{0}</value>
+  </data>
+  <data name="YearBCFormat" xml:space="preserve">
+    <value>{0} BC</value>
+  </data>
   <data name="YesItem" xml:space="preserve">
     <value>Yes</value>
   </data>

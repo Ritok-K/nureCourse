@@ -96,7 +96,7 @@ namespace WeaponAlmanac.Data_Model
             var jsonOptions = new JsonSerializerOptions()
             {
                 WriteIndented = true,
-                Converters = { new BitmapJsonConverter(), new DateJsonConverter() }
+                Converters = { new BitmapJsonConverter() }
             };
 
             foreach (string file in files)
@@ -148,7 +148,7 @@ namespace WeaponAlmanac.Data_Model
             var jsonOptions = new JsonSerializerOptions() 
             {
                 WriteIndented = true, 
-                Converters = { new BitmapJsonConverter(), new DateJsonConverter() }
+                Converters = { new BitmapJsonConverter() }
             };
 
             var json = JsonSerializer.Serialize<Weapon>(weapon, jsonOptions);
