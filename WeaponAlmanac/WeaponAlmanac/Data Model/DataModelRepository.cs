@@ -70,25 +70,25 @@ namespace WeaponAlmanac.Data_Model
         #endregion
 
         #region Get Collection
-        internal List<Weapon> GetWeapon()
+        internal List<Weapon> GetWeapon(IDataModelWeaponFilter filter = null)
         {
-            return LoadWeaponCollection(WeaponCommonCollectionPath);
+            return LoadWeaponCollection(WeaponCommonCollectionPath, filter);
         }
 
-        internal List<Collector> GetCollectors()
+        internal List<Collector> GetCollectors(IDataModelCollectorFilter filter = null)
         {
-            return LoadCollectorsCollection(CollectorsCommonCollectionPath);
+            return LoadCollectorsCollection(CollectorsCommonCollectionPath, filter);
         }
 
-        internal List<Weapon> GetOwnWeapon()
+        internal List<Weapon> GetOwnWeapon(IDataModelWeaponFilter filter = null)
         {
-            return LoadWeaponCollection(OwnWeaponCollectionPath);
+            return LoadWeaponCollection(OwnWeaponCollectionPath, filter);
         }
         #endregion
 
         #region Utility object methods
 
-        List<Weapon> LoadWeaponCollection(string path)
+        List<Weapon> LoadWeaponCollection(string path, IDataModelWeaponFilter filter)
         {
             var list = new List<Weapon>();
             var files = Directory.GetFiles(path);
@@ -104,15 +104,18 @@ namespace WeaponAlmanac.Data_Model
                 if(Path.GetExtension(file) == c_fileExtension)
                 {
                     var json = File.ReadAllText(file);
-
-                    list.Add(JsonSerializer.Deserialize<Weapon>(json, jsonOptions));
+                    var obj = JsonSerializer.Deserialize<Weapon>(json, jsonOptions);
+                    if (filter?.Pass(obj) ?? true)
+                    {
+                        list.Add(obj);
+                    }
                 }
             }
 
             return list;
         }
 
-        List<Collector> LoadCollectorsCollection(string path)
+        List<Collector> LoadCollectorsCollection(string path, IDataModelCollectorFilter filter)
         {
             var list = new List<Collector>();
             var files = Directory.GetFiles(path);
@@ -127,8 +130,11 @@ namespace WeaponAlmanac.Data_Model
                 if (Path.GetExtension(file) == c_fileExtension)
                 {
                     var json = File.ReadAllText(file);
-
-                    list.Add(JsonSerializer.Deserialize<Collector>(json, jsonOptions));
+                    var obj = JsonSerializer.Deserialize<Collector>(json, jsonOptions);
+                    if (filter?.Pass(obj) ?? true)
+                    {
+                        list.Add(obj);
+                    }
                 }
             }
 
