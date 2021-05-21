@@ -115,6 +115,15 @@ namespace WeaponAlmanac.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error: {0}.
+        /// </summary>
+        internal static string ExceptionError {
+            get {
+                return ResourceManager.GetString("ExceptionError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
         internal static string IsNotRareItem {

@@ -135,6 +135,10 @@
   <data name="ConfirmDeletion" xml:space="preserve">
     <value>Are you sure that you want to delete selected item from collection ?</value>
   </data>
+  <data name="ExceptionError" xml:space="preserve">
+    <value>Error: {0}</value>
+    <comment>{0} is exeption message</comment>
+  </data>
   <data name="IsNotRareItem" xml:space="preserve">
     <value />
   </data>

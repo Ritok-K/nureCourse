@@ -144,7 +144,28 @@ namespace WeaponAlmanac.UI
         {
             switch (Content)
             {
+                case ContentMode.OwnWeapon:
                 case ContentMode.Weapon:
+                    {
+                        var weapon = new Weapon();
+                        using (var weaponForm = new WeaponForm() { Weapon = weapon })
+                        {
+                            var dialogResult = weaponForm.ShowDialog(this);
+                            if (dialogResult == DialogResult.OK)
+                            {
+                                if (Content == ContentMode.Weapon)
+                                {
+                                    Program.Repository.SetWeapon(weapon);
+                                }
+                                else
+                                {
+                                    Program.Repository.SetOwnWeapon(weapon);
+                                }
+
+                                UpdateListContent();
+                            }
+                        }
+                    }
                     break;
                 case ContentMode.Collectors:
                     {
@@ -159,8 +180,6 @@ namespace WeaponAlmanac.UI
                             }
                         }
                     }
-                    break;
-                case ContentMode.OwnWeapon:
                     break;
             }
         }
@@ -187,12 +206,35 @@ namespace WeaponAlmanac.UI
         {
             switch (Content)
             {
+                case ContentMode.OwnWeapon:
                 case ContentMode.Weapon:
+                    {
+                        var weapon = dataModelObject as Weapon;
+                        using (var weaponForm = new WeaponForm() { Weapon = weapon,
+                                                                   ViewOnly = viewOnlyMode })
+                        {
+                            var dialogResult = weaponForm.ShowDialog(this);
+                            if ((dialogResult == DialogResult.OK) && !viewOnlyMode)
+                            {
+                                if (Content == ContentMode.Weapon)
+                                {
+                                    Program.Repository.SetWeapon(weapon);
+                                }
+                                else
+                                {
+                                    Program.Repository.SetOwnWeapon(weapon);
+                                }
+
+                                UpdateListContent();
+                            }
+                        }
+                    }
                     break;
                 case ContentMode.Collectors:
                     {
                         var collector = dataModelObject as Collector;
-                        using (var collectorForm = new CollectorForm() { Collector = collector, ViewOnly = viewOnlyMode })
+                        using (var collectorForm = new CollectorForm() { Collector = collector,
+                                                                         ViewOnly = viewOnlyMode })
                         {
                             var dialogResult = collectorForm.ShowDialog(this);
                             if ((dialogResult == DialogResult.OK) && !viewOnlyMode)
@@ -202,8 +244,6 @@ namespace WeaponAlmanac.UI
                             }
                         }
                     }
-                    break;
-                case ContentMode.OwnWeapon:
                     break;
             }
         }
@@ -268,7 +308,8 @@ namespace WeaponAlmanac.UI
                     m_listView.TileSize = new Size(m_listView.Width - SystemInformation.VerticalScrollBarWidth, 80);
                     break;
                 case ContentMode.Collectors:
-                    m_listView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+                    m_listView.AutoResizeColumns(m_listView.Items.Count>0 ? ColumnHeaderAutoResizeStyle.ColumnContent : 
+                                                                            ColumnHeaderAutoResizeStyle.HeaderSize);
                     break;
             }
         }
@@ -337,39 +378,88 @@ namespace WeaponAlmanac.UI
 
         private void OnWeaponClick(object sender, EventArgs e)
         {
-            Content = ContentMode.Weapon;
-            UpdateListContent();
+            try
+            {
+                Content = ContentMode.Weapon;
+                UpdateListContent();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(string.Format(Properties.Resources.ExceptionError, ex.Message), 
+                                this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void OnCollectorsClick(object sender, EventArgs e)
         {
-            Content = ContentMode.Collectors;
-            UpdateListContent();
+            try
+            {
+                Content = ContentMode.Collectors;
+                UpdateListContent();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format(Properties.Resources.ExceptionError, ex.Message), 
+                                this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void OnOwnWeaponClick(object sender, EventArgs e)
         {
-            Content = ContentMode.OwnWeapon;
-            UpdateListContent();
+            try
+            {
+                Content = ContentMode.OwnWeapon;
+                UpdateListContent();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format(Properties.Resources.ExceptionError, ex.Message),
+                                this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void OnAddClick(object sender, EventArgs e)
         {
-            AddDataModelObject();
+            try
+            {
+                AddDataModelObject();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format(Properties.Resources.ExceptionError, ex.Message),
+                                this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void OnDeleteClick(object sender, EventArgs e)
         {
-            var confirmRes = MessageBox.Show(Properties.Resources.ConfirmDeletion, this.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (confirmRes == DialogResult.Yes)
+            try
             {
-                DeleteSelectedDataModelObjects();
+                var confirmRes = MessageBox.Show(Properties.Resources.ConfirmDeletion, 
+                                                 this.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (confirmRes == DialogResult.Yes)
+                {
+                    DeleteSelectedDataModelObjects();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format(Properties.Resources.ExceptionError, ex.Message), 
+                                this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void OnEditClick(object sender, EventArgs e)
         {
-            EditSelectedDataModelObject();
+            try
+            {
+                EditSelectedDataModelObject();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format(Properties.Resources.ExceptionError, ex.Message),
+                                this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void OnSearchClick(object sender, EventArgs e)
@@ -379,24 +469,48 @@ namespace WeaponAlmanac.UI
 
         private void OnItemActivated(object sender, EventArgs e)
         {
-            if (IsListEditable)
+            try
             {
-                EditSelectedDataModelObject();
+                if (IsListEditable)
+                {
+                    EditSelectedDataModelObject();
+                }
+                else
+                {
+                    ViewSelectedDataModelObject();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                ViewSelectedDataModelObject();
+                MessageBox.Show(string.Format(Properties.Resources.ExceptionError, ex.Message),
+                                this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void OnListSizeChanged(object sender, EventArgs e)
         {
-            UpdateListItemSize();
+            try
+            {
+                UpdateListItemSize();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format(Properties.Resources.ExceptionError, ex.Message),
+                                this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void OnSelectionChanged(object sender, EventArgs e)
         {
-            UpdateState();
+            try
+            {
+                UpdateState();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format(Properties.Resources.ExceptionError, ex.Message),
+                                this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         #endregion
