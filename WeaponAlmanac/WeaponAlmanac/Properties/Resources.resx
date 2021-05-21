@@ -135,9 +135,18 @@
   <data name="ConfirmDeletion" xml:space="preserve">
     <value>Are you sure that you want to delete selected item from collection ?</value>
   </data>
+  <data name="EmptyNameValidating" xml:space="preserve">
+    <value>Name can not be empty!</value>
+  </data>
   <data name="ExceptionError" xml:space="preserve">
     <value>Error: {0}</value>
     <comment>{0} is exeption message</comment>
+  </data>
+  <data name="InvalidNumberValidating" xml:space="preserve">
+    <value>Invalid number, it should be positive number . Please fix the value.</value>
+  </data>
+  <data name="InvalidYearValidating" xml:space="preserve">
+    <value>Invalid year number, it can be either empty text or year from 1 to 9999. Please fix the value.</value>
   </data>
   <data name="IsNotRareItem" xml:space="preserve">
     <value />

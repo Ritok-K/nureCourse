@@ -59,6 +59,7 @@ namespace WeaponAlmanac.UI
             this.m_nameTextBox.Name = "m_nameTextBox";
             this.m_nameTextBox.Size = new System.Drawing.Size(421, 27);
             this.m_nameTextBox.TabIndex = 1;
+            this.m_nameTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.OnNameValidating);
             // 
             // m_countryLabel
             // 

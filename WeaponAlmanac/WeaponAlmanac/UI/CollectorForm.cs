@@ -130,6 +130,16 @@ namespace WeaponAlmanac.UI
             DialogResult = DialogResult.OK;
         }
 
+        private void OnNameValidating(object sender, CancelEventArgs e)
+        {
+            if (string.IsNullOrEmpty(m_nameTextBox.Text.Trim()))
+            {
+                e.Cancel = true;
+                MessageBox.Show(Properties.Resources.EmptyNameValidating,
+                                this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
         #endregion
     }
 }

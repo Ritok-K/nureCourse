@@ -52,7 +52,7 @@ namespace WeaponAlmanac.UI
                 Weapon.Material = m_materialTextBox.Text;
                 Weapon.Description = m_descriptionTextBox.Text;
                 Weapon.IssuedNumber = uint.Parse(m_issuedNumberTextBox.Text);
-                Weapon.ManufactureDate = string.IsNullOrEmpty(m_manufacturedYearTextBox.Text) ? DataModelObject.InvalidDate : 
+                Weapon.ManufactureDate = string.IsNullOrEmpty(m_manufacturedYearTextBox.Text.Trim()) ? DataModelObject.InvalidDate :
                                           DateTime.ParseExact(m_manufacturedYearTextBox.Text, "yyyy", CultureInfo.CurrentUICulture);
                 Weapon.IsRare = m_rareCheckBox.Checked;
 
@@ -104,6 +104,39 @@ namespace WeaponAlmanac.UI
 
                 m_bitmap = new Bitmap(filePath);
                 m_pictureBox.Image = m_bitmap;
+            }
+        }
+
+        private void OnNameValidating(object sender, CancelEventArgs e)
+        {
+            if (string.IsNullOrEmpty(m_nameTextBox.Text.Trim()))
+            {
+                e.Cancel = true;
+                MessageBox.Show(Properties.Resources.EmptyNameValidating,
+                                this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void OnManufacturedYearValidating(object sender, CancelEventArgs e)
+        {
+            DateTime value = DateTime.Now;
+            if (!string.IsNullOrEmpty(m_manufacturedYearTextBox.Text.Trim()) &&
+                !DateTime.TryParseExact(m_manufacturedYearTextBox.Text, "yyyy", CultureInfo.CurrentUICulture, DateTimeStyles.None, out value))
+            {
+                e.Cancel = true;
+                MessageBox.Show(Properties.Resources.InvalidYearValidating,
+                                this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void OnIssuedNumberValidating(object sender, CancelEventArgs e)
+        {
+            uint value = 0;
+            if(!uint.TryParse(m_issuedNumberTextBox.Text, out value))
+            {
+                e.Cancel = true;
+                MessageBox.Show(Properties.Resources.InvalidNumberValidating,
+                                this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

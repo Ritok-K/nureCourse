@@ -66,6 +66,7 @@ namespace WeaponAlmanac.UI
             this.m_nameTextBox.Name = "m_nameTextBox";
             this.m_nameTextBox.Size = new System.Drawing.Size(304, 27);
             this.m_nameTextBox.TabIndex = 1;
+            this.m_nameTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.OnNameValidating);
             // 
             // m_descriptionLabel
             // 
@@ -163,6 +164,7 @@ namespace WeaponAlmanac.UI
             this.m_manufacturedYearTextBox.Name = "m_manufacturedYearTextBox";
             this.m_manufacturedYearTextBox.Size = new System.Drawing.Size(124, 27);
             this.m_manufacturedYearTextBox.TabIndex = 12;
+            this.m_manufacturedYearTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.OnManufacturedYearValidating);
             // 
             // m_rareCheckBox
             // 
@@ -205,6 +207,7 @@ namespace WeaponAlmanac.UI
             this.m_issuedNumberTextBox.Name = "m_issuedNumberTextBox";
             this.m_issuedNumberTextBox.Size = new System.Drawing.Size(124, 27);
             this.m_issuedNumberTextBox.TabIndex = 10;
+            this.m_issuedNumberTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.OnIssuedNumberValidating);
             // 
             // m_pictureBrowseFileDialog
             // 

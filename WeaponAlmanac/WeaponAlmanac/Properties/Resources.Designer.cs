@@ -115,11 +115,38 @@ namespace WeaponAlmanac.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Name can not be empty!.
+        /// </summary>
+        internal static string EmptyNameValidating {
+            get {
+                return ResourceManager.GetString("EmptyNameValidating", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error: {0}.
         /// </summary>
         internal static string ExceptionError {
             get {
                 return ResourceManager.GetString("ExceptionError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid number, it should be positive number . Please fix the value..
+        /// </summary>
+        internal static string InvalidNumberValidating {
+            get {
+                return ResourceManager.GetString("InvalidNumberValidating", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid year number, it can be either empty text or year from 1 to 9999. Please fix the value..
+        /// </summary>
+        internal static string InvalidYearValidating {
+            get {
+                return ResourceManager.GetString("InvalidYearValidating", resourceCulture);
             }
         }
         
