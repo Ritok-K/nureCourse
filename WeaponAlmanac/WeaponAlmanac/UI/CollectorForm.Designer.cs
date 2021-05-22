@@ -163,6 +163,8 @@ namespace WeaponAlmanac.UI
             this.Controls.Add(this.m_countryLabel);
             this.Controls.Add(this.m_nameTextBox);
             this.Controls.Add(this.m_nameLabel);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(565, 455);
             this.Name = "CollectorForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
