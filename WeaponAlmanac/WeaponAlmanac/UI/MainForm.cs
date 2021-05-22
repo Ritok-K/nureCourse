@@ -138,10 +138,10 @@ namespace WeaponAlmanac.UI
             m_listView.Sorting = SortOrder.Ascending;
             m_listView.View = View.Details;
             m_listView.Columns.Clear();
-            m_listView.Columns.Add(Properties.Resources.CollectorNameColumn, -2, HorizontalAlignment.Left);
-            m_listView.Columns.Add(Properties.Resources.CollectorPhoneColumn, -2, HorizontalAlignment.Left);
-            m_listView.Columns.Add(Properties.Resources.CollectorEMailColumn, -2, HorizontalAlignment.Left);
-            m_listView.Columns.Add(Properties.Resources.CollecrorHasRareColumn, -2, HorizontalAlignment.Left);
+            m_listView.Columns.Add(Properties.Resources.CollectorNameColumn);
+            m_listView.Columns.Add(Properties.Resources.CollectorPhoneColumn);
+            m_listView.Columns.Add(Properties.Resources.CollectorEMailColumn);
+            m_listView.Columns.Add(Properties.Resources.CollecrorHasRareColumn);
 
             var items = new List<ListViewItem>();
             foreach (var c in collectors)
@@ -149,8 +149,8 @@ namespace WeaponAlmanac.UI
                 var item = new ListViewItem(new string[] { c.Name,
                                                            c.Phone,
                                                            c.EMail, 
-                                                           c.RareIds.Count==0 ? Properties.Resources.NoItem :
-                                                                                Properties.Resources.YesItem })
+                                                           DataModelUtils.IsCollectorOwnsRareWeapon(c) ? Properties.Resources.YesItem :
+                                                                                                         Properties.Resources.NoItem })
                 {
                     Tag = c,
                     Name = c.Name,
@@ -437,8 +437,16 @@ namespace WeaponAlmanac.UI
 
         private void OnLoad(object sender, EventArgs e)
         {
-            UpdateState();
-            UpdateListContent();
+            try
+            {
+                UpdateState();
+                UpdateListContent();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format(Properties.Resources.ExceptionError, ex.Message),
+                                this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void OnWeaponClick(object sender, EventArgs e)

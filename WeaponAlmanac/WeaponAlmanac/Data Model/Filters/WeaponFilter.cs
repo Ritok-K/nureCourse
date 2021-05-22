@@ -8,6 +8,7 @@ namespace WeaponAlmanac.Data_Model.Filters
 {
     public class WeaponFilter : IDataModelWeaponFilter
     {
+        public List<string> Ids { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string Country { get; set; }
@@ -18,13 +19,28 @@ namespace WeaponAlmanac.Data_Model.Filters
         public bool HasValidManufacturedDate => HasManufacturedStartDate &&
                                                 HasManufacturedEndDate &&
                                                (ManufacturedStartDate <= ManufacturedEndDate);
+        public bool? IsRare { get; set; } = null;
 
-        public bool IsEmpty => string.IsNullOrEmpty(Name) &&
+        public bool IsEmpty => ((Ids == null) || (Ids.Count == 0)) && 
+                               string.IsNullOrEmpty(Name) &&
                                string.IsNullOrEmpty(Description) &&
                                string.IsNullOrEmpty(Country) &&
-                               !HasValidManufacturedDate;
+                               !HasValidManufacturedDate &&
+                               !IsRare.HasValue;
 
-        public bool Pass(Weapon weapon)
+        public bool PassId(string id)
+        {
+            bool res = Ids == null;
+            if (!res)
+            {
+                var idIndex = Ids.FindIndex(i => i == id);
+                res = idIndex >= 0;
+            }
+
+            return res;
+        }
+
+        public bool PassDataModelObject(Weapon weapon)
         {
             bool res = true;
 
@@ -47,6 +63,11 @@ namespace WeaponAlmanac.Data_Model.Filters
             {
                 res = weapon.ManufactureDate >= ManufacturedStartDate &&
                       weapon.ManufactureDate <= ManufacturedEndDate;
+            }
+
+            if (res && IsRare.HasValue)
+            {
+                res = weapon.IsRare == IsRare.Value;
             }
 
             return res;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WeaponAlmanac.Data_Model.Filters;
 
 namespace WeaponAlmanac.Data_Model
 {
@@ -38,6 +39,28 @@ namespace WeaponAlmanac.Data_Model
                         res *= -1;
                     }
                 }
+            }
+
+            return res;
+        }
+
+        public static bool IsCollectorOwnsRareWeapon(Collector collector)
+        {
+            if (collector == null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            var res = false;
+            if (collector.OwnIds.Count > 0)
+            {
+                var weapons = Program.Repository.GetWeapon(new WeaponFilter() 
+                {
+                    Ids = collector.OwnIds,
+                    IsRare = true,
+                });
+
+                res = weapons.Count > 0;
             }
 
             return res;

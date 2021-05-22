@@ -8,11 +8,15 @@ namespace WeaponAlmanac.Data_Model
 {
     interface IDataModelWeaponFilter
     {
-        bool Pass(Weapon weapon);
+        bool PassId(string id);
+
+        bool PassDataModelObject(Weapon weapon);
     }
 
     interface IDataModelCollectorFilter
     {
-        bool Pass(Collector collector);
+        bool PassId(string id);
+
+        bool PassDataModelObject(Collector collector);
     }
 }

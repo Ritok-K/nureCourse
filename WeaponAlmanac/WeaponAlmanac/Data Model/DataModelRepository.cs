@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Text.Json;
 using WeaponAlmanac.Data_Model.Serializers;
+using System.Diagnostics;
 
 namespace WeaponAlmanac.Data_Model
 {
@@ -103,11 +104,17 @@ namespace WeaponAlmanac.Data_Model
             {
                 if(Path.GetExtension(file) == c_fileExtension)
                 {
-                    var json = File.ReadAllText(file);
-                    var obj = JsonSerializer.Deserialize<Weapon>(json, jsonOptions);
-                    if (filter?.Pass(obj) ?? true)
+                    var id = Path.GetFileNameWithoutExtension(file);
+                    if (filter?.PassId(id) ?? true)
                     {
-                        list.Add(obj);
+                        var json = File.ReadAllText(file);
+                        var obj = JsonSerializer.Deserialize<Weapon>(json, jsonOptions);
+                        Debug.Assert(obj.Id == id);
+
+                        if (filter?.PassDataModelObject(obj) ?? true)
+                        {
+                            list.Add(obj);
+                        }
                     }
                 }
             }
@@ -129,11 +136,17 @@ namespace WeaponAlmanac.Data_Model
             {
                 if (Path.GetExtension(file) == c_fileExtension)
                 {
-                    var json = File.ReadAllText(file);
-                    var obj = JsonSerializer.Deserialize<Collector>(json, jsonOptions);
-                    if (filter?.Pass(obj) ?? true)
+                    var id = Path.GetFileNameWithoutExtension(file);
+                    if (filter?.PassId(id) ?? true)
                     {
-                        list.Add(obj);
+                        var json = File.ReadAllText(file);
+                        var obj = JsonSerializer.Deserialize<Collector>(json, jsonOptions);
+                        Debug.Assert(obj.Id == id);
+
+                        if (filter?.PassDataModelObject(obj) ?? true)
+                        {
+                            list.Add(obj);
+                        }
                     }
                 }
             }

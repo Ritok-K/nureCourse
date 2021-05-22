@@ -142,9 +142,9 @@ namespace WeaponAlmanac.UI
             this.m_rareWeaponLabel.AutoSize = true;
             this.m_rareWeaponLabel.Location = new System.Drawing.Point(29, 169);
             this.m_rareWeaponLabel.Name = "m_rareWeaponLabel";
-            this.m_rareWeaponLabel.Size = new System.Drawing.Size(202, 20);
+            this.m_rareWeaponLabel.Size = new System.Drawing.Size(172, 20);
             this.m_rareWeaponLabel.TabIndex = 10;
-            this.m_rareWeaponLabel.Text = "Owns following rare weapon:";
+            this.m_rareWeaponLabel.Text = "Owns following weapon:";
             // 
             // CollectorForm
             // 

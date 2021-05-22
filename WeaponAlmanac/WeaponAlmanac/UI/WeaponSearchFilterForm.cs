@@ -55,27 +55,51 @@ namespace WeaponAlmanac.UI
 
         private void OnLoad(object sender, EventArgs e)
         {
-            UpdateControls(false);
+            try
+            {
+                UpdateControls(false);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format(Properties.Resources.ExceptionError, ex.Message),
+                                this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void OnOkClick(object sender, EventArgs e)
         {
-            UpdateControls(true);
+            try
+            {
+                UpdateControls(true);
 
-            DialogResult = DialogResult.OK;
+                DialogResult = DialogResult.OK;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format(Properties.Resources.ExceptionError, ex.Message),
+                                this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void OnResetClick(object sender, EventArgs e)
         {
-            m_nameTextBox.Text = string.Empty;
-            m_countryTextBox.Text = string.Empty;
-            m_descriptionTextBox.Text = string.Empty;
-            m_manifacturedFromTextBox.Text = string.Empty;
-            m_manifacturedToTextBox.Text = string.Empty;
+            try
+            {
+                m_nameTextBox.Text = string.Empty;
+                m_countryTextBox.Text = string.Empty;
+                m_descriptionTextBox.Text = string.Empty;
+                m_manifacturedFromTextBox.Text = string.Empty;
+                m_manifacturedToTextBox.Text = string.Empty;
 
-            UpdateControls(true);
+                UpdateControls(true);
 
-            DialogResult = DialogResult.OK;
+                DialogResult = DialogResult.OK;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format(Properties.Resources.ExceptionError, ex.Message),
+                                this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         #endregion

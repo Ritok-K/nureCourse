@@ -98,52 +98,94 @@ namespace WeaponAlmanac.UI
 
         private void OnLoad(object sender, EventArgs e)
         {
-            UpdateControls(false);
-            UpdateState();
+            try
+            {
+                UpdateControls(false);
+                UpdateState();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format(Properties.Resources.ExceptionError, ex.Message),
+                                this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void OnOkClick(object sender, EventArgs e)
         {
-            UpdateControls(true);
+            try
+            {
+                UpdateControls(true);
 
-            DialogResult = DialogResult.OK;
+                DialogResult = DialogResult.OK;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format(Properties.Resources.ExceptionError, ex.Message),
+                                this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void OnPictureBrowseClick(object sender, EventArgs e)
         {
-            if (m_pictureBrowseFileDialog.ShowDialog()==DialogResult.OK)
+            try
             {
-                var filePath = m_pictureBrowseFileDialog.FileName;
-                Debug.Assert(File.Exists(filePath));
+                if (m_pictureBrowseFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    var filePath = m_pictureBrowseFileDialog.FileName;
+                    Debug.Assert(File.Exists(filePath));
 
-                m_bitmap = new Bitmap(filePath);
-                m_pictureBox.Image = m_bitmap;
+                    m_bitmap = new Bitmap(filePath);
+                    m_pictureBox.Image = m_bitmap;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format(Properties.Resources.ExceptionError, ex.Message),
+                                this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void OnNameValidating(object sender, CancelEventArgs e)
         {
-            if (string.IsNullOrEmpty(m_nameTextBox.Text.Trim()))
+            try
+            {
+                if (string.IsNullOrEmpty(m_nameTextBox.Text.Trim()))
+                {
+                    e.Cancel = true;
+                    MessageBox.Show(Properties.Resources.EmptyNameValidating,
+                                    this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
             {
                 e.Cancel = true;
-                MessageBox.Show(Properties.Resources.EmptyNameValidating,
+
+                MessageBox.Show(string.Format(Properties.Resources.ExceptionError, ex.Message),
                                 this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-
-        private void OnManufacturedYearValidating(object sender, CancelEventArgs e)
-        {
         }
 
         private void OnIssuedNumberValidating(object sender, CancelEventArgs e)
         {
-            uint value = 0;
-            if(!uint.TryParse(m_issuedNumberTextBox.Text, out value))
+            try
+            {
+                uint value = 0;
+                if (!uint.TryParse(m_issuedNumberTextBox.Text, out value))
+                {
+                    e.Cancel = true;
+
+                    MessageBox.Show(Properties.Resources.InvalidNumberValidating,
+                                    this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
             {
                 e.Cancel = true;
-                MessageBox.Show(Properties.Resources.InvalidNumberValidating,
+
+                MessageBox.Show(string.Format(Properties.Resources.ExceptionError, ex.Message),
                                 this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+
         }
 
         #endregion

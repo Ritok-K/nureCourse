@@ -41,12 +41,12 @@ namespace WeaponAlmanac.UI
                 Collector.EMail = m_emailTextBox.Text;
                 Collector.Phone = m_phoneTextBox.Text;
 
-                Collector.RareIds.Clear();
+                Collector.OwnIds.Clear();
                 foreach(ListViewItem item in m_rareWeaponListView.Items)
                 {
                     if (item.Checked)
                     {
-                        Collector.RareIds.Add((item.Tag as DataModelObject).Id);
+                        Collector.OwnIds.Add((item.Tag as DataModelObject).Id);
                     }
                 }
             }
@@ -57,11 +57,13 @@ namespace WeaponAlmanac.UI
                 m_emailTextBox.Text = Collector.EMail;
                 m_phoneTextBox.Text = Collector.Phone;
 
-                var weapon = Program.Repository.GetWeapon();
+                WeaponFilter weaponFilter = null;
                 if (ViewOnly)
                 {
-                    weapon = BuildCollectorWeapon(weapon);
+                    // in view only mode we use filter so as to load collector's weapon only
+                    weaponFilter = new WeaponFilter() { Ids = Collector.OwnIds };
                 }
+                var weapon = Program.Repository.GetWeapon(weaponFilter);
 
                 m_rareWeaponListView.Items.Clear();
                 m_rareWeaponListView.View = View.Details;
@@ -69,6 +71,7 @@ namespace WeaponAlmanac.UI
                 m_rareWeaponListView.GridLines = true;
                 m_rareWeaponListView.Sorting = SortOrder.Ascending;
                 m_rareWeaponListView.Columns.Add(Properties.Resources.WeaponNameColumn);
+                m_rareWeaponListView.Columns.Add(Properties.Resources.WeaponIsRareColumn);
                 m_rareWeaponListView.Columns.Add(Properties.Resources.WeaponDescriptionColumn);
 
                 if (!ViewOnly)
@@ -79,7 +82,10 @@ namespace WeaponAlmanac.UI
                 var items = new List<ListViewItem>();
                 foreach (var w in weapon)
                 {
-                    var item = new ListViewItem(new string[] { w.Name, w.Description })
+                    var item = new ListViewItem(new string[] { w.Name, 
+                                                               w.IsRare ? Properties.Resources.YesItem : 
+                                                                          Properties.Resources.NoItem,
+                                                               w.Description })
                     {
                         Name = w.Name, 
                         Checked = IsCollectorWeapon(w),
@@ -95,23 +101,9 @@ namespace WeaponAlmanac.UI
             }
         }
 
-        List<Weapon> BuildCollectorWeapon(List<Weapon> allWeapon)
-        {
-            var collectorsWeapon = new List<Weapon>();
-            foreach (var w in allWeapon)
-            {
-                if (IsCollectorWeapon(w))
-                {
-                    collectorsWeapon.Add(w);
-                }
-            }
-
-            return collectorsWeapon;
-        }
-
         bool IsCollectorWeapon(Weapon weapon)
         {
-            return Collector.RareIds.FindIndex(id => weapon.Id == id) >= 0;
+            return Collector.OwnIds.FindIndex(id => weapon.Id == id) >= 0;
         }
 
         #endregion
@@ -136,23 +128,49 @@ namespace WeaponAlmanac.UI
 
         private void OnLoad(object sender, EventArgs e)
         {
-            UpdateControls(false);
-            UpdateState();
+            try
+            {
+                UpdateControls(false);
+                UpdateState();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format(Properties.Resources.ExceptionError, ex.Message),
+                                this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void OnOkClick(object sender, EventArgs e)
         {
-            UpdateControls(true);
+            try
+            {
+                UpdateControls(true);
 
-            DialogResult = DialogResult.OK;
+                DialogResult = DialogResult.OK;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format(Properties.Resources.ExceptionError, ex.Message),
+                                this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void OnNameValidating(object sender, CancelEventArgs e)
         {
-            if (string.IsNullOrEmpty(m_nameTextBox.Text.Trim()))
+            try
+            {
+                if (string.IsNullOrEmpty(m_nameTextBox.Text.Trim()))
+                {
+                    e.Cancel = true;
+                    MessageBox.Show(Properties.Resources.EmptyNameValidating,
+                                    this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
             {
                 e.Cancel = true;
-                MessageBox.Show(Properties.Resources.EmptyNameValidating,
+
+                MessageBox.Show(string.Format(Properties.Resources.ExceptionError, ex.Message),
                                 this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }

@@ -8,15 +8,29 @@ namespace WeaponAlmanac.Data_Model.Filters
 {
     public class CollectorFilter : IDataModelCollectorFilter
     {
+        public List<string> Ids { get; set; }
         public string Name { get; set; }
         public string Country { get; set; }
         public bool? HasRareWeapon { get; set; } = null;
 
-        public bool IsEmpty => string.IsNullOrEmpty(Name) &&
+        public bool IsEmpty => ((Ids==null) || (Ids.Count==0)) &&
+                               string.IsNullOrEmpty(Name) &&
                                string.IsNullOrEmpty(Country) &&
                                !HasRareWeapon.HasValue;
 
-        public bool Pass(Collector collector)
+        public bool PassId(string id)
+        {
+            bool res = Ids == null;
+            if (!res)
+            {
+                var idIndex = Ids.FindIndex(i => i == id);
+                res = idIndex >= 0;
+            }
+
+            return res;
+        }
+
+        public bool PassDataModelObject(Collector collector)
         {
             bool res = true;
 
@@ -32,7 +46,7 @@ namespace WeaponAlmanac.Data_Model.Filters
 
             if (res && HasRareWeapon.HasValue)
             {
-                res = collector.RareIds.Count>0 == HasRareWeapon.Value;
+                res = collector.OwnIds.Count>0 == HasRareWeapon.Value;
             }
 
             return res;

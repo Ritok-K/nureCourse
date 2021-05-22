@@ -13,6 +13,6 @@ namespace WeaponAlmanac.Data_Model
         public string Country { get; set; }
         public string EMail { get; set; }
         public string Phone { get; set; }
-        public List<string> RareIds { get; set; } = new List<string>();
+        public List<string> OwnIds { get; set; } = new List<string>();
     }
 }

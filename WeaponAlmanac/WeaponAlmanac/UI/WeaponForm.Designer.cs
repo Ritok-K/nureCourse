@@ -164,7 +164,6 @@ namespace WeaponAlmanac.UI
             this.m_manufacturedYearTextBox.Name = "m_manufacturedYearTextBox";
             this.m_manufacturedYearTextBox.Size = new System.Drawing.Size(124, 27);
             this.m_manufacturedYearTextBox.TabIndex = 12;
-            this.m_manufacturedYearTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.OnManufacturedYearValidating);
             // 
             // m_rareCheckBox
             // 
