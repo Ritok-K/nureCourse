@@ -178,6 +178,8 @@ namespace WeaponAlmanac.UI
             this.Controls.Add(this.m_listView);
             this.Controls.Add(this.m_footerPanel);
             this.Controls.Add(this.m_headerPanel);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(600, 400);
             this.Name = "MainForm";
             this.Text = "Weapon Almanac";

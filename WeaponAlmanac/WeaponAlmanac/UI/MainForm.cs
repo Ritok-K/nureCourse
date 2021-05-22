@@ -326,7 +326,7 @@ namespace WeaponAlmanac.UI
             {
                 case ContentMode.Weapon:
                 case ContentMode.OwnWeapon:
-                    m_listView.TileSize = new Size(m_listView.Width - SystemInformation.VerticalScrollBarWidth, 80);
+                    m_listView.TileSize = new Size(m_listView.Width - SystemInformation.VerticalScrollBarWidth, 90);
                     break;
                 case ContentMode.Collectors:
                     m_listView.AutoResizeColumns(m_listView.Items.Count>0 ? ColumnHeaderAutoResizeStyle.ColumnContent : 
