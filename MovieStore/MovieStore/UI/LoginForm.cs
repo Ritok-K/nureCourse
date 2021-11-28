@@ -16,5 +16,18 @@ namespace MovieStore.UI
         {
             InitializeComponent();
         }
+
+        private void OnOk(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void OnRegisterNewUser(object sender, EventArgs e)
+        {
+            using(var newUserForm = new NewUserForm())
+            {
+                newUserForm.ShowDialog(this);
+            }
+        }
     }
 }
