@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace MovieStore
+namespace MovieStore.UI
 {
     public partial class MainForm : Form
     {
@@ -17,5 +17,20 @@ namespace MovieStore
             InitializeComponent();
         }
 
+        private void OnLoad(object sender, EventArgs e)
+        {
+            using (var loginForm = new LoginForm())
+            {
+                var result = loginForm.ShowDialog(this);
+                if (result == DialogResult.OK)
+                {
+
+                }
+                else
+                {
+                    Close();
+                }
+            }
+        }
     }
 }
