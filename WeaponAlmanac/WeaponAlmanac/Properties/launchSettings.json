@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "WeaponAlmanac": {
+      "commandName": "Project",
+      "workingDirectory": "$(ProjectDir)"
+    }
+  }
+}
