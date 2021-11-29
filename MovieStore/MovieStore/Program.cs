@@ -8,6 +8,8 @@ namespace MovieStore
 {
     static class Program
     {
+        internal static DB.MovieDB DB { get; } = new DB.MovieDB();
+
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>

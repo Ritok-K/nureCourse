@@ -19,7 +19,16 @@ namespace MovieStore.UI
 
         private void OnOk(object sender, EventArgs e)
         {
-            Close();
+            try
+            {
+                Program.DB.Login(m_loginTextBox.Text, m_passwordTextBox.Text);
+
+                DialogResult = DialogResult.OK;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void OnRegisterNewUser(object sender, EventArgs e)

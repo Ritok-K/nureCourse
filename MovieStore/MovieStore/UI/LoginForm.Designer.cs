@@ -73,7 +73,6 @@ namespace MovieStore.UI
             // 
             // m_okButton
             // 
-            this.m_okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.m_okButton.Location = new System.Drawing.Point(147, 142);
             this.m_okButton.Name = "m_okButton";
             this.m_okButton.Size = new System.Drawing.Size(94, 29);
