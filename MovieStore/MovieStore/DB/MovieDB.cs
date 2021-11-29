@@ -82,7 +82,7 @@ namespace MovieStore.DB
         {
             var res = new Data.User()
             {
-                Id = row[table.Columns.IndexOf(c_UserIdColumn)] as string,
+                Id = Convert.ToInt32(row[table.Columns.IndexOf(c_UserIdColumn)]),
                 FirstName = row[table.Columns.IndexOf(c_FirstNameColumn)] as string,
                 SecondName = row[table.Columns.IndexOf(c_SecondNameColumn)] as string,
                 EMail = row[table.Columns.IndexOf(c_EMailColumn)] as string,

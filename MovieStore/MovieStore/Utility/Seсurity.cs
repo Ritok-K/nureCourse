@@ -9,6 +9,18 @@ namespace MovieStore.Utility
 {
     static class Seсurity
     {
+        static readonly Random random = new Random();
+
+        internal static string GenerateSalt()
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            const int length = 80;
+
+            return new string(Enumerable.Range(0, length)
+                                        .Select(_ => chars[random.Next(chars.Length)])
+                                        .ToArray());
+        }
+
         internal static string GetSHA256Hash(string input)
         {
             var res = string.Empty;
