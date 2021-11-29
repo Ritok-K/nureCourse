@@ -17,6 +17,11 @@ namespace MovieStore.UI
             InitializeComponent();
         }
 
+        void UpdateLayout()
+        {
+
+        }
+
         private void OnLoad(object sender, EventArgs e)
         {
             using (var loginForm = new LoginForm())
@@ -24,7 +29,7 @@ namespace MovieStore.UI
                 var result = loginForm.ShowDialog(this);
                 if (result == DialogResult.OK)
                 {
-
+                    UpdateLayout();
                 }
                 else
                 {
