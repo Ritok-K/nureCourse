@@ -34,8 +34,6 @@ namespace MovieStore.DB
         const string c_RoleUserValue = "user";
         const string c_RoleManagerValue = "manager";
 
-        const string c_EMailParam = "@email";
-
         #endregion
 
         #region Methods
@@ -43,20 +41,19 @@ namespace MovieStore.DB
         internal void Login(string email, string password)
         {
             using (var connection = new MySqlConnection(ConnectionString))
-            using (var command = new MySqlCommand($"SELECT * FROM {c_UsersTable} WHERE {c_EMailColumn} = {c_EMailParam};", connection))
+            using (var command = new MySqlCommand($"SELECT * FROM {c_UsersTable} WHERE {c_EMailColumn} = {BuildParameterName(c_EMailColumn)} LIMIT 1;", connection))
             {
-                command.Parameters.Add(new MySqlParameter(c_EMailParam, email));
+                command.Parameters.Add(new MySqlParameter(BuildParameterName(c_EMailColumn), email));
 
                 using (var adapter = new MySqlDataAdapter(command))
                 {
                     var ds = new DataSet();
-
                     adapter.Fill(ds);
 
                     var table = ds.Tables.Count > 0 ? ds.Tables[0] : null;
                     if (table != null && table.Rows.Count > 0)
                     {
-                        var user = CreateUser(table, table.Rows[0]);
+                        var user = LoadUser(table.Rows[0]);
                         if (user.CheckPassword(password))
                         {
                             CurrentUser = user;
@@ -74,24 +71,85 @@ namespace MovieStore.DB
             }
         }
 
+        internal void LoginAsNewUser(Data.User user)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(user.EMail));
+            Debug.Assert(!string.IsNullOrEmpty(user.PasswordHash));
+            Debug.Assert(!string.IsNullOrEmpty(user.Salt));
+
+            using (var connection = new MySqlConnection(ConnectionString))
+            using (var command = new MySqlCommand($"SELECT * FROM {c_UsersTable} WHERE {c_EMailColumn} = {BuildParameterName(c_EMailColumn)} LIMIT 1;", connection))
+            {
+                command.Parameters.Add(new MySqlParameter(BuildParameterName(c_EMailColumn), user.EMail));
+
+                using (var adapter = new MySqlDataAdapter(command))
+                {
+                    var ds = new DataSet();
+                    adapter.Fill(ds);
+
+                    var table = ds.Tables.Count > 0 ? ds.Tables[0] : null;
+                    if (table != null && table.Rows.Count == 0)
+                    {
+                        var row = table.NewRow();
+                        SaveUser(user, row);
+                        table.Rows.Add(row);
+
+                        var commandBuilder = new MySqlCommandBuilder(adapter);
+                        adapter.Update(ds);
+
+                        using (var idCommand = new MySqlCommand($"SELECT {c_UserIdColumn} FROM {c_UsersTable} WHERE {c_EMailColumn} = {BuildParameterName(c_EMailColumn)} LIMIT 1;", connection))
+                        {
+                            idCommand.Parameters.Add(new MySqlParameter(BuildParameterName(c_EMailColumn), user.EMail));
+                            adapter.SelectCommand = idCommand;
+
+                            ds.Clear();
+                            adapter.Fill(ds);
+
+                            LoadUserId(user, ds.Tables[0].Rows[0]);
+                            CurrentUser = user;
+                        }
+                    }
+                    else
+                    {
+                        throw new UserAlreadyExistsDBExceptiom(user.EMail);
+                    }
+                }
+            }
+        }
+
         #endregion
 
         #region Helper Methods
 
-        Data.User CreateUser(DataTable table, DataRow row)
+        Data.User LoadUser(DataRow row)
         {
             var res = new Data.User()
             {
-                Id = Convert.ToInt32(row[table.Columns.IndexOf(c_UserIdColumn)]),
-                FirstName = row[table.Columns.IndexOf(c_FirstNameColumn)] as string,
-                SecondName = row[table.Columns.IndexOf(c_SecondNameColumn)] as string,
-                EMail = row[table.Columns.IndexOf(c_EMailColumn)] as string,
-                Role = GetRole(row[table.Columns.IndexOf(c_RoleColumn)] as string),
-                PasswordHash = row[table.Columns.IndexOf(c_PasswordColumn)] as string,
-                Salt = row[table.Columns.IndexOf(c_SaltColumn)] as string,
+                Id = row.Field<int>(c_UserIdColumn),
+                FirstName = row.Field<string>(c_FirstNameColumn),
+                SecondName = row.Field<string>(c_SecondNameColumn),
+                EMail = row.Field<string>(c_EMailColumn),
+                Role = GetRole(row.Field<string>(c_RoleColumn)),
+                PasswordHash = row.Field<string>(c_PasswordColumn),
+                Salt = row.Field<string>(c_SaltColumn),
             };
 
             return res;
+        }
+
+        void LoadUserId(Data.User user, DataRow row)
+        {
+            user.Id = row.Field<int>(c_UserIdColumn);
+        }
+
+        void SaveUser(Data.User user, DataRow row)
+        {
+            row[c_FirstNameColumn] = user.FirstName;
+            row[c_SecondNameColumn] = user.SecondName;
+            row[c_EMailColumn] = user.EMail;
+            row[c_RoleColumn] = GetRoleName(user.Role);
+            row[c_PasswordColumn] = user.PasswordHash;
+            row[c_SaltColumn] = user.Salt;
         }
 
         Data.UserRole GetRole(string role)
@@ -112,6 +170,27 @@ namespace MovieStore.DB
             }
 
             return res;
+        }
+        string GetRoleName(Data.UserRole role)
+        {
+            var res = c_RoleUserValue;
+
+            switch(role)
+            {
+                case Data.UserRole.User:
+                    res = c_RoleUserValue;
+                    break;
+                case Data.UserRole.Manager:
+                    res = c_RoleManagerValue;
+                    break;
+            }
+
+            return res;
+        }
+
+        string BuildParameterName(string column)
+        {
+            return $"@{column}";
         }
 
         #endregion

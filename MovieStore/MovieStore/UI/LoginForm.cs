@@ -33,9 +33,21 @@ namespace MovieStore.UI
 
         private void OnRegisterNewUser(object sender, EventArgs e)
         {
-            using(var newUserForm = new NewUserForm())
+            try
             {
-                newUserForm.ShowDialog(this);
+                using (var newUserForm = new NewUserForm())
+                {
+                    //newUserForm.ShowDialog(this);
+
+                    var user = new Data.User() { FirstName = "e", SecondName = "k", EMail = "kyselgov@gmail.com", Role = Data.UserRole.Manager };
+                    user.SetPassword("test");
+
+                    Program.DB.LoginAsNewUser(user);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

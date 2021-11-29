@@ -22,6 +22,14 @@ namespace MovieStore.DB
         }
     }
 
+    class UserAlreadyExistsDBExceptiom : DBExecption
+    {
+        internal UserAlreadyExistsDBExceptiom(string email)
+            : base($"User with loging '{email}' already exists")
+        {
+        }
+    }
+
     class InvalidPasswordDBExceptiom : DBExecption
     {
         internal InvalidPasswordDBExceptiom()
