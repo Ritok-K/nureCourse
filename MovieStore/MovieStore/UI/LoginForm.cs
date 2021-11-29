@@ -43,6 +43,8 @@ namespace MovieStore.UI
                     user.SetPassword("test");
 
                     Program.DB.LoginAsNewUser(user);
+
+                    DialogResult = DialogResult.OK;
                 }
             }
             catch (Exception ex)
