@@ -37,14 +37,10 @@ namespace MovieStore.UI
             {
                 using (var newUserForm = new NewUserForm())
                 {
-                    //newUserForm.ShowDialog(this);
-
-                    var user = new Data.User() { FirstName = "e", SecondName = "k", EMail = "kyselgov@gmail.com", Role = Data.UserRole.Manager };
-                    user.SetPassword("test");
-
-                    Program.DB.LoginAsNewUser(user);
-
-                    DialogResult = DialogResult.OK;
+                    if (newUserForm.ShowDialog(this) == DialogResult.OK)
+                    {
+                        DialogResult = DialogResult.OK;
+                    }
                 }
             }
             catch (Exception ex)

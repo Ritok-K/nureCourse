@@ -15,7 +15,7 @@ namespace MovieStore.DB
 
         internal string ConnectionString => @"server=192.168.1.43;user id=rita;password=morganalifrey;persistsecurityinfo=True;database=movie";
         internal Data.User CurrentUser { get; set; }
-
+        internal bool IsManagerMode => CurrentUser?.Role == Data.UserRole.Manager;
         #endregion
 
         #region Constants
