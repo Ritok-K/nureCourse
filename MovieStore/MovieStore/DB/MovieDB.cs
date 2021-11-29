@@ -25,7 +25,6 @@ namespace MovieStore.DB
         const string c_UserIdColumn = "userId";
         const string c_FirstNameColumn = "firstName";
         const string c_SecondNameColumn = "secondName";
-        const string c_NameColumn = "secondName";
         const string c_EMailColumn = "email";
         const string c_RoleColumn = "role";
         const string c_PasswordColumn = "password";
