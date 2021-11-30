@@ -20,6 +20,9 @@ namespace MovieStore.DB.Serializers
                 Production = row.Field<string>($"{prefix}{MovieDB.c_ProductionColumn}"),
             };
 
+            // Do we need it?
+            //res.FoundationDate = DateTime.SpecifyKind(res.FoundationDate, DateTimeKind.Utc);
+
             return res;
         }
     }

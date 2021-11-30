@@ -23,6 +23,12 @@ namespace MovieStore.DB.Serializers
                 AwardsDescription = row.Field<string>($"{prefix}{MovieDB.c_AwardsDescriptionColumn}"),
             };
 
+            // Do we need it?
+            //if (res.BirthDate.HasValue)
+            //{
+            //    res.BirthDate = DateTime.SpecifyKind(res.BirthDate.Value, DateTimeKind.Utc);
+            //}
+
             return res;
         }
 

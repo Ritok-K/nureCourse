@@ -13,7 +13,7 @@ namespace MovieStore.DB.Serializers
         {
             var res = new Data.Movie()
             {
-                Id = row.Field<int>($"{prefix}{MovieDB.c_MoviewIdColumn}"),
+                Id = row.Field<int>($"{prefix}{MovieDB.c_MovieIdColumn}"),
                 Title = row.Field<string>($"{prefix}{MovieDB.c_TitleColumn}"),
                 Year = row.Field<DateTime>($"{prefix}{MovieDB.c_MovieYearColumn}"),
                 Genre = row.Field<string>($"{prefix}{MovieDB.c_GenreColumn}"),
@@ -23,6 +23,9 @@ namespace MovieStore.DB.Serializers
                 Price = row.Field<int>($"{prefix}{MovieDB.c_PriceColumn}"),
                 Studio = new Data.Studio() { Id = row.Field<int>($"{prefix}{MovieDB.c_StudioIdColumn}") },
             };
+
+            // Do we need it?
+            //res.Year = DateTime.SpecifyKind(res.Year, DateTimeKind.Utc);
 
             return res;
         }

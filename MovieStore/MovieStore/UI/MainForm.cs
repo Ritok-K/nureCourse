@@ -19,7 +19,10 @@ namespace MovieStore.UI
 
         void RefreshMoviesTable()
         {
-            var movies = Program.DB.GetMovies();
+            var movies = Program.DB.GetMovies(loadActors: true);
+            var actors = Program.DB.GetActors();
+            var studios = Program.DB.GetStudios();
+            var users = Program.DB.GetUsers();
         }
 
         void UpdateLayout()
