@@ -23,6 +23,7 @@ namespace MovieStore.UI
             var actors = Program.DB.GetActors();
             var studios = Program.DB.GetStudios();
             var users = Program.DB.GetUsers();
+            var orders = Program.DB.GetOrders(loadMovies: true);
         }
 
         void UpdateLayout()

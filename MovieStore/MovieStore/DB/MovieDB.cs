@@ -27,12 +27,14 @@ namespace MovieStore.DB
         internal const string c_MovieActorTable = "MovieActor";
         internal const string c_MovieOrderTable = "MovieOrder";
         internal const string c_MoviesTable = "Movies";
+        internal const string c_OrdersTable = "Orders";
         internal const string c_UsersTable = "Users";
         internal const string c_StudioTable = "Studio";
 
         // primary and foreign keys
         internal const string c_ActorIdColumn = "actorId";
         internal const string c_MovieIdColumn = "movieId";
+        internal const string c_OrderIdColumn = "orderId";
         internal const string c_UserIdColumn = "userId";
         internal const string c_StudioIdColumn = "studioId";
 
@@ -40,6 +42,7 @@ namespace MovieStore.DB
         internal const string c_AwardsDescriptionColumn = "awardsDescription";
         internal const string c_BirthDateColumn = "birthDate";
         internal const string c_CountryColumn = "country";
+        internal const string c_DateColumn = "date";
         internal const string c_DescriptionColumn = "description";
         internal const string c_EMailColumn = "email";
         internal const string c_FamilyStatusColumn = "familyStatus";
@@ -380,6 +383,109 @@ namespace MovieStore.DB
                             {
                                 var studio = Serializers.StudioSerializer.Load(r);
                                 res.Add(studio);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return res;
+        }
+
+        internal IList<Data.Order> GetOrders(int? limit = null, int? offset = null, IDataFilter filter = null, bool loadMovies = false)
+        {
+            if (!IsAuthorized)
+            {
+                throw new NotAuthorizedDBException();
+            }
+
+            var res = new List<Data.Order>();
+
+            // load movies
+            {
+                var sql = new QueryBuilders.SelectQueryBuilder()
+                                           .Select(new string[] {
+                                                    // Order table fields with aliases
+                                                    BuildFieldNameWithAliase(c_OrdersTable, c_OrderIdColumn),
+                                                    BuildFieldNameWithAliase(c_OrdersTable, c_DateColumn),
+                                                    BuildFieldNameWithAliase(c_OrdersTable, c_UserIdColumn),
+                                                    // User table fields with aliases
+                                                    BuildFieldNameWithAliase(c_UsersTable, c_UserIdColumn),
+                                                    BuildFieldNameWithAliase(c_UsersTable, c_FirstNameColumn),
+                                                    BuildFieldNameWithAliase(c_UsersTable, c_SecondNameColumn),
+                                                    BuildFieldNameWithAliase(c_UsersTable, c_EMailColumn),
+                                                    BuildFieldNameWithAliase(c_UsersTable, c_RoleColumn),
+                                                    BuildFieldNameWithAliase(c_UsersTable, c_PasswordColumn),
+                                                    BuildFieldNameWithAliase(c_UsersTable, c_SaltColumn),
+                                                  })
+                                           .From(c_OrdersTable)
+                                           .JoinUsing(QueryBuilders.SQLJoin.Inner, c_UsersTable, c_UserIdColumn)
+                                           .Pagging(limit, offset)
+                                           .AddFilter(filter)
+                                           .Make();
+
+                using (var connection = new MySqlConnection(ConnectionString))
+                using (var command = new MySqlCommand(sql, connection))
+                {
+                    filter?.AddCommandParameters(command);
+
+                    using (var adapter = new MySqlDataAdapter(command))
+                    {
+                        var ds = new DataSet();
+                        adapter.Fill(ds);
+                        Debug.Assert(ds.Tables.Count > 0);
+
+                        var table = ds.Tables[0];
+                        if (table.Rows.Count > 0)
+                        {
+                            foreach (var r in table.Rows.Cast<DataRow>())
+                            {
+                                var order = Serializers.OrderSerializer.Load(r, BuildFiledPrefix(c_OrdersTable));
+                                var user = Serializers.UserSerializer.Load(r, BuildFiledPrefix(c_UsersTable));
+                                order.User = user;
+
+                                res.Add(order);
+                            }
+                        }
+                    }
+                }
+            }
+
+            // load actors
+            if (loadMovies)
+            {
+                using (var connection = new MySqlConnection(ConnectionString))
+                {
+                    foreach (var o in res)
+                    {
+                        var sql = new QueryBuilders.SelectQueryBuilder()
+                                                   .SelectAll()
+                                                   .From(c_MoviesTable)
+                                                   .JoinUsing(QueryBuilders.SQLJoin.Inner, c_MovieOrderTable, c_MovieIdColumn)
+                                                   .Where($"{BuildFieldName(c_MovieOrderTable, c_OrderIdColumn)} = {BuildParameterName(c_MovieOrderTable, c_OrderIdColumn)}")
+                                                   .Make();
+
+                        using (var command = new MySqlCommand(sql, connection))
+                        {
+                            command.Parameters.AddWithValue(BuildParameterName(c_MovieOrderTable, c_OrderIdColumn), o.Id);
+
+                            using (var adapter = new MySqlDataAdapter(command))
+                            {
+                                var ds = new DataSet();
+                                adapter.Fill(ds);
+                                Debug.Assert(ds.Tables.Count > 0);
+
+                                var table = ds.Tables[0];
+                                if (table.Rows.Count > 0)
+                                {
+                                    o.Movies = new List<Data.Movie>();
+
+                                    foreach (var m in table.Rows.Cast<DataRow>())
+                                    {
+                                        var movie = Serializers.MovieSerializer.Load(m);
+                                        o.Movies.Add(movie);
+                                    }
+                                }
                             }
                         }
                     }
