@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MovieStore.DB.Filters
 {
-    class CurrentUserOredrList : IDataFilter
+    class CurrentUserOrderList : IDataFilter
     {
         string Field => MovieDB.BuildFieldName(MovieDB.c_OrdersTable, MovieDB.c_UserIdColumn);
         string Parameter => MovieDB.BuildParameterName(MovieDB.c_OrdersTable, MovieDB.c_UserIdColumn);

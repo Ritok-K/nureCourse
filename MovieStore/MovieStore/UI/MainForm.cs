@@ -224,7 +224,7 @@ namespace MovieStore.UI
         {
             try
             {
-                var filter = Program.DB.IsManagerMode ? null : new DB.Filters.CurrentUserOredrList();
+                var filter = Program.DB.IsManagerMode ? null : new DB.Filters.CurrentUserOrderList();
                 var orders = Program.DB.GetOrders(ListViewLimit, ListViewOffset, filter, loadMovies: true);
 
                 m_listView.BeginUpdate();
