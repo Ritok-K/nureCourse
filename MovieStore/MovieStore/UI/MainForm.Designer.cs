@@ -55,6 +55,7 @@ namespace MovieStore.UI
             // 
             this.m_listView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.m_listView.FullRowSelect = true;
+            this.m_listView.GridLines = true;
             this.m_listView.HideSelection = false;
             this.m_listView.Location = new System.Drawing.Point(0, 28);
             this.m_listView.Name = "m_listView";
