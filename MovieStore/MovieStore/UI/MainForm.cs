@@ -156,7 +156,7 @@ namespace MovieStore.UI
                     }));
                 }
 
-                EpandListViewColumns();
+                ExpandListViewColumns();
             }
             finally
             {
@@ -184,7 +184,7 @@ namespace MovieStore.UI
                     }));
                 }
 
-                EpandListViewColumns();
+                ExpandListViewColumns();
             }
             finally
             {
@@ -212,7 +212,7 @@ namespace MovieStore.UI
                     }));
                 }
 
-                EpandListViewColumns();
+                ExpandListViewColumns();
             }
             finally
             {
@@ -240,7 +240,7 @@ namespace MovieStore.UI
                     }));
                 }
 
-                EpandListViewColumns();
+                ExpandListViewColumns();
             }
             finally
             {
@@ -267,7 +267,7 @@ namespace MovieStore.UI
                     }));
                 }
 
-                EpandListViewColumns();
+                ExpandListViewColumns();
             }
             finally
             {
@@ -340,7 +340,7 @@ namespace MovieStore.UI
                 m_listView.Columns.Clear();
                 m_listView.Columns.AddRange(columns);
 
-                EpandListViewColumns(false);
+                ExpandListViewColumns(false);
             }
             finally
             {
@@ -348,7 +348,7 @@ namespace MovieStore.UI
             }
         }
 
-        void EpandListViewColumns(bool byContent = true)
+        void ExpandListViewColumns(bool byContent = true)
         {
             foreach(var c in m_listView.Columns.Cast<ColumnHeader>())
             {
