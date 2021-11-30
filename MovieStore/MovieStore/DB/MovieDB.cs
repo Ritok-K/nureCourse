@@ -69,6 +69,11 @@ namespace MovieStore.DB
 
         #region Methods
 
+        internal void Logout()
+        {
+            CurrentUser = null;
+        }
+
         internal void Login(string email, string password)
         {
             using (var connection = new MySqlConnection(ConnectionString))

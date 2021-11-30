@@ -17,13 +17,13 @@ namespace MovieStore.DB.QueryBuilders
 
     class SelectQueryBuilder
     {
-        IEnumerable<string> FieldsClause { get; set; }
-        string FromClause { get; set; }
+        IEnumerable<string> FieldsClause { get; set; } = Enumerable.Empty<string>();
+        string FromClause { get; set; } = string.Empty;
         IList<string> JoinClauses { get; set; } = new List<string>();
-        string WhereClause { get; set; }
+        string WhereClause { get; set; } = string.Empty;
         int? Limit { get; set; } = null;
         int? Offeset { get; set; } = null;
-        IDataFilter Filter { get; set; }
+        IDataFilter Filter { get; set; } = null;
 
         internal SelectQueryBuilder Select(IEnumerable<string> fields)
         {
@@ -120,6 +120,7 @@ namespace MovieStore.DB.QueryBuilders
                 var joinCollection = new List<string>();
                 joinCollection.AddRange(JoinClauses);
                 joinCollection.AddRange(Filter?.GetJoinClauses() ?? Enumerable.Empty<string>());
+                joinCollection = joinCollection.Where(s => !string.IsNullOrEmpty(s)).ToList();
 
                 var join = string.Join('\n', joinCollection).Trim(' ');
                 if (!string.IsNullOrEmpty(join))
@@ -133,6 +134,7 @@ namespace MovieStore.DB.QueryBuilders
                 var whereRules = new List<string>();
                 whereRules.Add(WhereClause);
                 whereRules.AddRange(Filter?.GetWhereClauses() ?? Enumerable.Empty<string>());
+                whereRules = whereRules.Where(s => !string.IsNullOrEmpty(s)).ToList();
 
                 var where = string.Join(" AND ", whereRules).Trim(' ');
                 if (!string.IsNullOrEmpty(where))
@@ -145,6 +147,7 @@ namespace MovieStore.DB.QueryBuilders
             {
                 var groupRules = new List<string>();
                 groupRules.AddRange(Filter?.GetGroupByClauses() ?? Enumerable.Empty<string>());
+                groupRules = groupRules.Where(s => !string.IsNullOrEmpty(s)).ToList();
 
                 var group = string.Join(", ", groupRules).Trim(' ');
                 if (!string.IsNullOrEmpty(group))
@@ -157,6 +160,7 @@ namespace MovieStore.DB.QueryBuilders
             {
                 var orderRules = new List<string>();
                 orderRules.AddRange(Filter?.GetOrderClauses() ?? Enumerable.Empty<string>());
+                orderRules = orderRules.Where(s => !string.IsNullOrEmpty(s)).ToList();
 
                 var order = string.Join(", ", orderRules).Trim(' ');
                 if (!string.IsNullOrEmpty(order))
