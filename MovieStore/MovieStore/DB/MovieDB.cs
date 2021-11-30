@@ -16,22 +16,49 @@ namespace MovieStore.DB
         internal string ConnectionString => @"server=192.168.1.43;user id=rita;password=morganalifrey;persistsecurityinfo=True;database=movie";
         internal Data.User CurrentUser { get; set; }
         internal bool IsManagerMode => CurrentUser?.Role == Data.UserRole.Manager;
+        internal bool IsAuthorized => CurrentUser != null;
+
         #endregion
 
-        #region Constants
+        #region DB Constants
 
-        const string c_UsersTable = "Users";
+        // tables
+        internal const string c_ActorsTable = "Actors";
+        internal const string c_MoviesTable = "Movies";
+        internal const string c_UsersTable = "Users";
+        internal const string c_StudioTable = "Studio";
 
-        const string c_UserIdColumn = "userId";
-        const string c_FirstNameColumn = "firstName";
-        const string c_SecondNameColumn = "secondName";
-        const string c_EMailColumn = "email";
-        const string c_RoleColumn = "role";
-        const string c_PasswordColumn = "password";
-        const string c_SaltColumn = "salt";
+        // primary and foreign keys
+        internal const string c_ActorIdColumn = "actorId";
+        internal const string c_MoviewIdColumn = "movieId";
+        internal const string c_UserIdColumn = "userId";
+        internal const string c_StudioIdColumn = "studioId";
 
-        const string c_RoleUserValue = "user";
-        const string c_RoleManagerValue = "manager";
+        // data columns
+        internal const string c_AwardsDescriptionColumn = "awardsDescription";
+        internal const string c_BirthDateColumn = "birthDate";
+        internal const string c_CountryColumn = "country";
+        internal const string c_DescriptionColumn = "description";
+        internal const string c_EMailColumn = "email";
+        internal const string c_FamilyStatusColumn = "familyStatus";
+        internal const string c_FirstNameColumn = "firstName";
+        internal const string c_FoundationDateColumn = "foundationDate";
+        internal const string c_GenreColumn = "genre";
+        internal const string c_ImdbColumn = "imdb";
+        internal const string c_MovieYearColumn = "movieYear";
+        internal const string c_PasswordColumn = "password";
+        internal const string c_PriceColumn = "price";
+        internal const string c_ProductionColumn = "production";
+        internal const string c_RoleColumn = "role";
+        internal const string c_SaltColumn = "salt";
+        internal const string c_SecondNameColumn = "secondName";
+        internal const string c_TitleColumn = "title";
+
+        // enums
+        internal const string c_RoleUserValue = "user";
+        internal const string c_RoleManagerValue = "manager";
+        internal const string c_FamilyStatusSingleValue = "single";
+        internal const string c_FamilyStatusMarriedValue = "married";
 
         #endregion
 
@@ -48,23 +75,24 @@ namespace MovieStore.DB
                 {
                     var ds = new DataSet();
                     adapter.Fill(ds);
+                    Debug.Assert(ds.Tables.Count > 0);
 
-                    var table = ds.Tables.Count > 0 ? ds.Tables[0] : null;
-                    if (table != null && table.Rows.Count > 0)
+                    var table = ds.Tables[0];
+                    if (table.Rows.Count > 0)
                     {
-                        var user = LoadUser(table.Rows[0]);
+                        var user = Serializers.UserSerializer.Load(table.Rows[0]);
                         if (user.CheckPassword(password))
                         {
                             CurrentUser = user;
                         }
                         else
                         {
-                            throw new InvalidPasswordDBExceptiom();
+                            throw new InvalidPasswordDBException();
                         }
                     }
                     else
                     {
-                        throw new UserNotFoundDBExceptiom(email);
+                        throw new UserNotFoundDBException(email);
                     }
                 }
             }
@@ -85,12 +113,13 @@ namespace MovieStore.DB
                 {
                     var ds = new DataSet();
                     adapter.Fill(ds);
+                    Debug.Assert(ds.Tables.Count > 0);
 
-                    var table = ds.Tables.Count > 0 ? ds.Tables[0] : null;
-                    if (table != null && table.Rows.Count == 0)
+                    var table = ds.Tables[0];
+                    if (table.Rows.Count == 0)
                     {
                         var row = table.NewRow();
-                        SaveUser(user, row);
+                        Serializers.UserSerializer.Save(user, row);
                         table.Rows.Add(row);
 
                         var commandBuilder = new MySqlCommandBuilder(adapter);
@@ -104,92 +133,102 @@ namespace MovieStore.DB
                             ds.Clear();
                             adapter.Fill(ds);
 
-                            LoadUserId(user, ds.Tables[0].Rows[0]);
+                            Serializers.UserSerializer.LoadId(user, ds.Tables[0].Rows[0]);
                             CurrentUser = user;
                         }
                     }
                     else
                     {
-                        throw new UserAlreadyExistsDBExceptiom(user.EMail);
+                        throw new UserAlreadyExistsDBException(user.EMail);
                     }
                 }
             }
         }
 
+        internal IList<Data.Movie> GetMovies(int? limit = null, int? offset = null, IDataFilter filter = null)
+        {
+            if (!IsAuthorized)
+            {
+                throw new NotAuthorizedDBException();
+            }
+
+            var res = new List<Data.Movie>();
+
+            var sql = new QueryBuilders.SelectQueryBuilder()
+                                       .Select(new string[] {
+                                                // Movie table fields with aliases
+                                                BuildFieldNameWithAliase(c_MoviesTable, c_MoviewIdColumn),
+                                                BuildFieldNameWithAliase(c_MoviesTable, c_TitleColumn),
+                                                BuildFieldNameWithAliase(c_MoviesTable, c_MovieYearColumn),
+                                                BuildFieldNameWithAliase(c_MoviesTable, c_GenreColumn),
+                                                BuildFieldNameWithAliase(c_MoviesTable, c_DescriptionColumn),
+                                                BuildFieldNameWithAliase(c_MoviesTable, c_ImdbColumn),
+                                                BuildFieldNameWithAliase(c_MoviesTable, c_CountryColumn),
+                                                BuildFieldNameWithAliase(c_MoviesTable, c_PriceColumn),
+                                                BuildFieldNameWithAliase(c_MoviesTable, c_StudioIdColumn),
+                                                // Studio table fields with aliases
+                                                BuildFieldNameWithAliase(c_StudioTable, c_StudioIdColumn),
+                                                BuildFieldNameWithAliase(c_StudioTable, c_TitleColumn),
+                                                BuildFieldNameWithAliase(c_StudioTable, c_CountryColumn),
+                                                BuildFieldNameWithAliase(c_StudioTable, c_FoundationDateColumn),
+                                                BuildFieldNameWithAliase(c_StudioTable, c_ProductionColumn),
+                                              })
+                                       .From(c_MoviesTable)
+                                       .JoinUsing(QueryBuilders.SQLJoin.Inner, c_StudioTable, c_StudioIdColumn)
+                                       .Pagging(limit, offset)
+                                       .AddFilter(filter)
+                                       .Make();
+
+            using (var connection = new MySqlConnection(ConnectionString))
+            using (var command = new MySqlCommand(sql, connection))
+            {
+                filter?.AddCommandParameters(command);
+
+                using (var adapter = new MySqlDataAdapter(command))
+                {
+                    var ds = new DataSet();
+                    adapter.Fill(ds);
+                    Debug.Assert(ds.Tables.Count > 0);
+
+                    var table = ds.Tables[0];
+                    if (table.Rows.Count > 0)
+                    {
+                        foreach (var r in table.Rows.Cast<DataRow>())
+                        {
+                            var movie = Serializers.MovieSerializer.Load(r, BuildFiledPrefix(c_MoviesTable));
+                            var studio = Serializers.StudioSerializer.Load(r, BuildFiledPrefix(c_StudioTable));
+                            movie.Studio = studio;
+
+                            res.Add(movie);
+                        }
+                    }
+                }
+            }
+
+            return res;
+        }
+
         #endregion
 
-        #region Helper Methods
+        #region Utility Methods
 
-        Data.User LoadUser(DataRow row)
-        {
-            var res = new Data.User()
-            {
-                Id = row.Field<int>(c_UserIdColumn),
-                FirstName = row.Field<string>(c_FirstNameColumn),
-                SecondName = row.Field<string>(c_SecondNameColumn),
-                EMail = row.Field<string>(c_EMailColumn),
-                Role = GetRole(row.Field<string>(c_RoleColumn)),
-                PasswordHash = row.Field<string>(c_PasswordColumn),
-                Salt = row.Field<string>(c_SaltColumn),
-            };
-
-            return res;
-        }
-
-        void LoadUserId(Data.User user, DataRow row)
-        {
-            user.Id = row.Field<int>(c_UserIdColumn);
-        }
-
-        void SaveUser(Data.User user, DataRow row)
-        {
-            row[c_FirstNameColumn] = user.FirstName;
-            row[c_SecondNameColumn] = user.SecondName;
-            row[c_EMailColumn] = user.EMail;
-            row[c_RoleColumn] = GetRoleName(user.Role);
-            row[c_PasswordColumn] = user.PasswordHash;
-            row[c_SaltColumn] = user.Salt;
-        }
-
-        Data.UserRole GetRole(string role)
-        {
-            var res = Data.UserRole.User;
-
-            switch(role)
-            {
-                case c_RoleUserValue:
-                    res = Data.UserRole.User;
-                    break;
-                case c_RoleManagerValue:
-                    res = Data.UserRole.Manager;
-                    break;
-                default:
-                    Debug.Assert(false, "Unknown role");
-                    break;
-            }
-
-            return res;
-        }
-        string GetRoleName(Data.UserRole role)
-        {
-            var res = c_RoleUserValue;
-
-            switch(role)
-            {
-                case Data.UserRole.User:
-                    res = c_RoleUserValue;
-                    break;
-                case Data.UserRole.Manager:
-                    res = c_RoleManagerValue;
-                    break;
-            }
-
-            return res;
-        }
-
-        string BuildParameterName(string column)
+        static internal string BuildParameterName(string column)
         {
             return $"@{column}";
+        }
+
+        // Return filed name string in format "table.column AS table_column".
+        // Useful at joining several tables with same column names, so as to column can be found in request result.
+        static internal string BuildFieldNameWithAliase(string table, string column)
+        {
+            return $"{table}.{column} AS {BuildFiledPrefix(table)}{column}";
+        }
+
+        // Return filed prefix in format "table_".
+        // Method should be use in pair with BuildFieldNameWithAliase()
+        static internal string BuildFiledPrefix(string table)
+        {
+            return $"{table}_";
         }
 
         #endregion

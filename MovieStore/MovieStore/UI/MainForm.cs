@@ -17,6 +17,11 @@ namespace MovieStore.UI
             InitializeComponent();
         }
 
+        void RefreshMoviesTable()
+        {
+            var movies = Program.DB.GetMovies();
+        }
+
         void UpdateLayout()
         {
 
@@ -24,17 +29,25 @@ namespace MovieStore.UI
 
         private void OnLoad(object sender, EventArgs e)
         {
-            using (var loginForm = new LoginForm())
+            try
             {
-                var result = loginForm.ShowDialog(this);
-                if (result == DialogResult.OK)
+                using (var loginForm = new LoginForm())
                 {
-                    UpdateLayout();
+                    var result = loginForm.ShowDialog(this);
+                    if (result == DialogResult.OK)
+                    {
+                        UpdateLayout();
+                        RefreshMoviesTable();
+                    }
+                    else
+                    {
+                        Close();
+                    }
                 }
-                else
-                {
-                    Close();
-                }
+            }
+            catch (Exception ex)
+            { 
+                MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

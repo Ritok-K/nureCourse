@@ -14,25 +14,33 @@ namespace MovieStore.DB
         }
     }
 
-    class UserNotFoundDBExceptiom : DBExecption
+    class NotAuthorizedDBException : DBExecption
     {
-        internal UserNotFoundDBExceptiom(string email)
+        internal NotAuthorizedDBException()
+            : base($"Login is required")
+        {
+        }
+    }
+
+    class UserNotFoundDBException : DBExecption
+    {
+        internal UserNotFoundDBException(string email)
             : base($"User with loging '{email}' has not been found")
         {
         }
     }
 
-    class UserAlreadyExistsDBExceptiom : DBExecption
+    class UserAlreadyExistsDBException : DBExecption
     {
-        internal UserAlreadyExistsDBExceptiom(string email)
+        internal UserAlreadyExistsDBException(string email)
             : base($"User with loging '{email}' already exists")
         {
         }
     }
 
-    class InvalidPasswordDBExceptiom : DBExecption
+    class InvalidPasswordDBException : DBExecption
     {
-        internal InvalidPasswordDBExceptiom()
+        internal InvalidPasswordDBException()
             : base($"Invalid password")
         {
         }
