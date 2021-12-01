@@ -231,7 +231,7 @@ namespace MovieStore.DB
                                                     BuildFieldNameWithAliase(c_StudioTable, c_ProductionColumn),
                                                   })
                                            .From(c_MoviesTable)
-                                           .JoinUsing(QueryBuilders.SQLJoin.Inner, c_StudioTable, c_StudioIdColumn)
+                                           .JoinUsing(QueryBuilders.SQLJoin.Left, c_StudioTable, c_StudioIdColumn)
                                            .Pagging(limit, offset)
                                            .AddFilter(filter)
                                            .Make();
@@ -273,7 +273,7 @@ namespace MovieStore.DB
                         var sql = new QueryBuilders.SelectQueryBuilder()
                                                    .SelectAll()
                                                    .From(c_ActorsTable)
-                                                   .JoinUsing(QueryBuilders.SQLJoin.Inner, c_MovieActorTable, c_ActorIdColumn)
+                                                   .JoinUsing(QueryBuilders.SQLJoin.Left, c_MovieActorTable, c_ActorIdColumn)
                                                    .Where($"{BuildFieldName(c_MovieActorTable, c_MovieIdColumn)} = {BuildParameterName(c_MovieActorTable, c_MovieIdColumn)}")
                                                    .Make();
 
@@ -424,7 +424,7 @@ namespace MovieStore.DB
                                                     BuildFieldNameWithAliase(c_UsersTable, c_SaltColumn),
                                                   })
                                            .From(c_OrdersTable)
-                                           .JoinUsing(QueryBuilders.SQLJoin.Inner, c_UsersTable, c_UserIdColumn)
+                                           .JoinUsing(QueryBuilders.SQLJoin.Left, c_UsersTable, c_UserIdColumn)
                                            .Pagging(limit, offset)
                                            .AddFilter(filter)
                                            .Make();
@@ -466,7 +466,7 @@ namespace MovieStore.DB
                         var sql = new QueryBuilders.SelectQueryBuilder()
                                                    .SelectAll()
                                                    .From(c_MoviesTable)
-                                                   .JoinUsing(QueryBuilders.SQLJoin.Inner, c_MovieOrderTable, c_MovieIdColumn)
+                                                   .JoinUsing(QueryBuilders.SQLJoin.Left, c_MovieOrderTable, c_MovieIdColumn)
                                                    .Where($"{BuildFieldName(c_MovieOrderTable, c_OrderIdColumn)} = {BuildParameterName(c_MovieOrderTable, c_OrderIdColumn)}")
                                                    .Make();
 
@@ -645,6 +645,43 @@ namespace MovieStore.DB
             }
         }
 
+        internal void AddMovies(IEnumerable<Data.Movie> movies)
+        {
+            if (!IsAuthorized)
+            {
+                throw new NotAuthorizedDBException();
+            }
+
+            // inserting
+            {
+                var sql = new QueryBuilders.SelectQueryBuilder()
+                                           .SelectAll()
+                                           .From(c_MoviesTable)
+                                           .Pagging(1, 0)
+                                           .Make();
+
+                using (var connection = new MySqlConnection(ConnectionString))
+                using (var command = new MySqlCommand(sql, connection))
+                {
+                    using (var adapter = new MySqlDataAdapter(command))
+                    {
+                        var table = new DataTable(c_MoviesTable);
+                        Serializers.MovieSerializer.AddColumns(table);
+
+                        foreach (var m in movies)
+                        {
+                            var r = table.NewRow();
+                            Serializers.MovieSerializer.Save(m, r);
+                            table.Rows.Add(r);
+                        }
+
+                        var commandBuilder = new MySqlCommandBuilder(adapter);
+                        adapter.Update(table);
+                    }
+                }
+            }
+        }
+
         internal void AddUsers(IEnumerable<Data.User> users)
         {
             if (!IsAuthorized)
@@ -740,6 +777,60 @@ namespace MovieStore.DB
                         }
 
                         var commandBuilder = new MySqlCommandBuilder(adapter);
+                        adapter.Update(table);
+                    }
+                }
+            }
+        }
+
+        internal void UpdateMovies(IEnumerable<Data.Movie> movies)
+        {
+            if (!IsAuthorized)
+            {
+                throw new NotAuthorizedDBException();
+            }
+
+            // updating
+            {
+                var filter = new Filters.MovieFilter();
+                filter.WithIds(movies.Select(u => u.Id));
+
+                var sql = new QueryBuilders.SelectQueryBuilder()
+                                           .SelectAll()
+                                           .From(c_MoviesTable)
+                                           .AddFilter(filter)
+                                           .Make();
+
+                using (var connection = new MySqlConnection(ConnectionString))
+                using (var command = new MySqlCommand(sql, connection))
+                {
+                    (filter as IDataFilter).AddCommandParameters(command);
+
+                    using (var adapter = new MySqlDataAdapter(command))
+                    {
+                        var ds = new DataSet();
+                        adapter.Fill(ds);
+                        Debug.Assert(ds.Tables.Count > 0);
+
+                        var table = ds.Tables[0];
+                        if (table.Rows.Count > 0)
+                        {
+                            // setup pk column (required for Find method)
+                            table.PrimaryKey = new DataColumn[] { table.Columns.Cast<DataColumn>().First(c => c.ColumnName == c_MovieIdColumn) };
+
+                            foreach (var m in movies)
+                            {
+                                var r = table.Rows.Find(m.Id);
+                                if (r != null)
+                                {
+                                    Serializers.MovieSerializer.Save(m, r);
+                                }
+                            }
+                        }
+
+                        var commandBuilder = new MySqlCommandBuilder(adapter);
+                        commandBuilder.ConflictOption = ConflictOption.OverwriteChanges;
+
                         adapter.Update(table);
                     }
                 }

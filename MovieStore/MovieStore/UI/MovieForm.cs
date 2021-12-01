@@ -69,7 +69,6 @@ namespace MovieStore.UI
             }
 
             var isViewMode = Mode == MovieFormMode.ViewMovie;
-            m_okButton.Enabled = !isViewMode;
             m_studioComboBox.Enabled = !isViewMode;
             m_titleTextBox.ReadOnly = isViewMode;
             m_countryTextBox.ReadOnly = isViewMode;
@@ -77,6 +76,7 @@ namespace MovieStore.UI
             m_descriptionTextBox.ReadOnly = isViewMode;
             m_genreTextBox.ReadOnly = isViewMode;
             m_priceTextBox.ReadOnly = isViewMode;
+            m_imdbTextBox.ReadOnly = isViewMode;
         }
 
         void UpdateData(bool save)
@@ -88,12 +88,17 @@ namespace MovieStore.UI
                     throw new Exception("Title should not be empty");
                 }
 
+                if (m_studioComboBox.SelectedIndex < 0)
+                {
+                    throw new Exception("Select Studio please");
+                }
+
                 Movie.Title = m_titleTextBox.Text;
                 Movie.Genre = m_genreTextBox.Text;
                 Movie.Year = DateTime.ParseExact(m_yearTextBox.Text, "yyyy", CultureInfo.CurrentUICulture);
                 Movie.Description = m_descriptionTextBox.Text;
                 Movie.Imdb = float.Parse(m_imdbTextBox.Text);
-                Movie.Studio = (m_studioComboBox.SelectedIndex>=0) ?  new Data.Studio() { Id = (m_studioComboBox.SelectedItem as Data.Studio).Id } : null;
+                Movie.Studio = new Data.Studio() { Id = (int)(m_studioComboBox.SelectedValue) };
                 Movie.Country = m_countryTextBox.Text;
                 Movie.Price = (int)Math.Round(float.Parse(m_priceTextBox.Text) * 100);
             }
@@ -106,6 +111,7 @@ namespace MovieStore.UI
                 m_countryTextBox.Text = Movie.Country;
                 m_priceTextBox.Text = Utility.UIPrimitiveFormatting.FormatPrice(Movie.Price);
                 m_imdbTextBox.Text = Utility.UIPrimitiveFormatting.FormatImdb(Movie.Imdb);
+                m_studioComboBox.SelectedValue = Movie.Studio?.Id ?? -1;
             }
         }
 
@@ -122,13 +128,13 @@ namespace MovieStore.UI
                 {
                     case MovieFormMode.NewMovie:
                         UpdateData(true);
-                        //Program.DB.AddUsers(new Data.User[] { User });
+                        Program.DB.AddMovies(new Data.Movie[] { Movie });
                         DialogResult = DialogResult.OK;
                         break;
 
                     case MovieFormMode.EditMovie:
                         UpdateData(true);
-                        //Program.DB.UpdateUsers(new Data.User[] { User });
+                        Program.DB.UpdateMovies(new Data.Movie[] { Movie });
                         DialogResult = DialogResult.OK;
                         break;
 

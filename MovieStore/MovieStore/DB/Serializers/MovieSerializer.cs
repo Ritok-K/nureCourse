@@ -29,5 +29,34 @@ namespace MovieStore.DB.Serializers
 
             return res;
         }
+
+        internal static void Save(Data.Movie moview, DataRow row)
+        {
+            if (moview.Studio == null)
+            {
+                throw new ArgumentException("Studio.Id should exists.", nameof(Data.Movie.Studio));
+            }
+
+            row[MovieDB.c_TitleColumn] = moview.Title;
+            row[MovieDB.c_MovieYearColumn] = moview.Year;
+            row[MovieDB.c_GenreColumn] = moview.Genre;
+            row[MovieDB.c_DescriptionColumn] = moview.Description;
+            row[MovieDB.c_ImdbColumn] = moview.Imdb;
+            row[MovieDB.c_CountryColumn] = moview.Country;
+            row[MovieDB.c_PriceColumn] = moview.Price;
+            row[MovieDB.c_StudioIdColumn] = moview.Studio.Id;
+        }
+
+        internal static void AddColumns(DataTable table)
+        {
+            table.Columns.Add(MovieDB.c_TitleColumn, typeof(string));
+            table.Columns.Add(MovieDB.c_MovieYearColumn, typeof(DateTime));
+            table.Columns.Add(MovieDB.c_GenreColumn, typeof(string));
+            table.Columns.Add(MovieDB.c_DescriptionColumn, typeof(string));
+            table.Columns.Add(MovieDB.c_ImdbColumn, typeof(float));
+            table.Columns.Add(MovieDB.c_CountryColumn, typeof(string));
+            table.Columns.Add(MovieDB.c_PriceColumn, typeof(int));
+            table.Columns.Add(MovieDB.c_StudioIdColumn, typeof(int));
+        }
     }
 }
