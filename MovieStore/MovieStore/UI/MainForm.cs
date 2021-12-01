@@ -86,6 +86,7 @@ namespace MovieStore.UI
                 {
                     SetViewMode(ViewMode.Movies, true);
                     RefreshListView();
+                    UpdateControls();
                 }
             }
         }
@@ -98,6 +99,7 @@ namespace MovieStore.UI
 
                 ReinitControls();
                 RefreshListView();
+                UpdateControls();
             }
         }
 
@@ -313,6 +315,7 @@ namespace MovieStore.UI
             if (refreshList)
             {
                 RefreshListView();
+                UpdateControls();
             }
         }
 
@@ -481,6 +484,7 @@ namespace MovieStore.UI
             if (refreshList && res)
             {
                 RefreshListView();
+                UpdateControls();
             }
         }
 
@@ -507,7 +511,38 @@ namespace MovieStore.UI
 
         bool UpdateActorsListViewItem(bool createNewItem)
         {
-            return false;
+            var res = false;
+
+            var selectedItem = m_listView.SelectedItems.Cast<ListViewItem>()?.FirstOrDefault()?.Tag as Data.Actor;
+            if (createNewItem || (selectedItem != null))
+            {
+#if DEBUG
+                if (createNewItem)
+                {
+                    var a = new Data.Actor()
+                    {
+                        FirstName = "Sylvester",
+                        SecondName = "Stallone",
+                        BirthDate = new DateTime(1946, 7, 6),
+                        Country = "USA",
+                        FamilyStatus = Data.ActorFamilyStatus.Married,
+                        AwardsDescription = "Favorite Movie Actor (1985); Best Supporting Actor (2015-2016)",
+                    };
+
+                    Program.DB.AddActors(new Data.Actor[] { a });
+                    res = true;
+                }
+                else
+                {
+                    var a = selectedItem;
+                    a.FirstName = string.Join("", a.FirstName.Reverse());
+                    Program.DB.UpdateActors(new Data.Actor[] { a });
+                    res = true;
+                }
+#endif
+            }
+         
+            return res;
         }
 
         bool UpdateStudioListViewItem(bool createNewItem)
@@ -534,7 +569,7 @@ namespace MovieStore.UI
                 else
                 {
                     var s = selectedItem;
-                    s.Title = string.Join("",selectedItem.Title.Reverse());
+                    s.Title = string.Join("", s.Title.Reverse());
                     Program.DB.UpdateStudio(new Data.Studio[] { s });
                     res = true;
                 }

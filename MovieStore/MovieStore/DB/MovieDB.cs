@@ -682,6 +682,43 @@ namespace MovieStore.DB
             }
         }
 
+        internal void AddActors(IEnumerable<Data.Actor> actors)
+        {
+            if (!IsAuthorized)
+            {
+                throw new NotAuthorizedDBException();
+            }
+
+            // inserting
+            {
+                var sql = new QueryBuilders.SelectQueryBuilder()
+                                           .SelectAll()
+                                           .From(c_ActorsTable)
+                                           .Pagging(1, 0)
+                                           .Make();
+
+                using (var connection = new MySqlConnection(ConnectionString))
+                using (var command = new MySqlCommand(sql, connection))
+                {
+                    using (var adapter = new MySqlDataAdapter(command))
+                    {
+                        var table = new DataTable(c_ActorsTable);
+                        Serializers.ActorSerializer.AddColumns(table);
+
+                        foreach (var a in actors)
+                        {
+                            var r = table.NewRow();
+                            Serializers.ActorSerializer.Save(a, r);
+                            table.Rows.Add(r);
+                        }
+
+                        var commandBuilder = new MySqlCommandBuilder(adapter);
+                        adapter.Update(table);
+                    }
+                }
+            }
+        }
+
         internal void AddStudio(IEnumerable<Data.Studio> studio)
         {
             if (!IsAuthorized)
@@ -846,6 +883,60 @@ namespace MovieStore.DB
                                 if (r != null)
                                 {
                                     Serializers.MovieSerializer.Save(m, r);
+                                }
+                            }
+
+                            var commandBuilder = new MySqlCommandBuilder(adapter);
+                            commandBuilder.ConflictOption = ConflictOption.OverwriteChanges;
+
+                            adapter.Update(table);
+                        }
+                    }
+                }
+            }
+        }
+
+        internal void UpdateActors(IEnumerable<Data.Actor> actors)
+        {
+            if (!IsAuthorized)
+            {
+                throw new NotAuthorizedDBException();
+            }
+
+            // updating
+            {
+                var filter = new Filters.ActorFilter();
+                filter.WithIds(actors.Select(u => u.Id));
+
+                var sql = new QueryBuilders.SelectQueryBuilder()
+                                           .SelectAll()
+                                           .From(c_ActorsTable)
+                                           .AddFilter(filter)
+                                           .Make();
+
+                using (var connection = new MySqlConnection(ConnectionString))
+                using (var command = new MySqlCommand(sql, connection))
+                {
+                    (filter as IDataFilter).AddCommandParameters(command);
+
+                    using (var adapter = new MySqlDataAdapter(command))
+                    {
+                        var ds = new DataSet();
+                        adapter.Fill(ds);
+                        Debug.Assert(ds.Tables.Count > 0);
+
+                        var table = ds.Tables[0];
+                        if (table.Rows.Count > 0)
+                        {
+                            // setup pk column (required for Find method)
+                            table.PrimaryKey = new DataColumn[] { table.Columns.Cast<DataColumn>().First(c => c.ColumnName == filter.PkColumn) };
+
+                            foreach (var a in actors)
+                            {
+                                var r = table.Rows.Find(a.Id);
+                                if (r != null)
+                                {
+                                    Serializers.ActorSerializer.Save(a, r);
                                 }
                             }
 
