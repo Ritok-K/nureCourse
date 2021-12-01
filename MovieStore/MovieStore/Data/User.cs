@@ -19,7 +19,7 @@ namespace MovieStore.Data
         internal string FirstName { get; set; }
         internal string SecondName { get; set; }
         internal string EMail { get; set; }
-        internal UserRole Role { get; set; }
+        internal UserRole Role { get; set; } = Data.UserRole.User;
         internal string PasswordHash { get; set; }
         internal string Salt { get; init; } = Utility.Seсurity.GenerateSalt();
 

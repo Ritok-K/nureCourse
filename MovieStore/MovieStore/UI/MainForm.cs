@@ -446,6 +446,81 @@ namespace MovieStore.UI
             }
         }
 
+        void UpdateListViewItem(bool createNewItem, bool refreshList = true)
+        {
+            if (!Program.DB.IsAuthorized)
+            {
+                return;
+            }
+
+            var res = false;
+
+            switch (ViewMode)
+            {
+                case ViewMode.Movies:
+                    res = UpdateMoviesListViewItem(createNewItem);
+                    break;
+
+                case ViewMode.Actors:
+                    res = UpdateActorsListViewItem(createNewItem);
+                    break;
+
+                case ViewMode.Studio:
+                    res = UpdateStudioListViewItem(createNewItem);
+                    break;
+
+                case ViewMode.Orders:
+                    res = UpdateOrdersListViewItem(createNewItem);
+                    break;
+
+                case ViewMode.Users:
+                    res = UpdateUsersListViewItem(createNewItem);
+                    break;
+            }
+
+            if (refreshList && res)
+            {
+                RefreshListView();
+            }
+        }
+
+        bool UpdateMoviesListViewItem(bool createNewItem)
+        {
+            return false;
+        }
+
+        bool UpdateActorsListViewItem(bool createNewItem)
+        {
+            return false;
+        }
+
+        bool UpdateStudioListViewItem(bool createNewItem)
+        {
+            return false;
+        }
+
+        bool UpdateOrdersListViewItem(bool createNewItem)
+        {
+            return false;
+        }
+
+        bool UpdateUsersListViewItem(bool createNewItem)
+        {
+            var res = false;
+
+            var selectedItem = m_listView.SelectedItems.Cast<ListViewItem>()?.FirstOrDefault()?.Tag as Data.User;
+            if (createNewItem || (selectedItem != null))
+            {
+                using (var userForm = new UserForm())
+                {
+                    userForm.SetMode(createNewItem ? UserFormMode.NewUser : UserFormMode.EditUser, selectedItem);
+                    res = userForm.ShowDialog(this) == DialogResult.OK;
+                }
+            }
+
+            return res;
+        }
+
         void ReinitControls()
         {
             switch (ViewMode)
@@ -698,6 +773,30 @@ namespace MovieStore.UI
                         DeleteListViewItems();
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void OnAddNew(object sender, EventArgs e)
+        {
+            try
+            {
+                UpdateListViewItem(true);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void OnItemActivated(object sender, EventArgs e)
+        {
+            try
+            {
+                UpdateListViewItem(false);
             }
             catch (Exception ex)
             {

@@ -33,7 +33,7 @@ namespace MovieStore.DB
     class UserAlreadyExistsDBException : DBExecption
     {
         internal UserAlreadyExistsDBException(string email)
-            : base($"User with loging '{email}' already exists")
+            : base($"User with e-mail '{email}' already exists")
         {
         }
     }

@@ -115,9 +115,9 @@ namespace MovieStore.DB
             Debug.Assert(!string.IsNullOrEmpty(user.Salt));
 
             using (var connection = new MySqlConnection(ConnectionString))
-            using (var command = new MySqlCommand($"SELECT * FROM {c_UsersTable} WHERE {c_EMailColumn} = {BuildParameterName(c_EMailColumn)} LIMIT 1;", connection))
+            using (var command = new MySqlCommand($"SELECT * FROM {c_UsersTable} WHERE {c_EMailColumn} = LOWER({BuildParameterName(c_EMailColumn)}) LIMIT 1;", connection))
             {
-                command.Parameters.Add(new MySqlParameter(BuildParameterName(c_EMailColumn), user.EMail));
+                command.Parameters.Add(new MySqlParameter(BuildParameterName(c_EMailColumn), user.EMail.ToLower()));
 
                 using (var adapter = new MySqlDataAdapter(command))
                 {
@@ -642,6 +642,107 @@ namespace MovieStore.DB
 
                 connection.Open();
                 command.ExecuteNonQuery();
+            }
+        }
+
+        internal void AddUsers(IEnumerable<Data.User> users)
+        {
+            if (!IsAuthorized)
+            {
+                throw new NotAuthorizedDBException();
+            }
+
+            // check on unique emails
+            {
+                var filter = new Filters.UserFilter();
+                filter.WithEmails(users.Select(u => u.EMail));
+
+                var existenUsers = GetUsers(filter: filter);
+                if (existenUsers.Count > 0)
+                {
+                    throw new UserAlreadyExistsDBException(existenUsers.First().EMail);
+                }
+            }
+
+            // inserting
+            {
+                var sql = new QueryBuilders.SelectQueryBuilder()
+                                           .SelectAll()
+                                           .From(c_UsersTable)
+                                           .Pagging(1, 0)
+                                           .Make();
+
+                using (var connection = new MySqlConnection(ConnectionString))
+                using (var command = new MySqlCommand(sql, connection))
+                {
+                    using (var adapter = new MySqlDataAdapter(command))
+                    {
+                        var table = new DataTable(c_UsersTable);
+                        Serializers.UserSerializer.AddColumns(table);
+
+                        foreach (var u in users)
+                        {
+                            var r = table.NewRow();
+                            Serializers.UserSerializer.Save(u, r);
+                            table.Rows.Add(r);
+                        }
+
+                        var commandBuilder = new MySqlCommandBuilder(adapter);
+                        adapter.Update(table);
+                    }
+                }
+            }
+        }
+
+        internal void UpdateUsers(IEnumerable<Data.User> users)
+        {
+            if (!IsAuthorized)
+            {
+                throw new NotAuthorizedDBException();
+            }
+
+            // updating
+            {
+                var filter = new Filters.UserFilter();
+                filter.WithIds(users.Select(u => u.Id));
+
+                var sql = new QueryBuilders.SelectQueryBuilder()
+                                           .SelectAll()
+                                           .From(c_UsersTable)
+                                           .AddFilter(filter)
+                                           .Make();
+
+                using (var connection = new MySqlConnection(ConnectionString))
+                using (var command = new MySqlCommand(sql, connection))
+                {
+                    (filter as IDataFilter).AddCommandParameters(command);
+
+                    using (var adapter = new MySqlDataAdapter(command))
+                    {
+                        var ds = new DataSet();
+                        adapter.Fill(ds);
+                        Debug.Assert(ds.Tables.Count > 0);
+
+                        var table = ds.Tables[0];
+                        if (table.Rows.Count > 0)
+                        {
+                            // setup pk column (required for Find method)
+                            table.PrimaryKey = new DataColumn[] { table.Columns.Cast<DataColumn>().First(c => c.ColumnName == c_UserIdColumn) };
+
+                            foreach (var u in users)
+                            {
+                                var r = table.Rows.Find(u.Id);
+                                if (r != null)
+                                {
+                                    Serializers.UserSerializer.Save(u, r);
+                                }
+                            }
+                        }
+
+                        var commandBuilder = new MySqlCommandBuilder(adapter);
+                        adapter.Update(table);
+                    }
+                }
             }
         }
 

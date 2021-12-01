@@ -41,6 +41,16 @@ namespace MovieStore.DB.Serializers
             row[MovieDB.c_SaltColumn] = user.Salt;
         }
 
+        internal static void AddColumns(DataTable table)
+        {
+            table.Columns.Add(MovieDB.c_FirstNameColumn, typeof(string));
+            table.Columns.Add(MovieDB.c_SecondNameColumn, typeof(string));
+            table.Columns.Add(MovieDB.c_EMailColumn, typeof(string));
+            table.Columns.Add(MovieDB.c_RoleColumn, typeof(string));
+            table.Columns.Add(MovieDB.c_PasswordColumn, typeof(string));
+            table.Columns.Add(MovieDB.c_SaltColumn, typeof(string));
+        }
+
         #region Helper Methods
 
         static Data.UserRole GetRole(string role)

@@ -35,7 +35,7 @@ namespace MovieStore.UI
         {
             try
             {
-                using (var newUserForm = new NewUserForm())
+                using (var newUserForm = new UserForm())
                 {
                     if (newUserForm.ShowDialog(this) == DialogResult.OK)
                     {

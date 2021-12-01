@@ -1,7 +1,7 @@
 ﻿
 namespace MovieStore.UI
 {
-    partial class NewUserForm
+    partial class UserForm
     {
         /// <summary>
         /// Required designer variable.
@@ -50,9 +50,9 @@ namespace MovieStore.UI
             this.m_loginLabel.AutoSize = true;
             this.m_loginLabel.Location = new System.Drawing.Point(28, 26);
             this.m_loginLabel.Name = "m_loginLabel";
-            this.m_loginLabel.Size = new System.Drawing.Size(106, 20);
+            this.m_loginLabel.Size = new System.Drawing.Size(55, 20);
             this.m_loginLabel.TabIndex = 0;
-            this.m_loginLabel.Text = "Login (e-mail):";
+            this.m_loginLabel.Text = "E-mail:";
             // 
             // m_firstNameLabel
             // 
@@ -85,7 +85,7 @@ namespace MovieStore.UI
             // 
             this.m_loginTextBox.Location = new System.Drawing.Point(149, 23);
             this.m_loginTextBox.Name = "m_loginTextBox";
-            this.m_loginTextBox.PlaceholderText = "your e-mail";
+            this.m_loginTextBox.PlaceholderText = "this is user\'s loggin";
             this.m_loginTextBox.Size = new System.Drawing.Size(270, 27);
             this.m_loginTextBox.TabIndex = 4;
             // 
@@ -139,7 +139,7 @@ namespace MovieStore.UI
             // 
             this.m_password1TextBox.Location = new System.Drawing.Point(149, 238);
             this.m_password1TextBox.Name = "m_password1TextBox";
-            this.m_password1TextBox.PlaceholderText = "your password";
+            this.m_password1TextBox.PlaceholderText = "strong password please";
             this.m_password1TextBox.Size = new System.Drawing.Size(270, 27);
             this.m_password1TextBox.TabIndex = 10;
             // 
@@ -157,7 +157,7 @@ namespace MovieStore.UI
             this.m_okButton.Name = "m_okButton";
             this.m_okButton.Size = new System.Drawing.Size(155, 29);
             this.m_okButton.TabIndex = 12;
-            this.m_okButton.Text = "Create && Login";
+            this.m_okButton.Text = "Ok";
             this.m_okButton.UseVisualStyleBackColor = true;
             this.m_okButton.Click += new System.EventHandler(this.OnOk);
             // 
@@ -171,7 +171,7 @@ namespace MovieStore.UI
             this.m_cancelButton.Text = "Cancel";
             this.m_cancelButton.UseVisualStyleBackColor = true;
             // 
-            // NewUserForm
+            // UserForm
             // 
             this.AcceptButton = this.m_okButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -195,9 +195,9 @@ namespace MovieStore.UI
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "NewUserForm";
+            this.Name = "UserForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "New account";
+            this.Text = "User";
             this.ResumeLayout(false);
             this.PerformLayout();
 
