@@ -60,13 +60,12 @@ namespace MovieStore.UI
                     m_okButton.Text = "Update user";
                     break;
                 case UserFormMode.ViewUser:
-                    Text = "Update user's data";
-                    m_okButton.Text = "Update user";
+                    Text = "View user's data";
+                    m_okButton.Text = "Ok";
                     break;
             }
 
             var isViewMode = Mode == UserFormMode.ViewUser;
-            m_okButton.Enabled = !isViewMode;
             m_userRadioButton.Enabled = !isViewMode;
             m_managerRadioButton.Enabled = !isViewMode;
             m_password1TextBox.ReadOnly = isViewMode;
@@ -143,7 +142,7 @@ namespace MovieStore.UI
                         break;
 
                     case UserFormMode.ViewUser:
-                        DialogResult = DialogResult.OK;
+                        DialogResult = DialogResult.Cancel; // Just view and cancel
                         break;
                 }
             }

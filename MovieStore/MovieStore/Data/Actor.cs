@@ -6,20 +6,20 @@ using System.Threading.Tasks;
 
 namespace MovieStore.Data
 {
-    enum ActorFamilyStatus
+    public enum ActorFamilyStatus
     {
         Single,
         Married
     }
 
-    class Actor
+    public class Actor
     {
-        internal int Id { get; set; }
-        internal string FirstName { get; set; }
-        internal string SecondName { get; set; }
-        internal DateTime? BirthDate { get; set; }              // in UTC
-        internal string Country { get; set; }                   // can be null
-        internal ActorFamilyStatus? FamilyStatus { get; set; }  // can be null
-        internal string AwardsDescription { get; set; }         // can be null
+        public int Id { get; set; }
+        public string FirstName { get; set; }
+        public string SecondName { get; set; }
+        public DateTime? BirthDate { get; set; }              // in UTC
+        public string Country { get; set; }                   // can be null
+        public ActorFamilyStatus? FamilyStatus { get; set; }  // can be null
+        public string AwardsDescription { get; set; }         // can be null
     }
 }

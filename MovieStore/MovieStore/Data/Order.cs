@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace MovieStore.Data
 {
-    class Order
+    public class Order
     {
-        internal int Id { get; set; }
-        internal DateTime Date { get; set; }            // in UTC
-        internal User User { get; set; }                // either whole User obj or User.Id only
-        internal IList<Movie> Movies { get; set; }      // can be null
+        public int Id { get; set; }
+        public DateTime Date { get; set; }            // in UTC
+        public User User { get; set; }                // either whole User obj or User.Id only
+        public IList<Movie> Movies { get; set; }      // can be null
     }
 }

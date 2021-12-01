@@ -7,29 +7,29 @@ using System.Threading.Tasks;
 
 namespace MovieStore.Data
 {
-    enum UserRole
+    public enum UserRole
     {
         User,
         Manager,
     }
 
-    class User
+    public class User
     {
-        internal int Id { get; set; }
-        internal string FirstName { get; set; }
-        internal string SecondName { get; set; }
-        internal string EMail { get; set; }
-        internal UserRole Role { get; set; } = Data.UserRole.User;
-        internal string PasswordHash { get; set; }
-        internal string Salt { get; init; } = Utility.Seсurity.GenerateSalt();
+        public int Id { get; set; }
+        public string FirstName { get; set; }
+        public string SecondName { get; set; }
+        public string EMail { get; set; }
+        public UserRole Role { get; set; } = Data.UserRole.User;
+        public string PasswordHash { get; set; }
+        public string Salt { get; init; } = Utility.Seсurity.GenerateSalt();
 
-        internal void SetPassword(string password)
+        public void SetPassword(string password)
         {
             var hash = Utility.Seсurity.GetSHA256Hash($"{password}{Salt}");
             PasswordHash = hash;
         }
 
-        internal bool CheckPassword(string password)
+        public bool CheckPassword(string password)
         {
             var hash = Utility.Seсurity.GetSHA256Hash($"{password}{Salt}");
 

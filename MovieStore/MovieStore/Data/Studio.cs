@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace MovieStore.Data
 {
-    class Studio
+    public class Studio
     {
-        internal int Id { get; set; }
-        internal string Title { get; set; }
-        internal string Country { get; set; }           // can be null
-        internal DateTime FoundationDate { get; set; }  // in UTC
-        internal string Production { get; set; }       // can be null
+        public int Id { get; set; }
+        public string Title { get; set; }
+        public string Country { get; set; }           // can be null
+        public DateTime FoundationDate { get; set; }  // in UTC
+        public string Production { get; set; }       // can be null
     }
 }

@@ -486,7 +486,23 @@ namespace MovieStore.UI
 
         bool UpdateMoviesListViewItem(bool createNewItem)
         {
-            return false;
+            var res = false;
+
+            var selectedItem = m_listView.SelectedItems.Cast<ListViewItem>()?.FirstOrDefault()?.Tag as Data.Movie;
+            if (createNewItem || (selectedItem != null))
+            {
+                using (var movieForm = new MovieForm())
+                {
+                    var isManagerMode = Program.DB.IsManagerMode;
+                    movieForm.SetMode(createNewItem ? MovieFormMode.NewMovie :
+                                     (isManagerMode ? MovieFormMode.EditMovie : MovieFormMode.ViewMovie), 
+                                      selectedItem);
+
+                    res = movieForm.ShowDialog(this) == DialogResult.OK;
+                }
+            }
+
+            return res;
         }
 
         bool UpdateActorsListViewItem(bool createNewItem)
@@ -513,7 +529,11 @@ namespace MovieStore.UI
             {
                 using (var userForm = new UserForm())
                 {
-                    userForm.SetMode(createNewItem ? UserFormMode.NewUser : UserFormMode.EditUser, selectedItem);
+                    var isManagerMode = Program.DB.IsManagerMode;
+                    userForm.SetMode(createNewItem ? UserFormMode.NewUser : 
+                                    (isManagerMode ? UserFormMode.EditUser : UserFormMode.ViewUser),
+                                     selectedItem);
+
                     res = userForm.ShowDialog(this) == DialogResult.OK;
                 }
             }
