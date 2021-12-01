@@ -30,21 +30,21 @@ namespace MovieStore.DB.Serializers
             return res;
         }
 
-        internal static void Save(Data.Movie moview, DataRow row)
+        internal static void Save(Data.Movie movie, DataRow row)
         {
-            if (moview.Studio == null)
+            if (movie.Studio == null)
             {
                 throw new ArgumentException("Studio.Id should exists.", nameof(Data.Movie.Studio));
             }
 
-            row[MovieDB.c_TitleColumn] = moview.Title;
-            row[MovieDB.c_MovieYearColumn] = moview.Year;
-            row[MovieDB.c_GenreColumn] = moview.Genre;
-            row[MovieDB.c_DescriptionColumn] = moview.Description;
-            row[MovieDB.c_ImdbColumn] = moview.Imdb;
-            row[MovieDB.c_CountryColumn] = moview.Country;
-            row[MovieDB.c_PriceColumn] = moview.Price;
-            row[MovieDB.c_StudioIdColumn] = moview.Studio.Id;
+            row[MovieDB.c_TitleColumn] = movie.Title;
+            row[MovieDB.c_MovieYearColumn] = movie.Year;
+            row[MovieDB.c_GenreColumn] = movie.Genre;
+            row[MovieDB.c_DescriptionColumn] = movie.Description;
+            row[MovieDB.c_ImdbColumn] = movie.Imdb;
+            row[MovieDB.c_CountryColumn] = movie.Country;
+            row[MovieDB.c_PriceColumn] = movie.Price;
+            row[MovieDB.c_StudioIdColumn] = movie.Studio.Id;
         }
 
         internal static void AddColumns(DataTable table)

@@ -8,8 +8,8 @@ namespace MovieStore.DB.Filters
 {
     class PrimaryKeyFilter : EmptyFilter
     {
-        string Table { get; init; }
-        string PkColumn { get; init; }
+        internal string Table { get; init; }
+        internal string PkColumn { get; init; }
 
         string IdField => MovieDB.BuildFieldName(Table, PkColumn);
 

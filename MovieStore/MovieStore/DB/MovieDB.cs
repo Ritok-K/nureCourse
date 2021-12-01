@@ -719,6 +719,43 @@ namespace MovieStore.DB
             }
         }
 
+        internal void AddOrders(IEnumerable<Data.Order> order)
+        {
+            if (!IsAuthorized)
+            {
+                throw new NotAuthorizedDBException();
+            }
+
+            // inserting
+            {
+                var sql = new QueryBuilders.SelectQueryBuilder()
+                                           .SelectAll()
+                                           .From(c_OrdersTable)
+                                           .Pagging(1, 0)
+                                           .Make();
+
+                using (var connection = new MySqlConnection(ConnectionString))
+                using (var command = new MySqlCommand(sql, connection))
+                {
+                    using (var adapter = new MySqlDataAdapter(command))
+                    {
+                        var table = new DataTable(c_OrdersTable);
+                        Serializers.OrderSerializer.AddColumns(table);
+
+                        foreach (var o in order)
+                        {
+                            var r = table.NewRow();
+                            Serializers.OrderSerializer.Save(o, r);
+                            table.Rows.Add(r);
+                        }
+
+                        var commandBuilder = new MySqlCommandBuilder(adapter);
+                        adapter.Update(table);
+                    }
+                }
+            }
+        }
+
         internal void AddUsers(IEnumerable<Data.User> users)
         {
             if (!IsAuthorized)
@@ -801,7 +838,7 @@ namespace MovieStore.DB
                         if (table.Rows.Count > 0)
                         {
                             // setup pk column (required for Find method)
-                            table.PrimaryKey = new DataColumn[] { table.Columns.Cast<DataColumn>().First(c => c.ColumnName == c_MovieIdColumn) };
+                            table.PrimaryKey = new DataColumn[] { table.Columns.Cast<DataColumn>().First(c => c.ColumnName == filter.PkColumn) };
 
                             foreach (var m in movies)
                             {
@@ -855,7 +892,7 @@ namespace MovieStore.DB
                         if (table.Rows.Count > 0)
                         {
                             // setup pk column (required for Find method)
-                            table.PrimaryKey = new DataColumn[] { table.Columns.Cast<DataColumn>().First(c => c.ColumnName == c_StudioIdColumn) };
+                            table.PrimaryKey = new DataColumn[] { table.Columns.Cast<DataColumn>().First(c => c.ColumnName == filter.PkColumn) };
 
                             foreach (var s in studio)
                             {
@@ -863,6 +900,60 @@ namespace MovieStore.DB
                                 if (r != null)
                                 {
                                     Serializers.StudioSerializer.Save(s, r);
+                                }
+                            }
+
+                            var commandBuilder = new MySqlCommandBuilder(adapter);
+                            commandBuilder.ConflictOption = ConflictOption.OverwriteChanges;
+
+                            adapter.Update(table);
+                        }
+                    }
+                }
+            }
+        }
+
+        internal void UpdateOrders(IEnumerable<Data.Order> orders)
+        {
+            if (!IsAuthorized)
+            {
+                throw new NotAuthorizedDBException();
+            }
+
+            // updating
+            {
+                var filter = new Filters.OrderFilter();
+                filter.WithIds(orders.Select(u => u.Id));
+
+                var sql = new QueryBuilders.SelectQueryBuilder()
+                                           .SelectAll()
+                                           .From(c_OrdersTable)
+                                           .AddFilter(filter)
+                                           .Make();
+
+                using (var connection = new MySqlConnection(ConnectionString))
+                using (var command = new MySqlCommand(sql, connection))
+                {
+                    (filter as IDataFilter).AddCommandParameters(command);
+
+                    using (var adapter = new MySqlDataAdapter(command))
+                    {
+                        var ds = new DataSet();
+                        adapter.Fill(ds);
+                        Debug.Assert(ds.Tables.Count > 0);
+
+                        var table = ds.Tables[0];
+                        if (table.Rows.Count > 0)
+                        {
+                            // setup pk column (required for Find method)
+                            table.PrimaryKey = new DataColumn[] { table.Columns.Cast<DataColumn>().First(c => c.ColumnName == filter.PkColumn) };
+
+                            foreach (var o in orders)
+                            {
+                                var r = table.Rows.Find(o.Id);
+                                if (r != null)
+                                {
+                                    Serializers.OrderSerializer.Save(o, r);
                                 }
                             }
 
@@ -909,7 +1000,7 @@ namespace MovieStore.DB
                         if (table.Rows.Count > 0)
                         {
                             // setup pk column (required for Find method)
-                            table.PrimaryKey = new DataColumn[] { table.Columns.Cast<DataColumn>().First(c => c.ColumnName == c_UserIdColumn) };
+                            table.PrimaryKey = new DataColumn[] { table.Columns.Cast<DataColumn>().First(c => c.ColumnName == filter.PkColumn) };
 
                             foreach (var u in users)
                             {

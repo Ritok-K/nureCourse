@@ -23,5 +23,22 @@ namespace MovieStore.DB.Serializers
 
             return res;
         }
+
+        internal static void Save(Data.Order order, DataRow row)
+        {
+            if (order.User == null)
+            {
+                throw new ArgumentException("User.Id should exists.", nameof(Data.Order.User));
+            }
+
+            row[MovieDB.c_DateColumn] = order.Date;
+            row[MovieDB.c_UserIdColumn] = order.User.Id;
+        }
+
+        internal static void AddColumns(DataTable table)
+        {
+            table.Columns.Add(MovieDB.c_DateColumn, typeof(DateTime));
+            table.Columns.Add(MovieDB.c_UserIdColumn, typeof(string));
+        }
     }
 }
