@@ -9,11 +9,11 @@ namespace MovieStore.DB
 {
     interface IDataFilter
     {
-        IEnumerable<string> GetJoinClauses() { return Enumerable.Empty<string>(); }
-        IEnumerable<string> GetWhereClauses() { return Enumerable.Empty<string>(); }
-        IEnumerable<string> GetOrderClauses() { return Enumerable.Empty<string>(); }
-        IEnumerable<string> GetGroupByClauses() { return Enumerable.Empty<string>(); }
+        IEnumerable<string> GetJoinClauses();
+        IEnumerable<string> GetWhereClauses();
+        IEnumerable<string> GetOrderClauses();
+        IEnumerable<string> GetGroupByClauses();
 
-        void AddCommandParameters(MySqlCommand command) {}
+        void AddCommandParameters(MySqlCommand command);
     }
 }

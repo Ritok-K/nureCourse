@@ -512,7 +512,46 @@ namespace MovieStore.UI
 
         bool UpdateStudioListViewItem(bool createNewItem)
         {
-            return false;
+            var res = false;
+
+            var selectedItem = m_listView.SelectedItems.Cast<ListViewItem>()?.FirstOrDefault()?.Tag as Data.Studio;
+            if (createNewItem || (selectedItem != null))
+            {
+#if DEBUG
+                if (createNewItem)
+                {
+                    var s = new Data.Studio()
+                    {
+                        Title = "Carolco Pictures",
+                        Country = "USA",
+                        FoundationDate = new DateTime(1976, 1, 1),
+                        Production = string.Empty
+                    };
+
+                    Program.DB.AddStudio(new Data.Studio[] { s });
+                    res = true;
+                }
+                else
+                {
+                    var s = selectedItem;
+                    s.Title = string.Join("",selectedItem.Title.Reverse());
+                    Program.DB.UpdateStudio(new Data.Studio[] { s });
+                    res = true;
+                }
+#endif
+
+                //using (var userForm = new UserForm())
+                //{
+                //    var isManagerMode = Program.DB.IsManagerMode;
+                //    userForm.SetMode(createNewItem ? UserFormMode.NewUser :
+                //                    (isManagerMode ? UserFormMode.EditUser : UserFormMode.ViewUser),
+                //                     selectedItem);
+
+                //    res = userForm.ShowDialog(this) == DialogResult.OK;
+                //}
+            }
+
+            return res;
         }
 
         bool UpdateOrdersListViewItem(bool createNewItem)

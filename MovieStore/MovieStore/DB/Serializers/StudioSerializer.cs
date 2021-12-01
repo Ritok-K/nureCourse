@@ -25,5 +25,21 @@ namespace MovieStore.DB.Serializers
 
             return res;
         }
+
+        internal static void Save(Data.Studio studio, DataRow row)
+        {
+            row[MovieDB.c_TitleColumn] = studio.Title;
+            row[MovieDB.c_CountryColumn] = studio.Country;
+            row[MovieDB.c_FoundationDateColumn] = studio.FoundationDate;
+            row[MovieDB.c_ProductionColumn] = studio.Production;
+        }
+
+        internal static void AddColumns(DataTable table)
+        {
+            table.Columns.Add(MovieDB.c_TitleColumn, typeof(string));
+            table.Columns.Add(MovieDB.c_CountryColumn, typeof(string));
+            table.Columns.Add(MovieDB.c_FoundationDateColumn, typeof(DateTime));
+            table.Columns.Add(MovieDB.c_ProductionColumn, typeof(string));
+        }
     }
 }
