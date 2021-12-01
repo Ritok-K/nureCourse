@@ -153,7 +153,8 @@ namespace MovieStore.UI
                         m.Country,
                         Utility.UIPrimitiveFormatting.FormatPrice(m.Price),
                         Utility.UIPrimitiveFormatting.FormatActorsList(m.Actors),
-                    }));
+                    })
+                    { Tag = m });
                 }
 
                 ExpandListViewColumns();
@@ -181,7 +182,8 @@ namespace MovieStore.UI
                         Utility.UIPrimitiveFormatting.Format(a.BirthDate,"d"),
                         a.Country,
                         Utility.UIPrimitiveFormatting.Format(a.FamilyStatus),
-                    }));
+                    })
+                    { Tag = a });
                 }
 
                 ExpandListViewColumns();
@@ -196,7 +198,7 @@ namespace MovieStore.UI
         {
             try
             {
-                var studios = Program.DB.GetStudios(ListViewLimit, ListViewOffset);
+                var studios = Program.DB.GetStudio(ListViewLimit, ListViewOffset);
 
                 m_listView.BeginUpdate();
                 m_listView.Items.Clear();
@@ -209,7 +211,8 @@ namespace MovieStore.UI
                         s.Country,
                         Utility.UIPrimitiveFormatting.Format(s.FoundationDate,"yyyy"),
                         s.Production,
-                    }));
+                    })
+                    { Tag = s });
                 }
 
                 ExpandListViewColumns();
@@ -237,7 +240,8 @@ namespace MovieStore.UI
                         Utility.UIPrimitiveFormatting.Format(o.Date,"g"),
                         Utility.UIPrimitiveFormatting.FormatUserName(o.User),
                         Utility.UIPrimitiveFormatting.FormatMoviesList(o.Movies),
-                    }));
+                    })
+                    { Tag = o });
                 }
 
                 ExpandListViewColumns();
@@ -264,7 +268,8 @@ namespace MovieStore.UI
                         Utility.UIPrimitiveFormatting.FormatUserName(u),
                         u.EMail,
                         Utility.UIPrimitiveFormatting.Format(u.Role),
-                    }));
+                    })
+                    { Tag = u });
                 }
 
                 ExpandListViewColumns();
@@ -274,7 +279,173 @@ namespace MovieStore.UI
                 m_listView.EndUpdate();
             }
         }
-        
+
+        void DeleteListViewItems(bool refreshList = true)
+        {
+            if (!Program.DB.IsAuthorized)
+            {
+                return;
+            }
+
+            switch (ViewMode)
+            {
+                case ViewMode.Movies:
+                    DeleteMoviesListViewItems();
+                    break;
+
+                case ViewMode.Actors:
+                    DeleteActorsListViewItems();
+                    break;
+
+                case ViewMode.Studio:
+                    DeleteStudioListViewItems();
+                    break;
+
+                case ViewMode.Orders:
+                    DeleteOrdersListViewItems();
+                    break;
+
+                case ViewMode.Users:
+                    DeleteUsersListViewItems();
+                    break;
+            }
+
+            if (refreshList)
+            {
+                RefreshListView();
+            }
+        }
+
+        void DeleteMoviesListViewItems()
+        {
+            try
+            {
+                var movies = m_listView.SelectedItems
+                                       .Cast<ListViewItem>()
+                                       .Select(lv => lv.Tag as Data.Movie)
+                                       .ToList();
+
+                Program.DB.DeleteMovies(movies);
+
+                m_listView.BeginUpdate();
+
+                foreach (var lv in m_listView.SelectedItems.Cast<ListViewItem>())
+                {
+                    m_listView.Items.Remove(lv);
+                }
+
+                ExpandListViewColumns();
+            }
+            finally
+            {
+                m_listView.EndUpdate();
+            }
+        }
+
+        void DeleteActorsListViewItems()
+        {
+            try
+            {
+                var actors = m_listView.SelectedItems
+                                       .Cast<ListViewItem>()
+                                       .Select(lv => lv.Tag as Data.Actor)
+                                       .ToList();
+
+                Program.DB.DeleteActors(actors);
+
+                m_listView.BeginUpdate();
+
+                foreach (var lv in m_listView.SelectedItems.Cast<ListViewItem>())
+                {
+                    m_listView.Items.Remove(lv);
+                }
+
+                ExpandListViewColumns();
+            }
+            finally
+            {
+                m_listView.EndUpdate();
+            }
+        }
+
+        void DeleteStudioListViewItems()
+        {
+            try
+            {
+                var studio = m_listView.SelectedItems
+                                       .Cast<ListViewItem>()
+                                       .Select(lv => lv.Tag as Data.Studio)
+                                       .ToList();
+
+                Program.DB.DeleteStudio(studio);
+
+                m_listView.BeginUpdate();
+
+                foreach (var lv in m_listView.SelectedItems.Cast<ListViewItem>())
+                {
+                    m_listView.Items.Remove(lv);
+                }
+
+                ExpandListViewColumns();
+            }
+            finally
+            {
+                m_listView.EndUpdate();
+            }
+        }
+
+        void DeleteOrdersListViewItems()
+        {
+            try
+            {
+                var orders = m_listView.SelectedItems
+                                       .Cast<ListViewItem>()
+                                       .Select(lv => lv.Tag as Data.Order)
+                                       .ToList();
+
+                Program.DB.DeleteOrders(orders);
+
+                m_listView.BeginUpdate();
+
+                foreach (var lv in m_listView.SelectedItems.Cast<ListViewItem>())
+                {
+                    m_listView.Items.Remove(lv);
+                }
+
+                ExpandListViewColumns();
+            }
+            finally
+            {
+                m_listView.EndUpdate();
+            }
+        }
+
+        void DeleteUsersListViewItems()
+        {
+            try
+            {
+                var users = m_listView.SelectedItems
+                                       .Cast<ListViewItem>()
+                                       .Select(lv => lv.Tag as Data.User)
+                                       .ToList();
+
+                Program.DB.DeleteUsers(users);
+
+                m_listView.BeginUpdate();
+
+                foreach (var lv in m_listView.SelectedItems.Cast<ListViewItem>())
+                {
+                    m_listView.Items.Remove(lv);
+                }
+
+                ExpandListViewColumns();
+            }
+            finally
+            {
+                m_listView.EndUpdate();
+            }
+        }
+
         void ReinitControls()
         {
             switch (ViewMode)
@@ -365,6 +536,7 @@ namespace MovieStore.UI
         {
             var isManagerMode = Program.DB.IsManagerMode;
             var isAuthorized = Program.DB.IsAuthorized;
+            var hasSelection = m_listView.SelectedItems.Count > 0;
 
             // Menu items
             {
@@ -398,7 +570,7 @@ namespace MovieStore.UI
                 m_addNewToolStripButton.Enabled = isManagerMode && isAuthorized;
                 m_addNewToolStripButton.Visible = isManagerMode;
 
-                m_deleteToolStripButton.Enabled = isManagerMode && isAuthorized;
+                m_deleteToolStripButton.Enabled = isManagerMode && isAuthorized && hasSelection;
                 m_deleteToolStripButton.Visible = isManagerMode;
             }
         }
@@ -511,6 +683,31 @@ namespace MovieStore.UI
         private void OnMyBasketMode(object sender, EventArgs e)
         {
 
+        }
+
+        private void OnDeleteSelected(object sender, EventArgs e)
+        {
+            try
+            {
+                if (m_listView.SelectedItems.Count > 0)
+                {
+                    var resp = MessageBox.Show(this, "Are you sure that you want to delete selected items?\nAll related with them data will be deleted also and you can not rollback this action!", 
+                                                     "?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (resp == DialogResult.Yes)
+                    {
+                        DeleteListViewItems();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void OnListViewSelectionChanged(object sender, EventArgs e)
+        {
+            UpdateControls();
         }
     }
 }

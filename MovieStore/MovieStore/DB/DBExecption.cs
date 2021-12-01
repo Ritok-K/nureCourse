@@ -38,6 +38,14 @@ namespace MovieStore.DB
         }
     }
 
+    class AttemptToDeleteCurrentUserDBException : DBExecption
+    {
+        internal AttemptToDeleteCurrentUserDBException(string email)
+            : base($"You can not delete the currently logged in user '{email}'!")
+        {
+        }
+    }
+
     class InvalidPasswordDBException : DBExecption
     {
         internal InvalidPasswordDBException()

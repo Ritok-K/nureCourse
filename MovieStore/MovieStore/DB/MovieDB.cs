@@ -352,7 +352,7 @@ namespace MovieStore.DB
             return res;
         }
 
-        internal IList<Data.Studio> GetStudios(int? limit = null, int? offset = null, IDataFilter filter = null)
+        internal IList<Data.Studio> GetStudio(int? limit = null, int? offset = null, IDataFilter filter = null)
         {
             if (!IsAuthorized)
             {
@@ -498,6 +498,151 @@ namespace MovieStore.DB
             }
 
             return res;
+        }
+
+        internal void DeleteUsers(IEnumerable<Data.User> users)
+        {
+            if (!IsAuthorized)
+            {
+                throw new NotAuthorizedDBException();
+            }
+
+            if (users.Any(u => u.Id == CurrentUser.Id))
+            {
+                throw new AttemptToDeleteCurrentUserDBException(CurrentUser.EMail);
+            }
+
+            var sqlParams = users.Select(u => Tuple.Create(BuildParameterName(c_UsersTable, $"{c_UserIdColumn}{u.Id}"), u.Id))
+                                 .ToList();
+
+            var sql = new QueryBuilders.DeleteRequestBuilder()
+                                       .Delete(c_UsersTable)
+                                       .Where($"{BuildFieldName(c_UsersTable, c_UserIdColumn)} IN ({string.Join(", ", sqlParams.Select(p => p.Item1))})")
+                                       .Make();
+
+            using (var connection = new MySqlConnection(ConnectionString))
+            using (var command = new MySqlCommand(sql, connection))
+            {
+                foreach (var p in sqlParams)
+                {
+                    command.Parameters.AddWithValue(p.Item1, p.Item2);
+                }
+
+                connection.Open();
+                command.ExecuteNonQuery();
+            }
+        }
+
+        internal void DeleteMovies(IEnumerable<Data.Movie> movies)
+        {
+            if (!IsAuthorized)
+            {
+                throw new NotAuthorizedDBException();
+            }
+
+            var sqlParams = movies.Select(m => Tuple.Create(BuildParameterName(c_MoviesTable, $"{c_MovieIdColumn}{m.Id}"), m.Id))
+                                  .ToList();
+
+            var sql = new QueryBuilders.DeleteRequestBuilder()
+                                       .Delete(c_MoviesTable)
+                                       .Where($"{BuildFieldName(c_MoviesTable, c_MovieIdColumn)} IN ({string.Join(", ", sqlParams.Select(p => p.Item1))})")
+                                       .Make();
+
+            using (var connection = new MySqlConnection(ConnectionString))
+            using (var command = new MySqlCommand(sql, connection))
+            {
+                foreach (var p in sqlParams)
+                {
+                    command.Parameters.AddWithValue(p.Item1, p.Item2);
+                }
+
+                connection.Open();
+                command.ExecuteNonQuery();
+            }
+        }
+
+        internal void DeleteActors(IEnumerable<Data.Actor> actors)
+        {
+            if (!IsAuthorized)
+            {
+                throw new NotAuthorizedDBException();
+            }
+
+            var sqlParams = actors.Select(a => Tuple.Create(BuildParameterName(c_ActorsTable, $"{c_ActorIdColumn}{a.Id}"), a.Id))
+                                  .ToList();
+
+            var sql = new QueryBuilders.DeleteRequestBuilder()
+                                       .Delete(c_ActorsTable)
+                                       .Where($"{BuildFieldName(c_ActorsTable, c_ActorIdColumn)} IN ({string.Join(", ", sqlParams.Select(p => p.Item1))})")
+                                       .Make();
+
+            using (var connection = new MySqlConnection(ConnectionString))
+            using (var command = new MySqlCommand(sql, connection))
+            {
+                foreach (var p in sqlParams)
+                {
+                    command.Parameters.AddWithValue(p.Item1, p.Item2);
+                }
+
+                connection.Open();
+                command.ExecuteNonQuery();
+            }
+        }
+
+        internal void DeleteStudio(IEnumerable<Data.Studio> studio)
+        {
+            if (!IsAuthorized)
+            {
+                throw new NotAuthorizedDBException();
+            }
+
+            var sqlParams = studio.Select(s => Tuple.Create(BuildParameterName(c_StudioTable, $"{c_StudioIdColumn}{s.Id}"), s.Id))
+                                  .ToList();
+
+            var sql = new QueryBuilders.DeleteRequestBuilder()
+                                       .Delete(c_StudioTable)
+                                       .Where($"{BuildFieldName(c_StudioTable, c_StudioIdColumn)} IN ({string.Join(", ", sqlParams.Select(p => p.Item1))})")
+                                       .Make();
+
+            using (var connection = new MySqlConnection(ConnectionString))
+            using (var command = new MySqlCommand(sql, connection))
+            {
+                foreach (var p in sqlParams)
+                {
+                    command.Parameters.AddWithValue(p.Item1, p.Item2);
+                }
+
+                connection.Open();
+                command.ExecuteNonQuery();
+            }
+        }
+
+        internal void DeleteOrders(IEnumerable<Data.Order> orders)
+        {
+            if (!IsAuthorized)
+            {
+                throw new NotAuthorizedDBException();
+            }
+
+            var sqlParams = orders.Select(o => Tuple.Create(BuildParameterName(c_OrdersTable, $"{c_OrderIdColumn}{o.Id}"), o.Id))
+                                  .ToList();
+
+            var sql = new QueryBuilders.DeleteRequestBuilder()
+                                       .Delete(c_OrdersTable)
+                                       .Where($"{BuildFieldName(c_OrdersTable, c_OrderIdColumn)} IN ({string.Join(", ", sqlParams.Select(p => p.Item1))})")
+                                       .Make();
+
+            using (var connection = new MySqlConnection(ConnectionString))
+            using (var command = new MySqlCommand(sql, connection))
+            {
+                foreach (var p in sqlParams)
+                {
+                    command.Parameters.AddWithValue(p.Item1, p.Item2);
+                }
+
+                connection.Open();
+                command.ExecuteNonQuery();
+            }
         }
 
         #endregion

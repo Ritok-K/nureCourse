@@ -63,6 +63,7 @@ namespace MovieStore.UI
             this.m_listView.TabIndex = 1;
             this.m_listView.UseCompatibleStateImageBehavior = false;
             this.m_listView.View = System.Windows.Forms.View.Details;
+            this.m_listView.SelectedIndexChanged += new System.EventHandler(this.OnListViewSelectionChanged);
             // 
             // m_menuStrip
             // 
@@ -176,6 +177,7 @@ namespace MovieStore.UI
             this.m_deleteToolStripButton.Name = "m_deleteToolStripButton";
             this.m_deleteToolStripButton.Size = new System.Drawing.Size(29, 24);
             this.m_deleteToolStripButton.Text = "Delete selected";
+            this.m_deleteToolStripButton.Click += new System.EventHandler(this.OnDeleteSelected);
             // 
             // m_addNewToolStripButton
             // 
