@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -734,6 +735,9 @@ namespace MovieStore.UI
 
             // Toolstrip buttons
             {
+                m_receiptToolStripButton.Enabled = isAuthorized && hasSelection;
+                m_receiptToolStripButton.Visible = (ViewMode == ViewMode.Orders);
+
                 m_prevToolStripButton.Enabled = isAuthorized && (ListViewOffset > 0);
                 m_prevToolStripButton.Visible = true;
 
@@ -745,6 +749,43 @@ namespace MovieStore.UI
 
                 m_deleteToolStripButton.Enabled = isManagerMode && isAuthorized && hasSelection;
                 m_deleteToolStripButton.Visible = isManagerMode;
+            }
+        }
+
+        void ExportReceipt()
+        {
+            if (!Program.DB.IsAuthorized || (ViewMode != ViewMode.Orders))
+            {
+                return;
+            }
+
+            var orders = m_listView.SelectedItems.Cast<ListViewItem>()
+                                                 .Select(lv => lv.Tag as Data.Order)
+                                                 .ToList();
+            if (orders.Any())
+            {
+                using(var saveDialog = new SaveFileDialog())
+                {
+                    saveDialog.Title = "Export orders receipt";
+                    saveDialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
+                    saveDialog.DefaultExt = "txt";
+                    saveDialog.CheckPathExists = true;
+                    saveDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+
+                    if (saveDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        var file = saveDialog.FileName;
+
+                        var reportBuilder = new Reports.OrderReceipt(orders, file);
+                        reportBuilder.Build();
+
+                        var resp = MessageBox.Show(this, "Receipt has been built. Do you want to open it?", "?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                        if (resp == DialogResult.Yes)
+                        {
+                            Process.Start(new ProcessStartInfo(file) { UseShellExecute = true });
+                        }
+                    }
+                }
             }
         }
 
@@ -905,6 +946,18 @@ namespace MovieStore.UI
         private void OnListViewSelectionChanged(object sender, EventArgs e)
         {
             UpdateControls();
+        }
+
+        private void OnExportReceipt(object sender, EventArgs e)
+        {
+            try
+            {
+                ExportReceipt();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
