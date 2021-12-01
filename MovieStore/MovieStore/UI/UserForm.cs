@@ -14,7 +14,8 @@ namespace MovieStore.UI
     {
         NewLogging,
         NewUser,
-        EditUser
+        EditUser,
+        ViewUser,
     }
 
     public partial class UserForm : Form
@@ -58,7 +59,21 @@ namespace MovieStore.UI
                     Text = "Update user's data";
                     m_okButton.Text = "Update user";
                     break;
+                case UserFormMode.ViewUser:
+                    Text = "Update user's data";
+                    m_okButton.Text = "Update user";
+                    break;
             }
+
+            var isViewMode = Mode == UserFormMode.ViewUser;
+            m_okButton.Enabled = !isViewMode;
+            m_userRadioButton.Enabled = !isViewMode;
+            m_managerRadioButton.Enabled = !isViewMode;
+            m_password1TextBox.ReadOnly = isViewMode;
+            m_password2TextBox.ReadOnly = isViewMode;
+            m_firstNameTextBox.ReadOnly = isViewMode;
+            m_secondNameTextBox.ReadOnly = isViewMode;
+            m_loginTextBox.ReadOnly = isViewMode;
         }
 
         void UpdateData(bool save)
@@ -107,22 +122,27 @@ namespace MovieStore.UI
         {
             try
             {
-                UpdateData(true);
-
                 switch (Mode)
                 {
                     case UserFormMode.NewLogging:
+                        UpdateData(true);
                         Program.DB.LoginAsNewUser(User);
                         DialogResult = DialogResult.OK;
                         break;
 
                     case UserFormMode.NewUser:
+                        UpdateData(true);
                         Program.DB.AddUsers(new Data.User[] { User });
                         DialogResult = DialogResult.OK;
                         break;
 
                     case UserFormMode.EditUser:
+                        UpdateData(true);
                         Program.DB.UpdateUsers(new Data.User[] { User });
+                        DialogResult = DialogResult.OK;
+                        break;
+
+                    case UserFormMode.ViewUser:
                         DialogResult = DialogResult.OK;
                         break;
                 }
