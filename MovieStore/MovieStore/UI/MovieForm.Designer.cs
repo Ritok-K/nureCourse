@@ -134,7 +134,7 @@ namespace MovieStore.UI
             // 
             this.m_okButton.Location = new System.Drawing.Point(322, 402);
             this.m_okButton.Name = "m_okButton";
-            this.m_okButton.Size = new System.Drawing.Size(143, 29);
+            this.m_okButton.Size = new System.Drawing.Size(144, 29);
             this.m_okButton.TabIndex = 2;
             this.m_okButton.Text = "Ok";
             this.m_okButton.UseVisualStyleBackColor = true;
