@@ -366,23 +366,41 @@ namespace MovieStore.UI
             var isManagerMode = Program.DB.IsManagerMode;
             var isAuthorized = Program.DB.IsAuthorized;
 
-            m_moviesToolStripMenuItem.Enabled = true && isAuthorized;
-            m_moviesToolStripMenuItem.Visible = true;
-            
-            m_actorsToolStripMenuItem.Enabled = isManagerMode && isAuthorized;
-            m_actorsToolStripMenuItem.Visible = isManagerMode;
+            // Menu items
+            {
+                m_moviesToolStripMenuItem.Enabled = true && isAuthorized;
+                m_moviesToolStripMenuItem.Visible = true;
 
-            m_studiosToolStripMenuItem.Enabled = isManagerMode && isAuthorized;
-            m_studiosToolStripMenuItem.Visible = isManagerMode;
+                m_actorsToolStripMenuItem.Enabled = isManagerMode && isAuthorized;
+                m_actorsToolStripMenuItem.Visible = isManagerMode;
 
-            m_ordersToolStripMenuItem.Enabled = true && isAuthorized;
-            m_ordersToolStripMenuItem.Visible = true;
+                m_studiosToolStripMenuItem.Enabled = isManagerMode && isAuthorized;
+                m_studiosToolStripMenuItem.Visible = isManagerMode;
 
-            m_usersToolStripMenuItem.Enabled = isManagerMode && isAuthorized;
-            m_usersToolStripMenuItem.Visible = isManagerMode;
+                m_ordersToolStripMenuItem.Enabled = true && isAuthorized;
+                m_ordersToolStripMenuItem.Visible = true;
 
-            m_myBasketToolStripMenuItem.Enabled = !isManagerMode && isAuthorized;
-            m_myBasketToolStripMenuItem.Visible = !isManagerMode;
+                m_usersToolStripMenuItem.Enabled = isManagerMode && isAuthorized;
+                m_usersToolStripMenuItem.Visible = isManagerMode;
+
+                m_myBasketToolStripMenuItem.Enabled = !isManagerMode && isAuthorized;
+                m_myBasketToolStripMenuItem.Visible = !isManagerMode;
+            }
+
+            // Toolstrip buttons
+            {
+                m_prevToolStripButton.Enabled = isAuthorized;
+                m_prevToolStripButton.Visible = true;
+
+                m_nextToolStripButton.Enabled = isAuthorized;
+                m_nextToolStripButton.Visible = true;
+
+                m_addNewToolStripButton.Enabled = isManagerMode && isAuthorized;
+                m_addNewToolStripButton.Visible = isManagerMode;
+
+                m_deleteToolStripButton.Enabled = isManagerMode && isAuthorized;
+                m_deleteToolStripButton.Visible = isManagerMode;
+            }
         }
 
         private void OnLoad(object sender, EventArgs e)
