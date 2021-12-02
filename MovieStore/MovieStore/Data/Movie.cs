@@ -8,6 +8,8 @@ namespace MovieStore.Data
 {
     public class Movie
     {
+        #region Model properties
+
         public int Id { get; set; }
         public string Title { get; set; }
         public DateTime Year { get; set; }            // in UTC
@@ -18,5 +20,13 @@ namespace MovieStore.Data
         public int Price { get; set; }                // in cents
         public Studio Studio { get; set; }            // either whole Studio obj or Studio.Id only
         public IList<Actor> Actors { get; set; }      // can be null
+
+        #endregion
+
+        #region Aggregated properties
+
+        public int? Income { get; set; }              // can be null
+
+        #endregion
     }
 }

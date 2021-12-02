@@ -18,6 +18,8 @@ namespace MovieStore.UI
         Studio,
         Orders,
         Users,
+
+        TopMovies,
     }
 
     public partial class MainForm : Form
@@ -26,16 +28,38 @@ namespace MovieStore.UI
 
         ViewMode ViewMode { get; set; } = ViewMode.Movies;
 
+        bool IsViewModeEditable => ViewMode == ViewMode.Movies ||
+                                   ViewMode == ViewMode.Actors ||
+                                   ViewMode == ViewMode.Studio ||
+                                   ViewMode == ViewMode.Orders ||
+                                   ViewMode == ViewMode.Users;
+
         ColumnHeader[] MovieModeListColumns => new ColumnHeader[] 
         {
-            new ColumnHeader() { Text = "Title" },
-            new ColumnHeader() { Text = "Year" },
-            new ColumnHeader() { Text = "Genre" },
-            new ColumnHeader() { Text = "IMDB" },
-            new ColumnHeader() { Text = "Studio" },
-            new ColumnHeader() { Text = "Country" },
-            new ColumnHeader() { Text = "Price" },
-            new ColumnHeader() { Text = "Actors" },
+            new ColumnHeader() { Text = "Title", Name = nameof(Data.Movie.Title) },
+            new ColumnHeader() { Text = "Year", Name = nameof(Data.Movie.Year)  },
+            new ColumnHeader() { Text = "Genre", Name = nameof(Data.Movie.Genre)  },
+            new ColumnHeader() { Text = "IMDB", Name = nameof(Data.Movie.Imdb)  },
+            new ColumnHeader() { Text = "Studio", Name = nameof(Data.Movie.Studio)  },
+            new ColumnHeader() { Text = "Country", Name = nameof(Data.Movie.Country)  },
+            new ColumnHeader() { Text = "Price", Name = nameof(Data.Movie.Price)  },
+            new ColumnHeader() { Text = "Actors", Name = nameof(Data.Movie.Actors)  },
+        };
+
+        ColumnHeader[] ManagerTopMovieModeListColumns => new ColumnHeader[]
+        {
+            new ColumnHeader() { Text = "Title", Name = nameof(Data.Movie.Title) },
+            new ColumnHeader() { Text = "Year", Name = nameof(Data.Movie.Year)  },
+            new ColumnHeader() { Text = "IMDB", Name = nameof(Data.Movie.Imdb)  },
+            new ColumnHeader() { Text = "Income", Name = nameof(Data.Movie.Income)  },
+        };
+
+        ColumnHeader[] CustomerTopMovieModeListColumns => new ColumnHeader[]
+        {
+            new ColumnHeader() { Text = "Title", Name = nameof(Data.Movie.Title) },
+            new ColumnHeader() { Text = "Year", Name = nameof(Data.Movie.Year)  },
+            new ColumnHeader() { Text = "IMDB", Name = nameof(Data.Movie.Imdb)  },
+            new ColumnHeader() { Text = "Income", Name = nameof(Data.Movie.Income)  },
         };
 
         ColumnHeader[] ActorsModeListColumns => new ColumnHeader[]
@@ -114,6 +138,7 @@ namespace MovieStore.UI
             switch (ViewMode)
             {
                 case ViewMode.Movies:
+                case ViewMode.TopMovies:
                     RefreshMoviesListView();
                     break;
 
@@ -137,35 +162,52 @@ namespace MovieStore.UI
 
         void RefreshMoviesListView()
         {
-            try
-            {
-                var movies = Program.DB.GetMovies(ListViewLimit, ListViewOffset, loadActors: true);
+            var movies = (ViewMode == ViewMode.Movies) ? Program.DB.GetMovies(ListViewLimit, ListViewOffset, loadActors: true) :
+                                                         Program.DB.GetTopMovies(ListViewLimit, ListViewOffset, loadActors: false);
+            var view = movies.Select(m => new Dictionary<string, string>()
+                                          {
+                                              { nameof(Data.Movie.Title),     m.Title },
+                                              { nameof(Data.Movie.Year),      Utility.UIPrimitiveFormatting.Format(m.Year,"yyyy") },
+                                              { nameof(Data.Movie.Genre),     m.Genre },
+                                              { nameof(Data.Movie.Imdb),      Utility.UIPrimitiveFormatting.FormatImdb(m.Imdb)},
+                                              { nameof(Data.Movie.Studio),    m.Studio.Title},
+                                              { nameof(Data.Movie.Country),   m.Country },
+                                              { nameof(Data.Movie.Price),     Utility.UIPrimitiveFormatting.FormatPrice(m.Price) },
+                                              { nameof(Data.Movie.Actors),    Utility.UIPrimitiveFormatting.FormatActorsList(m.Actors)},
+                                              { nameof(Data.Movie.Income),    Utility.UIPrimitiveFormatting.FormatPrice(m.Income)}
+                                          }).ToList();
 
-                m_listView.BeginUpdate();
-                m_listView.Items.Clear();
+            PopulateListView(movies, view);
 
-                foreach(var m in movies)
-                {
-                    m_listView.Items.Add(new ListViewItem(new string[]
-                    {
-                        m.Title,
-                        Utility.UIPrimitiveFormatting.Format(m.Year,"yyyy"),
-                        m.Genre,
-                        Utility.UIPrimitiveFormatting.FormatImdb(m.Imdb),
-                        m.Studio.Title,
-                        m.Country,
-                        Utility.UIPrimitiveFormatting.FormatPrice(m.Price),
-                        Utility.UIPrimitiveFormatting.FormatActorsList(m.Actors),
-                    })
-                    { Tag = m });
-                }
+            //try
+            //{
+            //    var movies = Program.DB.GetMovies(ListViewLimit, ListViewOffset, loadActors: true);
 
-                ExpandListViewColumns();
-            }
-            finally
-            {
-                m_listView.EndUpdate();
-            }
+            //    m_listView.BeginUpdate();
+            //    m_listView.Items.Clear();
+
+            //    foreach(var m in movies)
+            //    {
+            //        m_listView.Items.Add(new ListViewItem(new string[]
+            //        {
+            //            m.Title,
+            //            Utility.UIPrimitiveFormatting.Format(m.Year,"yyyy"),
+            //            m.Genre,
+            //            Utility.UIPrimitiveFormatting.FormatImdb(m.Imdb),
+            //            m.Studio.Title,
+            //            m.Country,
+            //            Utility.UIPrimitiveFormatting.FormatPrice(m.Price),
+            //            Utility.UIPrimitiveFormatting.FormatActorsList(m.Actors),
+            //        })
+            //        { Tag = m });
+            //    }
+
+            //    ExpandListViewColumns();
+            //}
+            //finally
+            //{
+            //    m_listView.EndUpdate();
+            //}
         }
 
         void RefreshActorsListView()
@@ -310,6 +352,14 @@ namespace MovieStore.UI
 
                 case ViewMode.Users:
                     DeleteUsersListViewItems();
+                    break;
+
+                case ViewMode.TopMovies:
+                    // do nothing
+                    break;
+
+                default:
+                    Debug.Assert(false);
                     break;
             }
 
@@ -480,6 +530,14 @@ namespace MovieStore.UI
                 case ViewMode.Users:
                     res = UpdateUsersListViewItem(createNewItem);
                     break;
+
+                case ViewMode.TopMovies:
+                    // do nothing
+                    break;
+
+                default:
+                    Debug.Assert(false);
+                    break;
             }
 
             if (refreshList && res)
@@ -625,6 +683,7 @@ namespace MovieStore.UI
             switch (ViewMode)
             {
                 case ViewMode.Movies:
+                case ViewMode.TopMovies:
                     ReinitMoviesModeControls();
                     break;
 
@@ -650,7 +709,9 @@ namespace MovieStore.UI
 
         void ReinitMoviesModeControls()
         {
-            ReinitListView(MovieModeListColumns);
+            var columns = (ViewMode == ViewMode.Movies) ? MovieModeListColumns : 
+                                                         (Program.DB.IsManagerMode ? ManagerTopMovieModeListColumns : CustomerTopMovieModeListColumns);
+            ReinitListView(columns);
         }
 
         void ReinitActorsModeControls()
@@ -693,6 +754,52 @@ namespace MovieStore.UI
             }
         }
 
+        void PopulateListView<T>(IList<T> model, IList<Dictionary<string, string>> view) where T : class
+        {
+            try
+            {
+                m_listView.BeginUpdate();
+                m_listView.Items.Clear();
+
+                for (var i = 0; i < model.Count; i++)
+                {
+                    var m = model[i];
+                    var v = view[i];
+
+                    var lv = default(ListViewItem);
+                    foreach (var c in m_listView.Columns.Cast<ColumnHeader>())
+                    {
+                        var value = Utility.UIPrimitiveFormatting.c_NoData;
+                        v.TryGetValue(c.Name, out value);
+
+                        if (lv==null)
+                        {
+                            lv = new ListViewItem() { Text = value, Name = c.Name };
+                        }
+                        else
+                        {
+                            lv.SubItems.Add(new ListViewItem.ListViewSubItem() { Text = value, Name = c.Name });
+                        }
+                    }
+
+                    if (lv == null)
+                    {
+                        lv = new ListViewItem() { Text = string.Empty };
+                    }
+
+                    lv.Tag = m;
+
+                    m_listView.Items.Add(lv);
+                }
+
+                ExpandListViewColumns();
+            }
+            finally
+            {
+                m_listView.EndUpdate();
+            }
+        }
+
         void ExpandListViewColumns(bool byContent = true)
         {
             foreach(var c in m_listView.Columns.Cast<ColumnHeader>())
@@ -714,8 +821,11 @@ namespace MovieStore.UI
 
             // Menu items
             {
-                m_moviesToolStripMenuItem.Enabled = true && isAuthorized;
+                m_moviesToolStripMenuItem.Enabled = isAuthorized;
                 m_moviesToolStripMenuItem.Visible = true;
+
+                m_topMoviesToolStripMenuItem.Enabled = isAuthorized;
+                m_topMoviesToolStripMenuItem.Visible = true;
 
                 m_actorsToolStripMenuItem.Enabled = isManagerMode && isAuthorized;
                 m_actorsToolStripMenuItem.Visible = isManagerMode;
@@ -723,7 +833,7 @@ namespace MovieStore.UI
                 m_studiosToolStripMenuItem.Enabled = isManagerMode && isAuthorized;
                 m_studiosToolStripMenuItem.Visible = isManagerMode;
 
-                m_ordersToolStripMenuItem.Enabled = true && isAuthorized;
+                m_ordersToolStripMenuItem.Enabled = isAuthorized;
                 m_ordersToolStripMenuItem.Visible = true;
 
                 m_usersToolStripMenuItem.Enabled = isManagerMode && isAuthorized;
@@ -747,14 +857,15 @@ namespace MovieStore.UI
                 m_nextToolStripButton.Enabled = isAuthorized && (m_listView.Items.Count >= ListViewLimit);
                 m_nextToolStripButton.Visible = true;
 
-                m_addNewToolStripButton.Enabled = isManagerMode && isAuthorized;
+                m_addNewToolStripButton.Enabled = isManagerMode && isAuthorized && IsViewModeEditable;
                 m_addNewToolStripButton.Visible = isManagerMode;
 
-                m_deleteToolStripButton.Enabled = isManagerMode && isAuthorized && hasSelection;
+                m_deleteToolStripButton.Enabled = isManagerMode && isAuthorized && IsViewModeEditable && hasSelection;
                 m_deleteToolStripButton.Visible = isManagerMode;
             }
         }
 
+        
         void BuildReceipt()
         {
             if (!Program.DB.IsAuthorized || (ViewMode != ViewMode.Orders))
@@ -892,6 +1003,18 @@ namespace MovieStore.UI
             }
         }
 
+        private void OnTopMoviesMode(object sender, EventArgs e)
+        {
+            try
+            {
+                SetViewMode(ViewMode.TopMovies);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
         private void OnMyBasketMode(object sender, EventArgs e)
         {
 
@@ -969,5 +1092,6 @@ namespace MovieStore.UI
                 MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
     }
 }

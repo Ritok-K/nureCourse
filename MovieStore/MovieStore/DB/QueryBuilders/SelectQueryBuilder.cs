@@ -21,6 +21,8 @@ namespace MovieStore.DB.QueryBuilders
         string FromClause { get; set; } = string.Empty;
         IList<string> JoinClauses { get; set; } = new List<string>();
         string WhereClause { get; set; } = string.Empty;
+        IList<string> GroupByClauses { get; set; } = new List<string>();
+        IList<string> OrderByClauses { get; set; } = new List<string>();
         int? Limit { get; set; } = null;
         int? Offeset { get; set; } = null;
         IDataFilter Filter { get; set; } = null;
@@ -72,6 +74,23 @@ namespace MovieStore.DB.QueryBuilders
             return this;
         }
 
+        internal SelectQueryBuilder GroupBy(string groupBy)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(groupBy));
+
+            GroupByClauses.Add(groupBy);
+            return this;
+        }
+
+        internal SelectQueryBuilder OrderBy(string orderBy, bool desc = false)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(orderBy));
+
+            var direction = desc ? " DESC" : string.Empty;
+            OrderByClauses.Add($"{orderBy}{direction}");
+            return this;
+        }
+
         internal SelectQueryBuilder Pagging(int? limit, int? offset)
         {
             Debug.Assert(!offset.HasValue || limit.HasValue);
@@ -93,13 +112,18 @@ namespace MovieStore.DB.QueryBuilders
 
             // select
             {
-                if (!(FieldsClause?.Any() ?? false))
+                var fieldsCollection = new List<string>();
+                fieldsCollection.AddRange(FieldsClause ?? Enumerable.Empty<string>());
+                fieldsCollection.AddRange(Filter?.GetSelectClauses() ?? Enumerable.Empty<string>());
+                fieldsCollection = fieldsCollection.Where(s => !string.IsNullOrEmpty(s)).ToList();
+
+                if (!fieldsCollection.Any())
                 {
                     throw new ArgumentException("Invalid SELECT part");
                 }
 
-                var fields = string.Join(", ", FieldsClause).Trim(' ');
-                res.Append($"SELECT {fields}");
+                var select = string.Join(", ", fieldsCollection).Trim(' ');
+                res.Append($"SELECT {select}");
             }
 
             // from
@@ -118,7 +142,7 @@ namespace MovieStore.DB.QueryBuilders
             // join
             {
                 var joinCollection = new List<string>();
-                joinCollection.AddRange(JoinClauses);
+                joinCollection.AddRange(JoinClauses ?? Enumerable.Empty<string>());
                 joinCollection.AddRange(Filter?.GetJoinClauses() ?? Enumerable.Empty<string>());
                 joinCollection = joinCollection.Where(s => !string.IsNullOrEmpty(s)).ToList();
 
@@ -146,6 +170,7 @@ namespace MovieStore.DB.QueryBuilders
             // group
             {
                 var groupRules = new List<string>();
+                groupRules.AddRange(GroupByClauses ?? Enumerable.Empty<string>());
                 groupRules.AddRange(Filter?.GetGroupByClauses() ?? Enumerable.Empty<string>());
                 groupRules = groupRules.Where(s => !string.IsNullOrEmpty(s)).ToList();
 
@@ -159,6 +184,7 @@ namespace MovieStore.DB.QueryBuilders
             // order
             {
                 var orderRules = new List<string>();
+                orderRules.AddRange(OrderByClauses ?? Enumerable.Empty<string>());
                 orderRules.AddRange(Filter?.GetOrderClauses() ?? Enumerable.Empty<string>());
                 orderRules = orderRules.Where(s => !string.IsNullOrEmpty(s)).ToList();
 

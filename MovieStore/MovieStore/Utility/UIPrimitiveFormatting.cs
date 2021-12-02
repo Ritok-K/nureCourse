@@ -42,9 +42,9 @@ namespace MovieStore.Utility
             return value.HasValue ? $"{value.Value:F2}" : c_NoData;
         }
 
-        static internal string FormatPrice(int? value)
+        static internal string FormatPrice(int? value, string currencyPrefix = "$", string currencySuffix = "")
         {
-            return value.HasValue ? $"{value.Value/100:F2}" : c_NoData;
+            return value.HasValue ? $"{currencyPrefix}{value.Value/100:F2}{currencySuffix}" : c_NoData;
         }
 
         static internal string FormatStarActor(IEnumerable<Data.Actor> value)

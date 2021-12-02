@@ -23,7 +23,7 @@ namespace MovieStore.Reports
             const string Date = "Date: ";
             const string Customer = "Customer: ";
 
-            var titleWidth = width - (Utility.UIPrimitiveFormatting.FormatPrice(0).Length + 3);
+            var titleWidth = width - (Utility.UIPrimitiveFormatting.FormatPrice(0).Length + 2);
             var totalWidth = width - Total.Length;
             var dateWidth = width - Date.Length;
             var customerWidth = width - Customer.Length;
@@ -43,13 +43,13 @@ namespace MovieStore.Reports
                     {
                         foreach (var m in o.Movies)
                         {
-                            textStream.WriteLine($"{FormatString(m.Title, -titleWidth)} ${Utility.UIPrimitiveFormatting.FormatPrice(m.Price)}");
+                            textStream.WriteLine($"{FormatString(m.Title, -titleWidth)} {Utility.UIPrimitiveFormatting.FormatPrice(m.Price)}");
                             total += m.Price;
                         }
                     }
                     
                     textStream.WriteLine($"{delimeter}");
-                    textStream.WriteLine($"{Total}{FormatString($"${Utility.UIPrimitiveFormatting.FormatPrice(total)}", totalWidth)}");
+                    textStream.WriteLine($"{Total}{FormatString(Utility.UIPrimitiveFormatting.FormatPrice(total), totalWidth)}");
                     textStream.WriteLine();
                     textStream.WriteLine();
                 }

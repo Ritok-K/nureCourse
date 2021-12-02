@@ -109,7 +109,7 @@ namespace MovieStore.UI
                 m_yearTextBox.Text = Utility.UIPrimitiveFormatting.Format(Movie.Year, "yyyy");
                 m_descriptionTextBox.Text = Movie.Description;
                 m_countryTextBox.Text = Movie.Country;
-                m_priceTextBox.Text = Utility.UIPrimitiveFormatting.FormatPrice(Movie.Price);
+                m_priceTextBox.Text = Utility.UIPrimitiveFormatting.FormatPrice(Movie.Price, string.Empty);
                 m_imdbTextBox.Text = Utility.UIPrimitiveFormatting.FormatImdb(Movie.Imdb);
                 m_studioComboBox.SelectedValue = Movie.Studio?.Id ?? -1;
             }

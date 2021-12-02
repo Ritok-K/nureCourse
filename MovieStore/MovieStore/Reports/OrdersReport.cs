@@ -46,11 +46,11 @@ namespace MovieStore.Reports
                     var orderTitle = $"Order #{o.Id} ";
                     var priceWidth = width - orderTitle.Length;
 
-                    textStream.WriteLine($"{orderTitle}{FormatString($"${Utility.UIPrimitiveFormatting.FormatPrice(orderPrice)}", priceWidth)}");
+                    textStream.WriteLine($"{orderTitle}{FormatString(Utility.UIPrimitiveFormatting.FormatPrice(orderPrice), priceWidth)}");
                 }
 
                 textStream.WriteLine($"{delimeter}");
-                textStream.WriteLine($"{Total}{FormatString($"${Utility.UIPrimitiveFormatting.FormatPrice(total)}", totalWidth)}");
+                textStream.WriteLine($"{Total}{FormatString(Utility.UIPrimitiveFormatting.FormatPrice(total), totalWidth)}");
                 textStream.WriteLine();
                 textStream.WriteLine();
             }

@@ -9,6 +9,7 @@ namespace MovieStore.DB
 {
     interface IDataFilter
     {
+        IEnumerable<string> GetSelectClauses();
         IEnumerable<string> GetJoinClauses();
         IEnumerable<string> GetWhereClauses();
         IEnumerable<string> GetOrderClauses();
