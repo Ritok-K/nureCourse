@@ -101,6 +101,7 @@ namespace MovieStore.UI
 
         ColumnHeader[] OrdersModeListColumns => new ColumnHeader[]
         {
+            new ColumnHeader() { Text = "#", Name = nameof(Data.Order.Id) },
             new ColumnHeader() { Text = "Date", Name = nameof(Data.Order.Date) },
             new ColumnHeader() { Text = "Customer", Name = nameof(Data.Order.User) },
             new ColumnHeader() { Text = "Movies", Name = nameof(Data.Order.Movies) },
@@ -108,6 +109,7 @@ namespace MovieStore.UI
 
         ColumnHeader[] ManagerTopOrdersModeListColumns => new ColumnHeader[]
         {
+            new ColumnHeader() { Text = "#", Name = nameof(Data.Order.Id) },
             new ColumnHeader() { Text = "Date", Name = nameof(Data.Order.Date) },
             new ColumnHeader() { Text = "Customer", Name = nameof(Data.Order.User) },
             new ColumnHeader() { Text = "Income", Name = nameof(Data.Order.Income) },
@@ -115,6 +117,7 @@ namespace MovieStore.UI
 
         ColumnHeader[] CustomerTopOrdersModeListColumns => new ColumnHeader[]
         {
+            new ColumnHeader() { Text = "#", Name = nameof(Data.Order.Id) },
             new ColumnHeader() { Text = "Date", Name = nameof(Data.Order.Date) },
             new ColumnHeader() { Text = "Income", Name = nameof(Data.Order.Income) },
         };
@@ -306,6 +309,7 @@ namespace MovieStore.UI
                                                          Program.DB.GetTopOrders(ListViewLimit, ListViewOffset, filter, loadMovies: false);
             var view = orders.Select(o => new Dictionary<string, string>()
                                           {
+                                              { nameof(Data.Order.Id),     $"{o.Id}" },
                                               { nameof(Data.Order.Date),   Utility.UIPrimitiveFormatting.Format(o.Date,"g") },
                                               { nameof(Data.Order.User),   Utility.UIPrimitiveFormatting.FormatUserName(o.User) },
                                               { nameof(Data.Order.Movies), Utility.UIPrimitiveFormatting.FormatMoviesList(o.Movies) },

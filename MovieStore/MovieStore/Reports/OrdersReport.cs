@@ -14,8 +14,8 @@ namespace MovieStore.Reports
         internal OrdersReport(string fileName, DateTime fromDate, DateTime toDate)
         {
             FileName = fileName;
-            FromDate = fromDate;
-            ToDate = toDate;
+            FromDate = fromDate.Date;
+            ToDate = toDate.Date + new TimeSpan(23, 59, 59);
         }
 
         public void Build()
