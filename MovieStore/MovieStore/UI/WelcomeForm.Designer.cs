@@ -29,6 +29,7 @@ namespace MovieStore.UI
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WelcomeForm));
             this.m_loginButton = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -36,16 +37,18 @@ namespace MovieStore.UI
             // 
             // m_loginButton
             // 
+            this.m_loginButton.BackColor = System.Drawing.Color.DarkKhaki;
             this.m_loginButton.Location = new System.Drawing.Point(333, 473);
             this.m_loginButton.Name = "m_loginButton";
             this.m_loginButton.Size = new System.Drawing.Size(152, 48);
             this.m_loginButton.TabIndex = 0;
             this.m_loginButton.Text = "Login";
-            this.m_loginButton.UseVisualStyleBackColor = true;
+            this.m_loginButton.UseVisualStyleBackColor = false;
             this.m_loginButton.Click += new System.EventHandler(this.OnLogin);
             // 
             // pictureBox1
             // 
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(781, 553);

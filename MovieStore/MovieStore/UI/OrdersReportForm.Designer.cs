@@ -144,7 +144,7 @@ namespace MovieStore.UI
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "OrdersReportForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Orders Report";
             this.Load += new System.EventHandler(this.OnLoad);
             this.ResumeLayout(false);
