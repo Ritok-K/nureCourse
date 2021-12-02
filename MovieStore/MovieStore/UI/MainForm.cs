@@ -229,7 +229,7 @@ namespace MovieStore.UI
                                           {
                                               { nameof(Data.Actor.FirstName),   Utility.UIPrimitiveFormatting.FormatActorName(a) },
                                               { nameof(Data.Actor.BirthDate),   Utility.UIPrimitiveFormatting.Format(a.BirthDate,"d") },
-                                              { nameof(Data.Actor.Country),     Utility.UIPrimitiveFormatting.Format(a.FamilyStatus) },
+                                              { nameof(Data.Actor.Country),     a.Country },
                                               { nameof(Data.Actor.FamilyStatus),Utility.UIPrimitiveFormatting.Format(a.FamilyStatus)},
                                           }).ToList();
 

@@ -90,7 +90,7 @@ namespace MovieStore.UI
                 Actor.FirstName = m_firstNameTextBox.Text;
                 Actor.SecondName = m_secondNameTextBox.Text;
                 Actor.BirthDate = DateTime.ParseExact(m_birthDateTextBox.Text, "yyyy-mm-dd", CultureInfo.CurrentUICulture);
-                Actor.FamilyStatus = m_singleRadioButton.Checked ? Data.ActorFamilyStatus.Married : Data.ActorFamilyStatus.Married;
+                Actor.FamilyStatus = m_singleRadioButton.Checked ? Data.ActorFamilyStatus.Single : Data.ActorFamilyStatus.Married;
                 Actor.Country = m_countryTextBox.Text;
                 Actor.AwardsDescription = m_awardsDescriptionTextBox.Text;
             }

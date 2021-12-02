@@ -38,7 +38,7 @@ namespace MovieStore.DB.Serializers
             row[MovieDB.c_SecondNameColumn] = actor.SecondName;
             row[MovieDB.c_BirthDateColumn] = actor.BirthDate;
             row[MovieDB.c_CountryColumn] = actor.Country;
-            row[MovieDB.c_FamilyStatusColumn] = actor.FamilyStatus;
+            row[MovieDB.c_FamilyStatusColumn] = GetFamilyStatusName(actor.FamilyStatus);
             row[MovieDB.c_AwardsDescriptionColumn] = actor.AwardsDescription;
         }
 
