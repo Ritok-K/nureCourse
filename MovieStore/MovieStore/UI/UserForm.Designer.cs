@@ -196,7 +196,7 @@ namespace MovieStore.UI
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "UserForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "User";
             this.ResumeLayout(false);
             this.PerformLayout();

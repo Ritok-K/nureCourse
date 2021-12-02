@@ -862,8 +862,17 @@ namespace MovieStore.UI
         {
             try
             {
-                Login();
-
+                using(var welcomeForm = new WelcomeForm())
+                {
+                    var resp = welcomeForm.ShowDialog(this);
+                    if(resp == DialogResult.OK)
+                    {
+                        SetViewMode(ViewMode.Movies, true);
+                        RefreshListView();
+                        UpdateControls();
+                    }
+                }
+               
                 if (!Program.DB.IsAuthorized)
                 {
                     Close();
