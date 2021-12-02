@@ -7,12 +7,12 @@ namespace MovieStore.Reports
 {
     class OrdersReceipt : IReport
     {
-        IEnumerable<Data.Order> Orders { get; init; }
+        IEnumerable<int> Ids { get; init; }
         string FileName { get; init; }
 
-        internal OrdersReceipt(IEnumerable<Data.Order> orders, string fileName)
+        internal OrdersReceipt(IEnumerable<int> ids, string fileName)
         {
-            Orders = orders;
+            Ids = ids;
             FileName = fileName;
         }
 
@@ -29,9 +29,14 @@ namespace MovieStore.Reports
             var customerWidth = width - Customer.Length;
             var delimeter = new string('-', width);
 
+            var filter = new DB.Filters.OrderFilter();
+            filter.WithIds(Ids);
+
+            var orders = Program.DB.GetOrders(filter: filter, loadMovies: true);
+
             using (var textStream = new StreamWriter(FileName, false, Encoding.UTF8))
             {
-                foreach (var o in Orders)
+                foreach (var o in orders)
                 {
                     textStream.WriteLine($"Receipt #{o.Id}");
                     textStream.WriteLine($"{Customer}{FormatString(Utility.UIPrimitiveFormatting.FormatUserName(o.User), customerWidth)}");

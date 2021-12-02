@@ -43,6 +43,7 @@ namespace MovieStore.UI
             this.m_topsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.m_topMoviesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.m_topUsersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.m_topStudioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.m_logoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.m_exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.m_toolStrip = new System.Windows.Forms.ToolStrip();
@@ -53,7 +54,7 @@ namespace MovieStore.UI
             this.m_receiptToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.m_reportToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.tToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.m_topStudioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.m_topOrdersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.m_menuStrip.SuspendLayout();
             this.m_toolStrip.SuspendLayout();
             this.SuspendLayout();
@@ -152,8 +153,9 @@ namespace MovieStore.UI
             // 
             this.m_topsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.m_topMoviesToolStripMenuItem,
+            this.m_topStudioToolStripMenuItem,
             this.m_topUsersToolStripMenuItem,
-            this.m_topStudioToolStripMenuItem});
+            this.m_topOrdersToolStripMenuItem});
             this.m_topsToolStripMenuItem.Name = "m_topsToolStripMenuItem";
             this.m_topsToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.m_topsToolStripMenuItem.Text = "Tops";
@@ -171,6 +173,13 @@ namespace MovieStore.UI
             this.m_topUsersToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.m_topUsersToolStripMenuItem.Text = "Top Users";
             this.m_topUsersToolStripMenuItem.Click += new System.EventHandler(this.OnTopUsersMode);
+            // 
+            // m_topStudioToolStripMenuItem
+            // 
+            this.m_topStudioToolStripMenuItem.Name = "m_topStudioToolStripMenuItem";
+            this.m_topStudioToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.m_topStudioToolStripMenuItem.Text = "Top Studio";
+            this.m_topStudioToolStripMenuItem.Click += new System.EventHandler(this.OnTopStudioMode);
             // 
             // m_logoutToolStripMenuItem
             // 
@@ -268,12 +277,12 @@ namespace MovieStore.UI
             this.tToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.tToolStripMenuItem.Text = "T";
             // 
-            // m_topStudioToolStripMenuItem
+            // m_topOrdersToolStripMenuItem
             // 
-            this.m_topStudioToolStripMenuItem.Name = "m_topStudioToolStripMenuItem";
-            this.m_topStudioToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
-            this.m_topStudioToolStripMenuItem.Text = "Top Studio";
-            this.m_topStudioToolStripMenuItem.Click += new System.EventHandler(this.OnTopStudioMode);
+            this.m_topOrdersToolStripMenuItem.Name = "m_topOrdersToolStripMenuItem";
+            this.m_topOrdersToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.m_topOrdersToolStripMenuItem.Text = "Top Orders";
+            this.m_topOrdersToolStripMenuItem.Click += new System.EventHandler(this.OnTopOrdersMode);
             // 
             // MainForm
             // 
@@ -324,6 +333,7 @@ namespace MovieStore.UI
         private System.Windows.Forms.ToolStripMenuItem tToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem m_topStudioToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem m_topOrdersToolStripMenuItem;
     }
 }
 

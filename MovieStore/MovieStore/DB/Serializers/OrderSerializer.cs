@@ -23,6 +23,14 @@ namespace MovieStore.DB.Serializers
 
             return res;
         }
+        internal static void LoadAggregated(Data.Order order, DataRow row)
+        {
+            if (row.Table.Columns.Contains(MovieDB.c_IncomeColumn))
+            {
+                var v = row.Field<decimal?>(MovieDB.c_IncomeColumn);
+                order.Income = v.HasValue ? (int)v.Value : null;
+            }
+        }
 
         internal static void Save(Data.Order order, DataRow row)
         {

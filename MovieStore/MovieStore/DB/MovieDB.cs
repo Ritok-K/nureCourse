@@ -517,42 +517,83 @@ namespace MovieStore.DB
             // load actors
             if (loadMovies)
             {
+                ExpandMoviews(res);
+            }
+
+            return res;
+        }
+
+        internal IList<Data.Order> GetTopOrders(int? limit = null, int? offset = null, IDataFilter filter = null, bool loadMovies = false)
+        {
+            if (!IsAuthorized)
+            {
+                throw new NotAuthorizedDBException();
+            }
+
+            var res = new List<Data.Order>();
+
+            // load movies
+            {
+                var sql = new QueryBuilders.SelectQueryBuilder()
+                                           .Select(new string[] {
+                                                    // Order table fields with aliases
+                                                    BuildFieldNameWithAliase(c_OrdersTable, c_OrderIdColumn),
+                                                    BuildFieldNameWithAliase(c_OrdersTable, c_DateColumn),
+                                                    BuildFieldNameWithAliase(c_OrdersTable, c_UserIdColumn),
+                                                    // User table fields with aliases
+                                                    BuildFieldNameWithAliase(c_UsersTable, c_UserIdColumn),
+                                                    BuildFieldNameWithAliase(c_UsersTable, c_FirstNameColumn),
+                                                    BuildFieldNameWithAliase(c_UsersTable, c_SecondNameColumn),
+                                                    BuildFieldNameWithAliase(c_UsersTable, c_EMailColumn),
+                                                    BuildFieldNameWithAliase(c_UsersTable, c_RoleColumn),
+                                                    BuildFieldNameWithAliase(c_UsersTable, c_PasswordColumn),
+                                                    BuildFieldNameWithAliase(c_UsersTable, c_SaltColumn),
+                                                    // Aggregated fields,
+                                                    $"SUM({BuildFieldName(c_MoviesTable, c_PriceColumn)}) AS {c_IncomeColumn}",
+                                                  })
+                                           .From(c_OrdersTable)
+                                           .JoinUsing(QueryBuilders.SQLJoin.Left, c_UsersTable, c_UserIdColumn)
+                                           .JoinUsing(QueryBuilders.SQLJoin.Inner, c_MovieOrderTable, c_OrderIdColumn)
+                                           .JoinUsing(QueryBuilders.SQLJoin.Inner, c_MoviesTable, c_MovieIdColumn)
+                                           .GroupBy(BuildFieldName(c_OrdersTable, c_OrderIdColumn))
+                                           .OrderBy(c_IncomeColumn, true)
+                                           .Pagging(limit, offset)
+                                           .AddFilter(filter)
+                                           .Make();
+
                 using (var connection = new MySqlConnection(ConnectionString))
+                using (var command = new MySqlCommand(sql, connection))
                 {
-                    foreach (var o in res)
+                    filter?.AddCommandParameters(command);
+
+                    using (var adapter = new MySqlDataAdapter(command))
                     {
-                        var sql = new QueryBuilders.SelectQueryBuilder()
-                                                   .SelectAll()
-                                                   .From(c_MoviesTable)
-                                                   .JoinUsing(QueryBuilders.SQLJoin.Left, c_MovieOrderTable, c_MovieIdColumn)
-                                                   .Where($"{BuildFieldName(c_MovieOrderTable, c_OrderIdColumn)} = {BuildParameterName(c_MovieOrderTable, c_OrderIdColumn)}")
-                                                   .Make();
+                        var ds = new DataSet();
+                        adapter.Fill(ds);
+                        Debug.Assert(ds.Tables.Count > 0);
 
-                        using (var command = new MySqlCommand(sql, connection))
+                        var table = ds.Tables[0];
+                        if (table.Rows.Count > 0)
                         {
-                            command.Parameters.AddWithValue(BuildParameterName(c_MovieOrderTable, c_OrderIdColumn), o.Id);
-
-                            using (var adapter = new MySqlDataAdapter(command))
+                            foreach (var r in table.Rows.Cast<DataRow>())
                             {
-                                var ds = new DataSet();
-                                adapter.Fill(ds);
-                                Debug.Assert(ds.Tables.Count > 0);
+                                var order = Serializers.OrderSerializer.Load(r, BuildFiledPrefix(c_OrdersTable));
+                                var user = Serializers.UserSerializer.Load(r, BuildFiledPrefix(c_UsersTable));
+                                order.User = user;
 
-                                var table = ds.Tables[0];
-                                if (table.Rows.Count > 0)
-                                {
-                                    o.Movies = new List<Data.Movie>();
+                                Serializers.OrderSerializer.LoadAggregated(order, r);
 
-                                    foreach (var m in table.Rows.Cast<DataRow>())
-                                    {
-                                        var movie = Serializers.MovieSerializer.Load(m);
-                                        o.Movies.Add(movie);
-                                    }
-                                }
+                                res.Add(order);
                             }
                         }
                     }
                 }
+            }
+
+            // load actors
+            if (loadMovies)
+            {
+                ExpandMoviews(res);
             }
 
             return res;
@@ -1339,6 +1380,46 @@ namespace MovieStore.DB
                                 {
                                     var actor = Serializers.ActorSerializer.Load(r);
                                     m.Actors.Add(actor);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        void ExpandMoviews(IList<Data.Order> orders)
+        {
+            using (var connection = new MySqlConnection(ConnectionString))
+            {
+                foreach (var o in orders)
+                {
+                    var sql = new QueryBuilders.SelectQueryBuilder()
+                                               .SelectAll()
+                                               .From(c_MoviesTable)
+                                               .JoinUsing(QueryBuilders.SQLJoin.Left, c_MovieOrderTable, c_MovieIdColumn)
+                                               .Where($"{BuildFieldName(c_MovieOrderTable, c_OrderIdColumn)} = {BuildParameterName(c_MovieOrderTable, c_OrderIdColumn)}")
+                                               .Make();
+
+                    using (var command = new MySqlCommand(sql, connection))
+                    {
+                        command.Parameters.AddWithValue(BuildParameterName(c_MovieOrderTable, c_OrderIdColumn), o.Id);
+
+                        using (var adapter = new MySqlDataAdapter(command))
+                        {
+                            var ds = new DataSet();
+                            adapter.Fill(ds);
+                            Debug.Assert(ds.Tables.Count > 0);
+
+                            var table = ds.Tables[0];
+                            if (table.Rows.Count > 0)
+                            {
+                                o.Movies = new List<Data.Movie>();
+
+                                foreach (var m in table.Rows.Cast<DataRow>())
+                                {
+                                    var movie = Serializers.MovieSerializer.Load(m);
+                                    o.Movies.Add(movie);
                                 }
                             }
                         }

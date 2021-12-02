@@ -53,7 +53,7 @@ namespace MovieStore.UI
             {
                 UpdateDate(true);
 
-                var reportBuilder = new Reports.OrdersReceipt(Orders, FileName);
+                var reportBuilder = new Reports.OrdersReceipt(Orders.Select(o => o.Id).ToList(), FileName);
                 reportBuilder.Build();
 
                 var resp = MessageBox.Show(this, "Receipt has been built. Do you want to open it?", "?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);

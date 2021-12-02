@@ -21,6 +21,7 @@ namespace MovieStore.UI
 
         TopMovies,
         TopUsers,
+        TopOrders,
         TopStudio,
     }
 
@@ -103,6 +104,19 @@ namespace MovieStore.UI
             new ColumnHeader() { Text = "Movies", Name = nameof(Data.Order.Movies) },
         };
 
+        ColumnHeader[] ManagerTopOrdersModeListColumns => new ColumnHeader[]
+        {
+            new ColumnHeader() { Text = "Date", Name = nameof(Data.Order.Date) },
+            new ColumnHeader() { Text = "Customer", Name = nameof(Data.Order.User) },
+            new ColumnHeader() { Text = "Income", Name = nameof(Data.Order.Income) },
+        };
+
+        ColumnHeader[] CustomerTopOrdersModeListColumns => new ColumnHeader[]
+        {
+            new ColumnHeader() { Text = "Date", Name = nameof(Data.Order.Date) },
+            new ColumnHeader() { Text = "Income", Name = nameof(Data.Order.Income) },
+        };
+
         ColumnHeader[] UsersModeListColumns => new ColumnHeader[]
         {
             new ColumnHeader() { Text = "Name", Name = nameof(Data.User.FirstName) },
@@ -177,6 +191,7 @@ namespace MovieStore.UI
                     break;
 
                 case ViewMode.Orders:
+                case ViewMode.TopOrders:
                     RefreshOrdersListView();
                     break;
 
@@ -240,12 +255,14 @@ namespace MovieStore.UI
         void RefreshOrdersListView()
         {
             var filter = Program.DB.IsManagerMode ? null : new DB.Filters.CurrentUserOrderList();
-            var orders = Program.DB.GetOrders(ListViewLimit, ListViewOffset, filter, loadMovies: true);
+            var orders = (ViewMode == ViewMode.Orders) ? Program.DB.GetOrders(ListViewLimit, ListViewOffset, filter, loadMovies: true) :
+                                                         Program.DB.GetTopOrders(ListViewLimit, ListViewOffset, filter, loadMovies: false);
             var view = orders.Select(o => new Dictionary<string, string>()
                                           {
                                               { nameof(Data.Order.Date),   Utility.UIPrimitiveFormatting.Format(o.Date,"g") },
                                               { nameof(Data.Order.User),   Utility.UIPrimitiveFormatting.FormatUserName(o.User) },
                                               { nameof(Data.Order.Movies), Utility.UIPrimitiveFormatting.FormatMoviesList(o.Movies) },
+                                              { nameof(Data.Order.Income), Utility.UIPrimitiveFormatting.FormatPrice(o.Income)}
                                           }).ToList();
 
             PopulateListView(orders, view);
@@ -639,6 +656,7 @@ namespace MovieStore.UI
                     break;
 
                 case ViewMode.Orders:
+                case ViewMode.TopOrders:
                     ReinitOrdersModeControls();
                     break;
 
@@ -679,7 +697,10 @@ namespace MovieStore.UI
 
         void ReinitOrdersModeControls()
         {
-            ReinitListView(OrdersModeListColumns);
+            var columns = (ViewMode == ViewMode.Orders) ? OrdersModeListColumns : 
+                                                         (Program.DB.IsManagerMode ? ManagerTopOrdersModeListColumns : CustomerTopOrdersModeListColumns);
+
+            ReinitListView(columns);
         }
 
         void ReinitListView(ColumnHeader[] columns)
@@ -784,6 +805,9 @@ namespace MovieStore.UI
                 m_ordersToolStripMenuItem.Enabled = isAuthorized;
                 m_ordersToolStripMenuItem.Visible = true;
 
+                m_topOrdersToolStripMenuItem.Enabled = isAuthorized;
+                m_topOrdersToolStripMenuItem.Visible = true;
+
                 m_usersToolStripMenuItem.Enabled = isManagerMode && isAuthorized;
                 m_usersToolStripMenuItem.Visible = isManagerMode;
 
@@ -800,7 +824,7 @@ namespace MovieStore.UI
                 m_reportToolStripButton.Visible = isManagerMode;
 
                 m_receiptToolStripButton.Enabled = isAuthorized && hasSelection;
-                m_receiptToolStripButton.Visible = (ViewMode == ViewMode.Orders);
+                m_receiptToolStripButton.Visible = (ViewMode == ViewMode.Orders) || (ViewMode == ViewMode.TopOrders);
 
                 m_prevToolStripButton.Enabled = isAuthorized && (ListViewOffset > 0);
                 m_prevToolStripButton.Visible = true;
@@ -819,7 +843,7 @@ namespace MovieStore.UI
         
         void BuildReceipt()
         {
-            if (!Program.DB.IsAuthorized || (ViewMode != ViewMode.Orders))
+            if (!Program.DB.IsAuthorized || ((ViewMode != ViewMode.Orders) && (ViewMode != ViewMode.TopOrders)))
             {
                 return;
             }
@@ -983,6 +1007,18 @@ namespace MovieStore.UI
             try
             {
                 SetViewMode(ViewMode.TopStudio);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void OnTopOrdersMode(object sender, EventArgs e)
+        {
+            try
+            {
+                SetViewMode(ViewMode.TopOrders);
             }
             catch (Exception ex)
             {
