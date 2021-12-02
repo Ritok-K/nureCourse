@@ -73,32 +73,35 @@ namespace MovieStore.UI
             // 
             // m_okButton
             // 
+            this.m_okButton.BackColor = System.Drawing.Color.DarkSeaGreen;
             this.m_okButton.Location = new System.Drawing.Point(147, 142);
             this.m_okButton.Name = "m_okButton";
             this.m_okButton.Size = new System.Drawing.Size(94, 29);
             this.m_okButton.TabIndex = 3;
             this.m_okButton.Text = "Ok";
-            this.m_okButton.UseVisualStyleBackColor = true;
+            this.m_okButton.UseVisualStyleBackColor = false;
             this.m_okButton.Click += new System.EventHandler(this.OnOk);
             // 
             // m_cancelButton
             // 
+            this.m_cancelButton.BackColor = System.Drawing.Color.DarkSeaGreen;
             this.m_cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.m_cancelButton.Location = new System.Drawing.Point(347, 142);
             this.m_cancelButton.Name = "m_cancelButton";
             this.m_cancelButton.Size = new System.Drawing.Size(94, 29);
             this.m_cancelButton.TabIndex = 5;
             this.m_cancelButton.Text = "Cancel";
-            this.m_cancelButton.UseVisualStyleBackColor = true;
+            this.m_cancelButton.UseVisualStyleBackColor = false;
             // 
             // m_registerButton
             // 
+            this.m_registerButton.BackColor = System.Drawing.Color.DarkSeaGreen;
             this.m_registerButton.Location = new System.Drawing.Point(247, 142);
             this.m_registerButton.Name = "m_registerButton";
             this.m_registerButton.Size = new System.Drawing.Size(94, 29);
             this.m_registerButton.TabIndex = 4;
             this.m_registerButton.Text = "New user";
-            this.m_registerButton.UseVisualStyleBackColor = true;
+            this.m_registerButton.UseVisualStyleBackColor = false;
             this.m_registerButton.Click += new System.EventHandler(this.OnRegisterNewUser);
             // 
             // LoginForm
@@ -107,6 +110,7 @@ namespace MovieStore.UI
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
+            this.BackColor = System.Drawing.Color.DarkKhaki;
             this.CancelButton = this.m_cancelButton;
             this.ClientSize = new System.Drawing.Size(465, 194);
             this.Controls.Add(this.m_registerButton);

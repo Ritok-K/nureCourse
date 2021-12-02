@@ -59,6 +59,7 @@ namespace MovieStore.UI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.ClientSize = new System.Drawing.Size(782, 553);
             this.Controls.Add(this.m_loginButton);
             this.Controls.Add(this.pictureBox1);

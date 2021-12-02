@@ -63,6 +63,7 @@ namespace MovieStore.UI
             // 
             // m_listView
             // 
+            this.m_listView.BackColor = System.Drawing.Color.LemonChiffon;
             this.m_listView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.m_listView.FullRowSelect = true;
             this.m_listView.GridLines = true;
@@ -78,6 +79,7 @@ namespace MovieStore.UI
             // 
             // m_menuStrip
             // 
+            this.m_menuStrip.BackColor = System.Drawing.Color.DarkKhaki;
             this.m_menuStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.m_menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.m_viewToolStripMenuItem,
@@ -206,6 +208,7 @@ namespace MovieStore.UI
             // 
             // m_toolStrip
             // 
+            this.m_toolStrip.BackColor = System.Drawing.Color.DarkKhaki;
             this.m_toolStrip.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.m_toolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.m_toolStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
