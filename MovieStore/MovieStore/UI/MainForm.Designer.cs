@@ -48,6 +48,8 @@ namespace MovieStore.UI
             this.m_logoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.m_exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.m_toolStrip = new System.Windows.Forms.ToolStrip();
+            this.m_basketToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.m_addToBasketToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.m_deleteToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.m_basketToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.m_addNewToolStripButton = new System.Windows.Forms.ToolStripButton();
@@ -159,7 +161,7 @@ namespace MovieStore.UI
             this.m_myBasketToolStripMenuItem.Name = "m_myBasketToolStripMenuItem";
             this.m_myBasketToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.m_myBasketToolStripMenuItem.Text = "My basket";
-            this.m_myBasketToolStripMenuItem.Click += new System.EventHandler(this.OnMyBasketMode);
+            this.m_myBasketToolStripMenuItem.Click += new System.EventHandler(this.OnMyBasket);
             // 
             // m_topsToolStripMenuItem
             // 
@@ -222,8 +224,9 @@ namespace MovieStore.UI
             this.m_toolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.m_toolStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.m_toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.m_deleteToolStripButton,
             this.m_basketToolStripButton,
+            this.m_addToBasketToolStripButton,
+            this.m_deleteToolStripButton,
             this.m_addNewToolStripButton,
             this.m_nextToolStripButton,
             this.m_prevToolStripButton,
@@ -234,6 +237,26 @@ namespace MovieStore.UI
             this.m_toolStrip.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.m_toolStrip.Size = new System.Drawing.Size(782, 27);
             this.m_toolStrip.TabIndex = 0;
+            // 
+            // m_basketToolStripButton
+            // 
+            this.m_basketToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.m_basketToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("m_basketToolStripButton.Image")));
+            this.m_basketToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.m_basketToolStripButton.Name = "m_basketToolStripButton";
+            this.m_basketToolStripButton.Size = new System.Drawing.Size(29, 24);
+            this.m_basketToolStripButton.Text = "My basket";
+            this.m_basketToolStripButton.Click += new System.EventHandler(this.OnMyBasket);
+            // 
+            // m_addToBasketToolStripButton
+            // 
+            this.m_addToBasketToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.m_addToBasketToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("m_addToBasketToolStripButton.Image")));
+            this.m_addToBasketToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.m_addToBasketToolStripButton.Name = "m_addToBasketToolStripButton";
+            this.m_addToBasketToolStripButton.Size = new System.Drawing.Size(29, 24);
+            this.m_addToBasketToolStripButton.Text = "Add to basket";
+            this.m_addToBasketToolStripButton.Click += new System.EventHandler(this.OnAddToBasket);
             // 
             // m_deleteToolStripButton
             // 
@@ -359,6 +382,7 @@ namespace MovieStore.UI
         private System.Windows.Forms.ToolStripMenuItem m_topStudioToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem m_topOrdersToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton m_basketToolStripButton;
+        private System.Windows.Forms.ToolStripButton m_addToBasketToolStripButton;
     }
 }
 

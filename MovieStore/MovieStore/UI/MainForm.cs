@@ -37,7 +37,7 @@ namespace MovieStore.UI
                                    ViewMode == ViewMode.Orders ||
                                    ViewMode == ViewMode.Users;
 
-        IList<int> BasketList { get; set; } = new List<int>();
+        List<int> BasketList { get; set; } = new List<int>();
 
         ColumnHeader[] MovieModeListColumns => new ColumnHeader[] 
         {
@@ -143,6 +143,18 @@ namespace MovieStore.UI
             InitializeComponent();
         }
 
+        bool CanClose()
+        {
+            var res = !(BasketList?.Any() ?? false);
+            if (!res)
+            {
+                var resp = MessageBox.Show(this, "Your basket list is not empty. Do you want to continue?", "?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                res = resp == DialogResult.Yes;
+            }
+
+            return res;
+        }
+
         void Login()
         {
             using (var loginForm = new LoginForm())
@@ -150,11 +162,44 @@ namespace MovieStore.UI
                 var result = loginForm.ShowDialog(this);
                 if (result == DialogResult.OK)
                 {
+                    BasketList.Clear();
+
                     SetViewMode(ViewMode.Movies, true);
                     RefreshListView();
                     UpdateControls();
                 }
             }
+        }
+
+        void Logout()
+        {
+            Program.DB.Logout();
+
+            BasketList.Clear();
+        }
+
+        void AddToBasket()
+        {
+            if (!Program.DB.IsAuthorized || ((ViewMode != ViewMode.Movies) && (ViewMode != ViewMode.TopMovies)))
+            {
+                return;
+            }
+
+            var movieIds = m_listView.SelectedItems?.Cast<ListViewItem>()
+                                                    .Select(lv => lv.Tag as Data.Movie)
+                                                    .Select(m => m.Id)
+                                                    .ToList();
+            if (movieIds?.Any() ?? false)
+            {
+                BasketList.AddRange(movieIds);
+
+                UpdateControls();
+            }
+        }
+
+        void MyBasket()
+        {
+
         }
 
         void SetViewMode(ViewMode mode, bool forceUpdate = false)
@@ -823,15 +868,17 @@ namespace MovieStore.UI
                 m_addNewToolStripButton.Enabled = isManagerMode && isAuthorized && IsViewModeEditable;
                 m_addNewToolStripButton.Visible = isManagerMode;
 
-                m_basketToolStripButton.Enabled = isAuthorized && !isBasketEmpty;
-                m_basketToolStripButton.Visible = (ViewMode == ViewMode.Movies) || (ViewMode == ViewMode.TopMovies);
-
                 m_deleteToolStripButton.Enabled = isManagerMode && isAuthorized && IsViewModeEditable && hasSelection;
                 m_deleteToolStripButton.Visible = isManagerMode;
+
+                m_addToBasketToolStripButton.Enabled = isAuthorized && hasSelection;
+                m_addToBasketToolStripButton.Visible = (ViewMode == ViewMode.Movies) || (ViewMode == ViewMode.TopMovies);
+
+                m_basketToolStripButton.Enabled = isAuthorized && !isBasketEmpty;
+                m_basketToolStripButton.Visible = (ViewMode == ViewMode.Movies) || (ViewMode == ViewMode.TopMovies);
             }
         }
 
-        
         void BuildReceipt()
         {
             if (!Program.DB.IsAuthorized || ((ViewMode != ViewMode.Orders) && (ViewMode != ViewMode.TopOrders)))
@@ -873,6 +920,8 @@ namespace MovieStore.UI
                     var resp = welcomeForm.ShowDialog(this);
                     if(resp == DialogResult.OK)
                     {
+                        BasketList.Clear();
+
                         SetViewMode(ViewMode.Movies, true);
                         RefreshListView();
                         UpdateControls();
@@ -892,19 +941,25 @@ namespace MovieStore.UI
 
         private void OnExit(object sender, EventArgs e)
         {
-            Close();
+            if (CanClose())
+            {
+                Close();
+            }
         }
 
         private void OnLogout(object sender, EventArgs e)
         {
             try
             {
-                Program.DB.Logout();
-
-                var res = MessageBox.Show(this, "You have been logged out. Do you want to login again?", "?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (res == DialogResult.Yes)
+                if (CanClose())
                 {
-                    Login();
+                    Logout();
+
+                    var res = MessageBox.Show(this, "You have been logged out. Do you want to login again?", "?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (res == DialogResult.Yes)
+                    {
+                        Login();
+                    }
                 }
 
                 if (!Program.DB.IsAuthorized)
@@ -1026,9 +1081,28 @@ namespace MovieStore.UI
             }
         }
 
-        private void OnMyBasketMode(object sender, EventArgs e)
+        private void OnAddToBasket(object sender, EventArgs e)
         {
+            try
+            {
+                AddToBasket();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
 
+        private void OnMyBasket(object sender, EventArgs e)
+        {
+            try
+            {
+                MyBasket();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void OnDeleteSelected(object sender, EventArgs e)
@@ -1103,5 +1177,7 @@ namespace MovieStore.UI
                 MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        
     }
 }
