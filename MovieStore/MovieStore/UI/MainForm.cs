@@ -150,11 +150,26 @@ namespace MovieStore.UI
                 var result = loginForm.ShowDialog(this);
                 if (result == DialogResult.OK)
                 {
+                    BasketList.Clear();
+
                     SetViewMode(ViewMode.Movies, true);
                     RefreshListView();
                     UpdateControls();
                 }
             }
+        }
+
+        void AddToBasket()
+        {
+            if (!Program.DB.IsAuthorized || ((ViewMode != ViewMode.Movies) && (ViewMode != ViewMode.TopMovies)))
+            {
+                return;
+            }
+        }
+
+        void MyBasket()
+        {
+
         }
 
         void SetViewMode(ViewMode mode, bool forceUpdate = false)
@@ -875,6 +890,8 @@ namespace MovieStore.UI
                     var resp = welcomeForm.ShowDialog(this);
                     if(resp == DialogResult.OK)
                     {
+                        BasketList.Clear();
+
                         SetViewMode(ViewMode.Movies, true);
                         RefreshListView();
                         UpdateControls();
@@ -1028,9 +1045,28 @@ namespace MovieStore.UI
             }
         }
 
-        private void OnMyBasketMode(object sender, EventArgs e)
+        private void OnAddToBasket(object sender, EventArgs e)
         {
+            try
+            {
+                AddToBasket();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
 
+        private void OnMyBasket(object sender, EventArgs e)
+        {
+            try
+            {
+                MyBasket();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void OnDeleteSelected(object sender, EventArgs e)
@@ -1105,5 +1141,7 @@ namespace MovieStore.UI
                 MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        
     }
 }
