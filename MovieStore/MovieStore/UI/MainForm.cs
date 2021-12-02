@@ -65,10 +65,10 @@ namespace MovieStore.UI
 
         ColumnHeader[] ActorsModeListColumns => new ColumnHeader[]
         {
-            new ColumnHeader() { Text = "Name" },
-            new ColumnHeader() { Text = "Birth date" },
-            new ColumnHeader() { Text = "Country" },
-            new ColumnHeader() { Text = "Family status" },
+            new ColumnHeader() { Text = "Name", Name = nameof(Data.Actor.FirstName) },
+            new ColumnHeader() { Text = "Birth date", Name = nameof(Data.Actor.BirthDate) },
+            new ColumnHeader() { Text = "Country", Name = nameof(Data.Actor.Country) },
+            new ColumnHeader() { Text = "Family status", Name = nameof(Data.Actor.FamilyStatus) },
         };
 
         ColumnHeader[] StudiosModeListColumns => new ColumnHeader[]
@@ -98,9 +98,9 @@ namespace MovieStore.UI
 
         ColumnHeader[] OrdersModeListColumns => new ColumnHeader[]
         {
-            new ColumnHeader() { Text = "Date" },
-            new ColumnHeader() { Text = "Customer" },
-            new ColumnHeader() { Text = "Movies" },
+            new ColumnHeader() { Text = "Date", Name = nameof(Data.Order.Date) },
+            new ColumnHeader() { Text = "Customer", Name = nameof(Data.Order.User) },
+            new ColumnHeader() { Text = "Movies", Name = nameof(Data.Order.Movies) },
         };
 
         ColumnHeader[] UsersModeListColumns => new ColumnHeader[]
@@ -209,31 +209,16 @@ namespace MovieStore.UI
 
         void RefreshActorsListView()
         {
-            try
-            {
-                var actors = Program.DB.GetActors(ListViewLimit, ListViewOffset);
+            var actors = Program.DB.GetActors(ListViewLimit, ListViewOffset);
+            var view = actors.Select(a => new Dictionary<string, string>()
+                                          {
+                                              { nameof(Data.Actor.FirstName),   Utility.UIPrimitiveFormatting.FormatActorName(a) },
+                                              { nameof(Data.Actor.BirthDate),   Utility.UIPrimitiveFormatting.Format(a.BirthDate,"d") },
+                                              { nameof(Data.Actor.Country),     Utility.UIPrimitiveFormatting.Format(a.FamilyStatus) },
+                                              { nameof(Data.Actor.FamilyStatus),Utility.UIPrimitiveFormatting.Format(a.FamilyStatus)},
+                                          }).ToList();
 
-                m_listView.BeginUpdate();
-                m_listView.Items.Clear();
-
-                foreach (var a in actors)
-                {
-                    m_listView.Items.Add(new ListViewItem(new string[]
-                    {
-                        Utility.UIPrimitiveFormatting.FormatActorName(a),
-                        Utility.UIPrimitiveFormatting.Format(a.BirthDate,"d"),
-                        a.Country,
-                        Utility.UIPrimitiveFormatting.Format(a.FamilyStatus),
-                    })
-                    { Tag = a });
-                }
-
-                ExpandListViewColumns();
-            }
-            finally
-            {
-                m_listView.EndUpdate();
-            }
+            PopulateListView(actors, view);
         }
 
         void RefreshStudiosListView()
@@ -254,31 +239,16 @@ namespace MovieStore.UI
 
         void RefreshOrdersListView()
         {
-            try
-            {
-                var filter = Program.DB.IsManagerMode ? null : new DB.Filters.CurrentUserOrderList();
-                var orders = Program.DB.GetOrders(ListViewLimit, ListViewOffset, filter, loadMovies: true);
+            var filter = Program.DB.IsManagerMode ? null : new DB.Filters.CurrentUserOrderList();
+            var orders = Program.DB.GetOrders(ListViewLimit, ListViewOffset, filter, loadMovies: true);
+            var view = orders.Select(o => new Dictionary<string, string>()
+                                          {
+                                              { nameof(Data.Order.Date),   Utility.UIPrimitiveFormatting.Format(o.Date,"g") },
+                                              { nameof(Data.Order.User),   Utility.UIPrimitiveFormatting.FormatUserName(o.User) },
+                                              { nameof(Data.Order.Movies), Utility.UIPrimitiveFormatting.FormatMoviesList(o.Movies) },
+                                          }).ToList();
 
-                m_listView.BeginUpdate();
-                m_listView.Items.Clear();
-
-                foreach (var o in orders)
-                {
-                    m_listView.Items.Add(new ListViewItem(new string[]
-                    {
-                        Utility.UIPrimitiveFormatting.Format(o.Date,"g"),
-                        Utility.UIPrimitiveFormatting.FormatUserName(o.User),
-                        Utility.UIPrimitiveFormatting.FormatMoviesList(o.Movies),
-                    })
-                    { Tag = o });
-                }
-
-                ExpandListViewColumns();
-            }
-            finally
-            {
-                m_listView.EndUpdate();
-            }
+            PopulateListView(orders, view);
         }
 
         void RefreshUsersListView()
