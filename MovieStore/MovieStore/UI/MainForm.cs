@@ -37,7 +37,7 @@ namespace MovieStore.UI
                                    ViewMode == ViewMode.Orders ||
                                    ViewMode == ViewMode.Users;
 
-        IList<int> BasketList { get; set; } = new List<int>();
+        List<int> BasketList { get; set; } = new List<int>();
 
         ColumnHeader[] MovieModeListColumns => new ColumnHeader[] 
         {
@@ -143,6 +143,18 @@ namespace MovieStore.UI
             InitializeComponent();
         }
 
+        bool CanClose()
+        {
+            var res = !(BasketList?.Any() ?? false);
+            if (!res)
+            {
+                var resp = MessageBox.Show(this, "Your basket list is not empty. Do you want to continue?", "?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                res = resp == DialogResult.Yes;
+            }
+
+            return res;
+        }
+
         void Login()
         {
             using (var loginForm = new LoginForm())
@@ -159,11 +171,29 @@ namespace MovieStore.UI
             }
         }
 
+        void Logout()
+        {
+            Program.DB.Logout();
+
+            BasketList.Clear();
+        }
+
         void AddToBasket()
         {
             if (!Program.DB.IsAuthorized || ((ViewMode != ViewMode.Movies) && (ViewMode != ViewMode.TopMovies)))
             {
                 return;
+            }
+
+            var movieIds = m_listView.SelectedItems?.Cast<ListViewItem>()
+                                                    .Select(lv => lv.Tag as Data.Movie)
+                                                    .Select(m => m.Id)
+                                                    .ToList();
+            if (movieIds?.Any() ?? false)
+            {
+                BasketList.AddRange(movieIds);
+
+                UpdateControls();
             }
         }
 
@@ -911,19 +941,25 @@ namespace MovieStore.UI
 
         private void OnExit(object sender, EventArgs e)
         {
-            Close();
+            if (CanClose())
+            {
+                Close();
+            }
         }
 
         private void OnLogout(object sender, EventArgs e)
         {
             try
             {
-                Program.DB.Logout();
-
-                var res = MessageBox.Show(this, "You have been logged out. Do you want to login again?", "?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (res == DialogResult.Yes)
+                if (CanClose())
                 {
-                    Login();
+                    Logout();
+
+                    var res = MessageBox.Show(this, "You have been logged out. Do you want to login again?", "?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (res == DialogResult.Yes)
+                    {
+                        Login();
+                    }
                 }
 
                 if (!Program.DB.IsAuthorized)
