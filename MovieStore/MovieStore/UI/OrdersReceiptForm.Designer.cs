@@ -104,6 +104,7 @@ namespace MovieStore.UI
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "OrdersReceiptForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Order Receipt";
             this.Load += new System.EventHandler(this.OnLoad);
             this.ResumeLayout(false);
