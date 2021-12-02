@@ -735,6 +735,9 @@ namespace MovieStore.UI
 
             // Toolstrip buttons
             {
+                m_reportToolStripButton.Enabled = isAuthorized && isManagerMode;
+                m_reportToolStripButton.Visible = isManagerMode;
+
                 m_receiptToolStripButton.Enabled = isAuthorized && hasSelection;
                 m_receiptToolStripButton.Visible = (ViewMode == ViewMode.Orders);
 
@@ -752,7 +755,7 @@ namespace MovieStore.UI
             }
         }
 
-        void ExportReceipt()
+        void BuildReceipt()
         {
             if (!Program.DB.IsAuthorized || (ViewMode != ViewMode.Orders))
             {
@@ -764,28 +767,23 @@ namespace MovieStore.UI
                                                  .ToList();
             if (orders.Any())
             {
-                using(var saveDialog = new SaveFileDialog())
+                using (var reportForm = new OrdersReceiptForm() { Orders = orders })
                 {
-                    saveDialog.Title = "Export orders receipt";
-                    saveDialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
-                    saveDialog.DefaultExt = "txt";
-                    saveDialog.CheckPathExists = true;
-                    saveDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-
-                    if (saveDialog.ShowDialog() == DialogResult.OK)
-                    {
-                        var file = saveDialog.FileName;
-
-                        var reportBuilder = new Reports.OrderReceipt(orders, file);
-                        reportBuilder.Build();
-
-                        var resp = MessageBox.Show(this, "Receipt has been built. Do you want to open it?", "?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                        if (resp == DialogResult.Yes)
-                        {
-                            Process.Start(new ProcessStartInfo(file) { UseShellExecute = true });
-                        }
-                    }
+                    reportForm.ShowDialog(this);
                 }
+            }
+        }
+
+        void BuildReport()
+        {
+            if (!Program.DB.IsAuthorized)
+            {
+                return;
+            }
+
+            using (var reportForm = new OrdersReportForm())
+            {
+                reportForm.ShowDialog(this);
             }
         }
 
@@ -948,11 +946,23 @@ namespace MovieStore.UI
             UpdateControls();
         }
 
-        private void OnExportReceipt(object sender, EventArgs e)
+        private void OnBuildReceipt(object sender, EventArgs e)
         {
             try
             {
-                ExportReceipt();
+                BuildReceipt();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void OnBuildReport(object sender, EventArgs e)
+        {
+            try
+            {
+                BuildReport();
             }
             catch (Exception ex)
             {

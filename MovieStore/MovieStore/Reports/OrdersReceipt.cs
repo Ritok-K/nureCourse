@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace MovieStore.Reports
 {
-    class OrderReceipt : IReport
+    class OrdersReceipt : IReport
     {
         IEnumerable<Data.Order> Orders { get; init; }
         string FileName { get; init; }
 
-        internal OrderReceipt(IEnumerable<Data.Order> orders, string fileName)
+        internal OrdersReceipt(IEnumerable<Data.Order> orders, string fileName)
         {
             Orders = orders;
             FileName = fileName;
@@ -29,11 +27,10 @@ namespace MovieStore.Reports
             var totalWidth = width - Total.Length;
             var dateWidth = width - Date.Length;
             var customerWidth = width - Customer.Length;
+            var delimeter = new string('-', width);
 
             using (var textStream = new StreamWriter(FileName, false, Encoding.UTF8))
             {
-                var delimeter = new string('-', width);
-
                 foreach (var o in Orders)
                 {
                     textStream.WriteLine($"Receipt #{o.Id}");
@@ -59,16 +56,9 @@ namespace MovieStore.Reports
             }
         }
 
-        string FormatString(string text, int width)
+        static string FormatString(string text, int width)
         {
-            if (text.Length > Math.Abs(width))
-            {
-                text = text.Substring(0, Math.Abs(width));
-            }
-
-            var res = string.Format($"{{0, {width}}}", text);
-
-            return res;
+            return Utility.UIPrimitiveFormatting.FormatString(text, width);
         }
     }
 }

@@ -25,6 +25,18 @@ namespace MovieStore.Utility
             return value.HasValue ? (value == Data.UserRole.Manager? "Manager" : "Customer") : c_NoData;
         }
 
+        static internal string FormatString(string text, int width)
+        {
+            if (text.Length > Math.Abs(width))
+            {
+                text = text.Substring(0, Math.Abs(width));
+            }
+
+            var res = string.Format($"{{0, {width}}}", text);
+
+            return res;
+        }
+
         static internal string FormatImdb(float? value)
         {
             return value.HasValue ? $"{value.Value:F2}" : c_NoData;
