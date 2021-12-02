@@ -823,15 +823,17 @@ namespace MovieStore.UI
                 m_addNewToolStripButton.Enabled = isManagerMode && isAuthorized && IsViewModeEditable;
                 m_addNewToolStripButton.Visible = isManagerMode;
 
-                m_basketToolStripButton.Enabled = isAuthorized && !isBasketEmpty;
-                m_basketToolStripButton.Visible = (ViewMode == ViewMode.Movies) || (ViewMode == ViewMode.TopMovies);
-
                 m_deleteToolStripButton.Enabled = isManagerMode && isAuthorized && IsViewModeEditable && hasSelection;
                 m_deleteToolStripButton.Visible = isManagerMode;
+
+                m_addToBasketToolStripButton.Enabled = isAuthorized && hasSelection;
+                m_addToBasketToolStripButton.Visible = (ViewMode == ViewMode.Movies) || (ViewMode == ViewMode.TopMovies);
+
+                m_basketToolStripButton.Enabled = isAuthorized && !isBasketEmpty;
+                m_basketToolStripButton.Visible = (ViewMode == ViewMode.Movies) || (ViewMode == ViewMode.TopMovies);
             }
         }
 
-        
         void BuildReceipt()
         {
             if (!Program.DB.IsAuthorized || ((ViewMode != ViewMode.Orders) && (ViewMode != ViewMode.TopOrders)))
