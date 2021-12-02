@@ -55,6 +55,7 @@ namespace MovieStore.UI
             this.m_receiptToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.m_reportToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.tToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.m_basketToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.m_menuStrip.SuspendLayout();
             this.m_toolStrip.SuspendLayout();
             this.SuspendLayout();
@@ -212,6 +213,7 @@ namespace MovieStore.UI
             this.m_toolStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.m_toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.m_deleteToolStripButton,
+            this.m_basketToolStripButton,
             this.m_addNewToolStripButton,
             this.m_nextToolStripButton,
             this.m_prevToolStripButton,
@@ -287,6 +289,15 @@ namespace MovieStore.UI
             this.tToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.tToolStripMenuItem.Text = "T";
             // 
+            // m_basketToolStripButton
+            // 
+            this.m_basketToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.m_basketToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("m_basketToolStripButton.Image")));
+            this.m_basketToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.m_basketToolStripButton.Name = "m_basketToolStripButton";
+            this.m_basketToolStripButton.Size = new System.Drawing.Size(29, 24);
+            this.m_basketToolStripButton.Text = "My basket";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -337,6 +348,7 @@ namespace MovieStore.UI
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem m_topStudioToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem m_topOrdersToolStripMenuItem;
+        private System.Windows.Forms.ToolStripButton m_basketToolStripButton;
     }
 }
 

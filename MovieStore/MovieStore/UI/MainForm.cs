@@ -37,6 +37,8 @@ namespace MovieStore.UI
                                    ViewMode == ViewMode.Orders ||
                                    ViewMode == ViewMode.Users;
 
+        IList<int> BasketList { get; set; } = new List<int>();
+
         ColumnHeader[] MovieModeListColumns => new ColumnHeader[] 
         {
             new ColumnHeader() { Text = "Title", Name = nameof(Data.Movie.Title) },
@@ -771,6 +773,7 @@ namespace MovieStore.UI
         {
             var isManagerMode = Program.DB.IsManagerMode;
             var isAuthorized = Program.DB.IsAuthorized;
+            var isBasketEmpty = !BasketList.Any();
             var hasSelection = m_listView.SelectedItems.Count > 0;
 
             // Menu items
@@ -819,6 +822,9 @@ namespace MovieStore.UI
 
                 m_addNewToolStripButton.Enabled = isManagerMode && isAuthorized && IsViewModeEditable;
                 m_addNewToolStripButton.Visible = isManagerMode;
+
+                m_basketToolStripButton.Enabled = isAuthorized && !isBasketEmpty;
+                m_basketToolStripButton.Visible = (ViewMode == ViewMode.Movies) || (ViewMode == ViewMode.TopMovies);
 
                 m_deleteToolStripButton.Enabled = isManagerMode && isAuthorized && IsViewModeEditable && hasSelection;
                 m_deleteToolStripButton.Visible = isManagerMode;
