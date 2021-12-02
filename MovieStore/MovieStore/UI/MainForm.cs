@@ -534,30 +534,15 @@ namespace MovieStore.UI
             var selectedItem = m_listView.SelectedItems.Cast<ListViewItem>()?.FirstOrDefault()?.Tag as Data.Actor;
             if (createNewItem || (selectedItem != null))
             {
-#if DEBUG
-                if (createNewItem)
+                using (var actorForm = new ActorForm())
                 {
-                    var a = new Data.Actor()
-                    {
-                        FirstName = "Sylvester",
-                        SecondName = "Stallone",
-                        BirthDate = new DateTime(1946, 7, 6),
-                        Country = "USA",
-                        FamilyStatus = Data.ActorFamilyStatus.Married,
-                        AwardsDescription = "Favorite Movie Actor (1985); Best Supporting Actor (2015-2016)",
-                    };
+                    var isManagerMode = Program.DB.IsManagerMode;
+                    actorForm.SetMode(createNewItem ? ActorFormMode.NewActor :
+                                     (isManagerMode ? ActorFormMode.EditActor : ActorFormMode.ViewActor),
+                                      selectedItem);
 
-                    Program.DB.AddActors(new Data.Actor[] { a });
-                    res = true;
+                    res = actorForm.ShowDialog(this) == DialogResult.OK;
                 }
-                else
-                {
-                    var a = selectedItem;
-                    a.FirstName = string.Join("", a.FirstName.Reverse());
-                    Program.DB.UpdateActors(new Data.Actor[] { a });
-                    res = true;
-                }
-#endif
             }
          
             return res;

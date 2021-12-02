@@ -34,15 +34,16 @@ namespace MovieStore.UI
             this.m_secondNameLabel = new System.Windows.Forms.Label();
             this.m_secondNameTextBox = new System.Windows.Forms.TextBox();
             this.m_birthDateLabel = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.m_birthDateTextBox = new System.Windows.Forms.TextBox();
             this.m_familyStatusLabel = new System.Windows.Forms.Label();
-            this.m_familyStatusComboBox = new System.Windows.Forms.ComboBox();
             this.m_countryLabel = new System.Windows.Forms.Label();
             this.m_countryTextBox = new System.Windows.Forms.TextBox();
             this.m_awardsDescriptionLabel = new System.Windows.Forms.Label();
             this.m_awardsDescriptionTextBox = new System.Windows.Forms.TextBox();
             this.m_okButton = new System.Windows.Forms.Button();
             this.m_cancelButton = new System.Windows.Forms.Button();
+            this.m_singleRadioButton = new System.Windows.Forms.RadioButton();
+            this.m_marriedRadioButton = new System.Windows.Forms.RadioButton();
             this.SuspendLayout();
             // 
             // m_firstNameLabel
@@ -86,12 +87,12 @@ namespace MovieStore.UI
             this.m_birthDateLabel.TabIndex = 5;
             this.m_birthDateLabel.Text = "Birth date:";
             // 
-            // textBox1
+            // m_birthDateTextBox
             // 
-            this.textBox1.Location = new System.Drawing.Point(153, 154);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(167, 27);
-            this.textBox1.TabIndex = 6;
+            this.m_birthDateTextBox.Location = new System.Drawing.Point(153, 154);
+            this.m_birthDateTextBox.Name = "m_birthDateTextBox";
+            this.m_birthDateTextBox.Size = new System.Drawing.Size(167, 27);
+            this.m_birthDateTextBox.TabIndex = 6;
             // 
             // m_familyStatusLabel
             // 
@@ -101,15 +102,6 @@ namespace MovieStore.UI
             this.m_familyStatusLabel.Size = new System.Drawing.Size(96, 20);
             this.m_familyStatusLabel.TabIndex = 7;
             this.m_familyStatusLabel.Text = "Family status:";
-            // 
-            // m_familyStatusComboBox
-            // 
-            this.m_familyStatusComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.m_familyStatusComboBox.FormattingEnabled = true;
-            this.m_familyStatusComboBox.Location = new System.Drawing.Point(467, 154);
-            this.m_familyStatusComboBox.Name = "m_familyStatusComboBox";
-            this.m_familyStatusComboBox.Size = new System.Drawing.Size(133, 28);
-            this.m_familyStatusComboBox.TabIndex = 8;
             // 
             // m_countryLabel
             // 
@@ -152,6 +144,7 @@ namespace MovieStore.UI
             this.m_okButton.TabIndex = 13;
             this.m_okButton.Text = "Ok";
             this.m_okButton.UseVisualStyleBackColor = true;
+            this.m_okButton.Click += new System.EventHandler(this.OnOk);
             // 
             // m_cancelButton
             // 
@@ -163,20 +156,46 @@ namespace MovieStore.UI
             this.m_cancelButton.Text = "Cancel";
             this.m_cancelButton.UseVisualStyleBackColor = true;
             // 
+            // m_singleRadioButton
+            // 
+            this.m_singleRadioButton.AutoSize = true;
+            this.m_singleRadioButton.Checked = true;
+            this.m_singleRadioButton.Location = new System.Drawing.Point(476, 141);
+            this.m_singleRadioButton.Name = "m_singleRadioButton";
+            this.m_singleRadioButton.Size = new System.Drawing.Size(71, 24);
+            this.m_singleRadioButton.TabIndex = 15;
+            this.m_singleRadioButton.TabStop = true;
+            this.m_singleRadioButton.Text = "Single";
+            this.m_singleRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // m_marriedRadioButton
+            // 
+            this.m_marriedRadioButton.AutoSize = true;
+            this.m_marriedRadioButton.Location = new System.Drawing.Point(476, 171);
+            this.m_marriedRadioButton.Name = "m_marriedRadioButton";
+            this.m_marriedRadioButton.Size = new System.Drawing.Size(82, 24);
+            this.m_marriedRadioButton.TabIndex = 16;
+            this.m_marriedRadioButton.TabStop = true;
+            this.m_marriedRadioButton.Text = "Married";
+            this.m_marriedRadioButton.UseVisualStyleBackColor = true;
+            // 
             // ActorForm
             // 
+            this.AcceptButton = this.m_okButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.m_cancelButton;
             this.ClientSize = new System.Drawing.Size(637, 456);
+            this.Controls.Add(this.m_marriedRadioButton);
+            this.Controls.Add(this.m_singleRadioButton);
             this.Controls.Add(this.m_cancelButton);
             this.Controls.Add(this.m_okButton);
             this.Controls.Add(this.m_awardsDescriptionTextBox);
             this.Controls.Add(this.m_awardsDescriptionLabel);
             this.Controls.Add(this.m_countryTextBox);
             this.Controls.Add(this.m_countryLabel);
-            this.Controls.Add(this.m_familyStatusComboBox);
             this.Controls.Add(this.m_familyStatusLabel);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.m_birthDateTextBox);
             this.Controls.Add(this.m_birthDateLabel);
             this.Controls.Add(this.m_secondNameTextBox);
             this.Controls.Add(this.m_secondNameLabel);
@@ -188,6 +207,7 @@ namespace MovieStore.UI
             this.Name = "ActorForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Actor";
+            this.Load += new System.EventHandler(this.OnLoad);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -200,14 +220,15 @@ namespace MovieStore.UI
         private System.Windows.Forms.Label m_secondNameLabel;
         private System.Windows.Forms.TextBox m_secondNameTextBox;
         private System.Windows.Forms.Label m_birthDateLabel;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox m_birthDateTextBox;
         private System.Windows.Forms.Label m_familyStatusLabel;
-        private System.Windows.Forms.ComboBox m_familyStatusComboBox;
         private System.Windows.Forms.Label m_countryLabel;
         private System.Windows.Forms.TextBox m_countryTextBox;
         private System.Windows.Forms.Label m_awardsDescriptionLabel;
         private System.Windows.Forms.TextBox m_awardsDescriptionTextBox;
         private System.Windows.Forms.Button m_okButton;
         private System.Windows.Forms.Button m_cancelButton;
+        private System.Windows.Forms.RadioButton m_singleRadioButton;
+        private System.Windows.Forms.RadioButton m_marriedRadioButton;
     }
 }
