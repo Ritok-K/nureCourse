@@ -20,6 +20,7 @@ namespace MovieStore.UI
         Users,
 
         TopMovies,
+        TopUsers,
     }
 
     public partial class MainForm : Form
@@ -51,7 +52,7 @@ namespace MovieStore.UI
             new ColumnHeader() { Text = "Title", Name = nameof(Data.Movie.Title) },
             new ColumnHeader() { Text = "Year", Name = nameof(Data.Movie.Year)  },
             new ColumnHeader() { Text = "IMDB", Name = nameof(Data.Movie.Imdb)  },
-            new ColumnHeader() { Text = "Income", Name = nameof(Data.Movie.Income)  },
+            new ColumnHeader() { Text = "Income", Name = nameof(Data.Movie.Income) },
         };
 
         ColumnHeader[] CustomerTopMovieModeListColumns => new ColumnHeader[]
@@ -59,7 +60,6 @@ namespace MovieStore.UI
             new ColumnHeader() { Text = "Title", Name = nameof(Data.Movie.Title) },
             new ColumnHeader() { Text = "Year", Name = nameof(Data.Movie.Year)  },
             new ColumnHeader() { Text = "IMDB", Name = nameof(Data.Movie.Imdb)  },
-            new ColumnHeader() { Text = "Income", Name = nameof(Data.Movie.Income)  },
         };
 
         ColumnHeader[] ActorsModeListColumns => new ColumnHeader[]
@@ -87,9 +87,16 @@ namespace MovieStore.UI
 
         ColumnHeader[] UsersModeListColumns => new ColumnHeader[]
         {
-            new ColumnHeader() { Text = "Name" },
-            new ColumnHeader() { Text = "E-mail" },
-            new ColumnHeader() { Text = "Role" },
+            new ColumnHeader() { Text = "Name", Name = nameof(Data.User.FirstName) },
+            new ColumnHeader() { Text = "E-mail", Name = nameof(Data.User.EMail) },
+            new ColumnHeader() { Text = "Role", Name = nameof(Data.User.Role) },
+        };
+
+        ColumnHeader[] TopUsersModeListColumns => new ColumnHeader[]
+        {
+            new ColumnHeader() { Text = "Name", Name = nameof(Data.User.FirstName) },
+            new ColumnHeader() { Text = "E-mail", Name = nameof(Data.User.EMail) },
+            new ColumnHeader() { Text = "Income", Name = nameof(Data.User.Income) },
         };
 
         int ListViewOffset { get; set; } = 0;
@@ -155,6 +162,7 @@ namespace MovieStore.UI
                     break;
 
                 case ViewMode.Users:
+                case ViewMode.TopUsers:
                     RefreshUsersListView();
                     break;
             }
@@ -299,30 +307,18 @@ namespace MovieStore.UI
 
         void RefreshUsersListView()
         {
-            try
-            {
-                var users = Program.DB.GetUsers(ListViewLimit, ListViewOffset);
+            var users = (ViewMode == ViewMode.Users) ? Program.DB.GetUsers(ListViewLimit, ListViewOffset) :
+                                                       Program.DB.GetTopUsers(ListViewLimit, ListViewOffset);
 
-                m_listView.BeginUpdate();
-                m_listView.Items.Clear();
+            var view = users.Select(u => new Dictionary<string, string>()
+                                      {
+                                          { nameof(Data.User.FirstName),Utility.UIPrimitiveFormatting.FormatUserName(u) },
+                                          { nameof(Data.User.EMail),    u.EMail },
+                                          { nameof(Data.User.Role),     Utility.UIPrimitiveFormatting.Format(u.Role) },
+                                          { nameof(Data.User.Income),   Utility.UIPrimitiveFormatting.FormatPrice(u.Income)}
+                                      }).ToList();
 
-                foreach (var u in users)
-                {
-                    m_listView.Items.Add(new ListViewItem(new string[]
-                    {
-                        Utility.UIPrimitiveFormatting.FormatUserName(u),
-                        u.EMail,
-                        Utility.UIPrimitiveFormatting.Format(u.Role),
-                    })
-                    { Tag = u });
-                }
-
-                ExpandListViewColumns();
-            }
-            finally
-            {
-                m_listView.EndUpdate();
-            }
+            PopulateListView(users, view);
         }
 
         void DeleteListViewItems(bool refreshList = true)
@@ -700,6 +696,7 @@ namespace MovieStore.UI
                     break;
 
                 case ViewMode.Users:
+                case ViewMode.TopUsers:
                     ReinitUsersModeControls();
                     break;
             }
@@ -721,7 +718,8 @@ namespace MovieStore.UI
 
         void ReinitUsersModeControls()
         {
-            ReinitListView(UsersModeListColumns);
+            var columns = (ViewMode == ViewMode.Users) ? UsersModeListColumns : TopUsersModeListColumns;
+            ReinitListView(columns);
         }
 
         void ReinitStudiosModeControls()
@@ -838,6 +836,9 @@ namespace MovieStore.UI
 
                 m_usersToolStripMenuItem.Enabled = isManagerMode && isAuthorized;
                 m_usersToolStripMenuItem.Visible = isManagerMode;
+
+                m_topUsersToolStripMenuItem.Enabled = isManagerMode && isAuthorized;
+                m_topUsersToolStripMenuItem.Visible = isManagerMode;
 
                 m_myBasketToolStripMenuItem.Enabled = !isManagerMode && isAuthorized;
                 m_myBasketToolStripMenuItem.Visible = !isManagerMode;
@@ -1015,6 +1016,18 @@ namespace MovieStore.UI
             }
         }
 
+        private void OnTopUsersMode(object sender, EventArgs e)
+        {
+            try
+            {
+                SetViewMode(ViewMode.TopUsers);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
         private void OnMyBasketMode(object sender, EventArgs e)
         {
 
@@ -1092,6 +1105,5 @@ namespace MovieStore.UI
                 MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
     }
 }

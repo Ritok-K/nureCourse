@@ -158,51 +158,6 @@ namespace MovieStore.DB
             }
         }
 
-        internal IList<Data.User> GetUsers(int? limit = null, int? offset = null, IDataFilter filter = null)
-        {
-            if (!IsAuthorized)
-            {
-                throw new NotAuthorizedDBException();
-            }
-
-            var res = new List<Data.User>();
-
-            // load movies
-            {
-                var sql = new QueryBuilders.SelectQueryBuilder()
-                                           .SelectAll()
-                                           .From(c_UsersTable)
-                                           .Pagging(limit, offset)
-                                           .AddFilter(filter)
-                                           .Make();
-
-                using (var connection = new MySqlConnection(ConnectionString))
-                using (var command = new MySqlCommand(sql, connection))
-                {
-                    filter?.AddCommandParameters(command);
-
-                    using (var adapter = new MySqlDataAdapter(command))
-                    {
-                        var ds = new DataSet();
-                        adapter.Fill(ds);
-                        Debug.Assert(ds.Tables.Count > 0);
-
-                        var table = ds.Tables[0];
-                        if (table.Rows.Count > 0)
-                        {
-                            foreach (var r in table.Rows.Cast<DataRow>())
-                            {
-                                var user = Serializers.UserSerializer.Load(r);
-                                res.Add(user);
-                            }
-                        }
-                    }
-                }
-            }
-
-            return res;
-        }
-
         internal IList<Data.Movie> GetMovies(int? limit = null, int? offset = null, IDataFilter filter = null, bool loadActors = false)
         {
             if (!IsAuthorized)
@@ -547,37 +502,106 @@ namespace MovieStore.DB
             return res;
         }
 
-        internal void DeleteUsers(IEnumerable<Data.User> users)
+        internal IList<Data.User> GetUsers(int? limit = null, int? offset = null, IDataFilter filter = null)
         {
             if (!IsAuthorized)
             {
                 throw new NotAuthorizedDBException();
             }
 
-            if (users.Any(u => u.Id == CurrentUser.Id))
+            var res = new List<Data.User>();
+
+            // load movies
             {
-                throw new AttemptToDeleteCurrentUserDBException(CurrentUser.EMail);
-            }
+                var sql = new QueryBuilders.SelectQueryBuilder()
+                                           .SelectAll()
+                                           .From(c_UsersTable)
+                                           .Pagging(limit, offset)
+                                           .AddFilter(filter)
+                                           .Make();
 
-            var sqlParams = users.Select(u => Tuple.Create(BuildParameterName(c_UsersTable, $"{c_UserIdColumn}{u.Id}"), u.Id))
-                                 .ToList();
-
-            var sql = new QueryBuilders.DeleteRequestBuilder()
-                                       .Delete(c_UsersTable)
-                                       .Where($"{BuildFieldName(c_UsersTable, c_UserIdColumn)} IN ({string.Join(", ", sqlParams.Select(p => p.Item1))})")
-                                       .Make();
-
-            using (var connection = new MySqlConnection(ConnectionString))
-            using (var command = new MySqlCommand(sql, connection))
-            {
-                foreach (var p in sqlParams)
+                using (var connection = new MySqlConnection(ConnectionString))
+                using (var command = new MySqlCommand(sql, connection))
                 {
-                    command.Parameters.AddWithValue(p.Item1, p.Item2);
-                }
+                    filter?.AddCommandParameters(command);
 
-                connection.Open();
-                command.ExecuteNonQuery();
+                    using (var adapter = new MySqlDataAdapter(command))
+                    {
+                        var ds = new DataSet();
+                        adapter.Fill(ds);
+                        Debug.Assert(ds.Tables.Count > 0);
+
+                        var table = ds.Tables[0];
+                        if (table.Rows.Count > 0)
+                        {
+                            foreach (var r in table.Rows.Cast<DataRow>())
+                            {
+                                var user = Serializers.UserSerializer.Load(r);
+                                res.Add(user);
+                            }
+                        }
+                    }
+                }
             }
+
+            return res;
+        }
+
+        internal IList<Data.User> GetTopUsers(int? limit = null, int? offset = null, IDataFilter filter = null)
+        {
+            if (!IsAuthorized)
+            {
+                throw new NotAuthorizedDBException();
+            }
+
+            var res = new List<Data.User>();
+
+            // load movies
+            {
+                var sql = new QueryBuilders.SelectQueryBuilder()
+                                           .Select(new string[] {
+                                                    // User table fields
+                                                    BuildFieldName(c_UsersTable, "*"),
+                                                    // Aggregated fields,
+                                                    $"SUM({BuildFieldName(c_MoviesTable, c_PriceColumn)}) AS {c_IncomeColumn}",
+                                                  })
+                                           .JoinUsing(QueryBuilders.SQLJoin.Inner, c_OrdersTable, c_UserIdColumn)
+                                           .JoinUsing(QueryBuilders.SQLJoin.Inner, c_MovieOrderTable, c_OrderIdColumn)
+                                           .JoinUsing(QueryBuilders.SQLJoin.Inner, c_MoviesTable, c_MovieIdColumn)
+                                           .From(c_UsersTable)
+                                           .GroupBy(BuildFieldName(c_UsersTable, c_UserIdColumn))
+                                           .OrderBy(c_IncomeColumn, true)
+                                           .Pagging(limit, offset)
+                                           .AddFilter(filter)
+                                           .Make();
+
+                using (var connection = new MySqlConnection(ConnectionString))
+                using (var command = new MySqlCommand(sql, connection))
+                {
+                    filter?.AddCommandParameters(command);
+
+                    using (var adapter = new MySqlDataAdapter(command))
+                    {
+                        var ds = new DataSet();
+                        adapter.Fill(ds);
+                        Debug.Assert(ds.Tables.Count > 0);
+
+                        var table = ds.Tables[0];
+                        if (table.Rows.Count > 0)
+                        {
+                            foreach (var r in table.Rows.Cast<DataRow>())
+                            {
+                                var user = Serializers.UserSerializer.Load(r);
+                                Serializers.UserSerializer.LoadAggregated(user, r);
+
+                                res.Add(user);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return res;
         }
 
         internal void DeleteMovies(IEnumerable<Data.Movie> movies)
@@ -677,6 +701,39 @@ namespace MovieStore.DB
             var sql = new QueryBuilders.DeleteRequestBuilder()
                                        .Delete(c_OrdersTable)
                                        .Where($"{BuildFieldName(c_OrdersTable, c_OrderIdColumn)} IN ({string.Join(", ", sqlParams.Select(p => p.Item1))})")
+                                       .Make();
+
+            using (var connection = new MySqlConnection(ConnectionString))
+            using (var command = new MySqlCommand(sql, connection))
+            {
+                foreach (var p in sqlParams)
+                {
+                    command.Parameters.AddWithValue(p.Item1, p.Item2);
+                }
+
+                connection.Open();
+                command.ExecuteNonQuery();
+            }
+        }
+
+        internal void DeleteUsers(IEnumerable<Data.User> users)
+        {
+            if (!IsAuthorized)
+            {
+                throw new NotAuthorizedDBException();
+            }
+
+            if (users.Any(u => u.Id == CurrentUser.Id))
+            {
+                throw new AttemptToDeleteCurrentUserDBException(CurrentUser.EMail);
+            }
+
+            var sqlParams = users.Select(u => Tuple.Create(BuildParameterName(c_UsersTable, $"{c_UserIdColumn}{u.Id}"), u.Id))
+                                 .ToList();
+
+            var sql = new QueryBuilders.DeleteRequestBuilder()
+                                       .Delete(c_UsersTable)
+                                       .Where($"{BuildFieldName(c_UsersTable, c_UserIdColumn)} IN ({string.Join(", ", sqlParams.Select(p => p.Item1))})")
                                        .Make();
 
             using (var connection = new MySqlConnection(ConnectionString))

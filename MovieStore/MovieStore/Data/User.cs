@@ -15,6 +15,8 @@ namespace MovieStore.Data
 
     public class User
     {
+        #region Model properties
+
         public int Id { get; set; }
         public string FirstName { get; set; }
         public string SecondName { get; set; }
@@ -22,6 +24,16 @@ namespace MovieStore.Data
         public UserRole Role { get; set; } = Data.UserRole.User;
         public string PasswordHash { get; set; }
         public string Salt { get; init; } = Utility.Seсurity.GenerateSalt();
+
+        #endregion
+
+        #region Aggregated properties
+
+        public int? Income { get; set; }              // can be null
+
+        #endregion
+
+        #region Methods
 
         public void SetPassword(string password)
         {
@@ -36,5 +48,7 @@ namespace MovieStore.Data
             var res = PasswordHash.Equals(hash, StringComparison.OrdinalIgnoreCase);
             return res;
         }
+
+        #endregion
     }
 }
