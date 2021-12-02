@@ -38,7 +38,7 @@ namespace MovieStore.UI
             // m_loginButton
             // 
             this.m_loginButton.BackColor = System.Drawing.Color.DarkKhaki;
-            this.m_loginButton.Location = new System.Drawing.Point(333, 473);
+            this.m_loginButton.Location = new System.Drawing.Point(373, 548);
             this.m_loginButton.Name = "m_loginButton";
             this.m_loginButton.Size = new System.Drawing.Size(152, 48);
             this.m_loginButton.TabIndex = 0;
@@ -51,7 +51,8 @@ namespace MovieStore.UI
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(781, 553);
+            this.pictureBox1.Size = new System.Drawing.Size(852, 609);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
             // 
@@ -59,8 +60,7 @@ namespace MovieStore.UI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.ClientSize = new System.Drawing.Size(782, 553);
+            this.ClientSize = new System.Drawing.Size(850, 608);
             this.Controls.Add(this.m_loginButton);
             this.Controls.Add(this.pictureBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
