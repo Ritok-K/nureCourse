@@ -138,23 +138,25 @@ namespace MovieStore.UI
             // 
             // m_okButton
             // 
+            this.m_okButton.BackColor = System.Drawing.Color.DarkKhaki;
             this.m_okButton.Location = new System.Drawing.Point(322, 402);
             this.m_okButton.Name = "m_okButton";
             this.m_okButton.Size = new System.Drawing.Size(144, 29);
             this.m_okButton.TabIndex = 13;
             this.m_okButton.Text = "Ok";
-            this.m_okButton.UseVisualStyleBackColor = true;
+            this.m_okButton.UseVisualStyleBackColor = false;
             this.m_okButton.Click += new System.EventHandler(this.OnOk);
             // 
             // m_cancelButton
             // 
+            this.m_cancelButton.BackColor = System.Drawing.Color.DarkKhaki;
             this.m_cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.m_cancelButton.Location = new System.Drawing.Point(487, 403);
             this.m_cancelButton.Name = "m_cancelButton";
             this.m_cancelButton.Size = new System.Drawing.Size(108, 29);
             this.m_cancelButton.TabIndex = 14;
             this.m_cancelButton.Text = "Cancel";
-            this.m_cancelButton.UseVisualStyleBackColor = true;
+            this.m_cancelButton.UseVisualStyleBackColor = false;
             // 
             // m_singleRadioButton
             // 
@@ -184,6 +186,7 @@ namespace MovieStore.UI
             this.AcceptButton = this.m_okButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.PaleGoldenrod;
             this.CancelButton = this.m_cancelButton;
             this.ClientSize = new System.Drawing.Size(637, 456);
             this.Controls.Add(this.m_marriedRadioButton);

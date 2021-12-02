@@ -84,12 +84,13 @@ namespace MovieStore.UI
             // 
             // m_okButton
             // 
+            this.m_okButton.BackColor = System.Drawing.Color.DarkKhaki;
             this.m_okButton.Location = new System.Drawing.Point(262, 260);
             this.m_okButton.Name = "m_okButton";
             this.m_okButton.Size = new System.Drawing.Size(94, 29);
             this.m_okButton.TabIndex = 3;
             this.m_okButton.Text = "Ok";
-            this.m_okButton.UseVisualStyleBackColor = true;
+            this.m_okButton.UseVisualStyleBackColor = false;
             this.m_okButton.Click += new System.EventHandler(this.OnOk);
             // 
             // m_fileNameTextBox
@@ -130,6 +131,7 @@ namespace MovieStore.UI
             this.AcceptButton = this.m_okButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.PaleGoldenrod;
             this.ClientSize = new System.Drawing.Size(392, 314);
             this.Controls.Add(this.m_fileNameLabel);
             this.Controls.Add(this.m_showFileDialogButton);

@@ -49,20 +49,20 @@ namespace MovieStore.UI
             this.m_exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.m_toolStrip = new System.Windows.Forms.ToolStrip();
             this.m_deleteToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.m_basketToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.m_addNewToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.m_nextToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.m_prevToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.m_receiptToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.m_reportToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.tToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.m_basketToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.m_menuStrip.SuspendLayout();
             this.m_toolStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // m_listView
             // 
-            this.m_listView.BackColor = System.Drawing.Color.LemonChiffon;
+            this.m_listView.BackColor = System.Drawing.Color.PaleGoldenrod;
             this.m_listView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.m_listView.FullRowSelect = true;
             this.m_listView.GridLines = true;
@@ -92,6 +92,7 @@ namespace MovieStore.UI
             // 
             // m_viewToolStripMenuItem
             // 
+            this.m_viewToolStripMenuItem.BackColor = System.Drawing.Color.DarkKhaki;
             this.m_viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.m_moviesToolStripMenuItem,
             this.m_actorsToolStripMenuItem,
@@ -107,60 +108,69 @@ namespace MovieStore.UI
             // 
             // m_moviesToolStripMenuItem
             // 
+            this.m_moviesToolStripMenuItem.BackColor = System.Drawing.Color.LemonChiffon;
             this.m_moviesToolStripMenuItem.Name = "m_moviesToolStripMenuItem";
-            this.m_moviesToolStripMenuItem.Size = new System.Drawing.Size(159, 26);
+            this.m_moviesToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.m_moviesToolStripMenuItem.Text = "Movies";
             this.m_moviesToolStripMenuItem.Click += new System.EventHandler(this.OnMoviesMode);
             // 
             // m_actorsToolStripMenuItem
             // 
+            this.m_actorsToolStripMenuItem.BackColor = System.Drawing.Color.LemonChiffon;
             this.m_actorsToolStripMenuItem.Name = "m_actorsToolStripMenuItem";
-            this.m_actorsToolStripMenuItem.Size = new System.Drawing.Size(159, 26);
+            this.m_actorsToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.m_actorsToolStripMenuItem.Text = "Actors";
             this.m_actorsToolStripMenuItem.Click += new System.EventHandler(this.OnActorsMode);
             // 
             // m_studiosToolStripMenuItem
             // 
+            this.m_studiosToolStripMenuItem.BackColor = System.Drawing.Color.LemonChiffon;
             this.m_studiosToolStripMenuItem.Name = "m_studiosToolStripMenuItem";
-            this.m_studiosToolStripMenuItem.Size = new System.Drawing.Size(159, 26);
+            this.m_studiosToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.m_studiosToolStripMenuItem.Text = "Studio";
             this.m_studiosToolStripMenuItem.Click += new System.EventHandler(this.OnStudioMode);
             // 
             // m_ordersToolStripMenuItem
             // 
+            this.m_ordersToolStripMenuItem.BackColor = System.Drawing.Color.LemonChiffon;
             this.m_ordersToolStripMenuItem.Name = "m_ordersToolStripMenuItem";
-            this.m_ordersToolStripMenuItem.Size = new System.Drawing.Size(159, 26);
+            this.m_ordersToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.m_ordersToolStripMenuItem.Text = "Orders";
             this.m_ordersToolStripMenuItem.Click += new System.EventHandler(this.OnOrdersMode);
             // 
             // m_usersToolStripMenuItem
             // 
+            this.m_usersToolStripMenuItem.BackColor = System.Drawing.Color.LemonChiffon;
             this.m_usersToolStripMenuItem.Name = "m_usersToolStripMenuItem";
-            this.m_usersToolStripMenuItem.Size = new System.Drawing.Size(159, 26);
+            this.m_usersToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.m_usersToolStripMenuItem.Text = "Users";
             this.m_usersToolStripMenuItem.Click += new System.EventHandler(this.OnUsersMode);
             // 
             // toolStripSeparator1
             // 
+            this.toolStripSeparator1.BackColor = System.Drawing.Color.DarkKhaki;
+            this.toolStripSeparator1.ForeColor = System.Drawing.Color.DarkKhaki;
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(156, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(221, 6);
             // 
             // m_myBasketToolStripMenuItem
             // 
+            this.m_myBasketToolStripMenuItem.BackColor = System.Drawing.Color.LemonChiffon;
             this.m_myBasketToolStripMenuItem.Name = "m_myBasketToolStripMenuItem";
-            this.m_myBasketToolStripMenuItem.Size = new System.Drawing.Size(159, 26);
+            this.m_myBasketToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.m_myBasketToolStripMenuItem.Text = "My basket";
             this.m_myBasketToolStripMenuItem.Click += new System.EventHandler(this.OnMyBasketMode);
             // 
             // m_topsToolStripMenuItem
             // 
+            this.m_topsToolStripMenuItem.BackColor = System.Drawing.Color.LemonChiffon;
             this.m_topsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.m_topMoviesToolStripMenuItem,
             this.m_topStudioToolStripMenuItem,
             this.m_topUsersToolStripMenuItem,
             this.m_topOrdersToolStripMenuItem});
             this.m_topsToolStripMenuItem.Name = "m_topsToolStripMenuItem";
-            this.m_topsToolStripMenuItem.Size = new System.Drawing.Size(159, 26);
+            this.m_topsToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.m_topsToolStripMenuItem.Text = "Tops";
             // 
             // m_topMoviesToolStripMenuItem
@@ -235,6 +245,15 @@ namespace MovieStore.UI
             this.m_deleteToolStripButton.Text = "Delete selected";
             this.m_deleteToolStripButton.Click += new System.EventHandler(this.OnDeleteSelected);
             // 
+            // m_basketToolStripButton
+            // 
+            this.m_basketToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.m_basketToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("m_basketToolStripButton.Image")));
+            this.m_basketToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.m_basketToolStripButton.Name = "m_basketToolStripButton";
+            this.m_basketToolStripButton.Size = new System.Drawing.Size(29, 24);
+            this.m_basketToolStripButton.Text = "My basket";
+            // 
             // m_addNewToolStripButton
             // 
             this.m_addNewToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -288,15 +307,6 @@ namespace MovieStore.UI
             this.tToolStripMenuItem.Name = "tToolStripMenuItem";
             this.tToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.tToolStripMenuItem.Text = "T";
-            // 
-            // m_basketToolStripButton
-            // 
-            this.m_basketToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.m_basketToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("m_basketToolStripButton.Image")));
-            this.m_basketToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.m_basketToolStripButton.Name = "m_basketToolStripButton";
-            this.m_basketToolStripButton.Size = new System.Drawing.Size(29, 24);
-            this.m_basketToolStripButton.Text = "My basket";
             // 
             // MainForm
             // 
