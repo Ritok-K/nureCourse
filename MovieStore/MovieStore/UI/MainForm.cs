@@ -194,15 +194,43 @@ namespace MovieStore.UI
                                                     .ToList();
             if (movieIds?.Any() ?? false)
             {
-                BasketList.AddRange(movieIds);
+                var tempList = new List<int>();
+                tempList.AddRange(BasketList);
+                tempList.AddRange(movieIds);
+                tempList = tempList.Distinct().ToList();
 
-                UpdateControls();
+                var wasEmpty = !BasketList.Any();
+                if (!BasketList.SequenceEqual(tempList))
+                {
+                    BasketList = tempList;
+
+                    UpdateControls();
+
+                    if (wasEmpty)
+                    {
+                        var resp = MessageBox.Show(this, "Your basket is not empty now.\nDo you want open it to make an order?", "?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                        if (resp == DialogResult.Yes)
+                        {
+                            MyBasket();
+                        }
+                    }
+                }
             }
         }
 
         void MyBasket()
         {
+            using(var myBasketForm = new MyBasketForm() { BasketList = BasketList })
+            {
+                var resp = myBasketForm.ShowDialog(this);
+                if (resp == DialogResult.OK)
+                {
+                    BasketList.Clear();
 
+                    RefreshListView();
+                    UpdateControls();
+                }
+            }
         }
 
         void SetViewMode(ViewMode mode, bool forceUpdate = false)
@@ -745,11 +773,7 @@ namespace MovieStore.UI
             {
                 ListViewOffset = 0;
 
-                m_listView.BeginUpdate();
-
-                m_listView.Items.Clear();
-                m_listView.Columns.Clear();
-                m_listView.Columns.AddRange(columns);
+                Utility.UIListView.InitColumns(m_listView, columns);
 
                 ExpandListViewColumns(false);
             }
@@ -761,61 +785,14 @@ namespace MovieStore.UI
 
         void PopulateListView<T>(IList<T> model, IList<Dictionary<string, string>> view) where T : class
         {
-            try
-            {
-                m_listView.BeginUpdate();
-                m_listView.Items.Clear();
+            Utility.UIListView.PopulateItems(m_listView, model, view);
 
-                for (var i = 0; i < model.Count; i++)
-                {
-                    var m = model[i];
-                    var v = view[i];
-
-                    var lv = default(ListViewItem);
-                    foreach (var c in m_listView.Columns.Cast<ColumnHeader>())
-                    {
-                        var value = Utility.UIPrimitiveFormatting.c_NoData;
-                        v.TryGetValue(c.Name, out value);
-
-                        if (lv==null)
-                        {
-                            lv = new ListViewItem() { Text = value, Name = c.Name };
-                        }
-                        else
-                        {
-                            lv.SubItems.Add(new ListViewItem.ListViewSubItem() { Text = value, Name = c.Name });
-                        }
-                    }
-
-                    if (lv == null)
-                    {
-                        lv = new ListViewItem() { Text = string.Empty };
-                    }
-
-                    lv.Tag = m;
-
-                    m_listView.Items.Add(lv);
-                }
-
-                ExpandListViewColumns();
-            }
-            finally
-            {
-                m_listView.EndUpdate();
-            }
+            ExpandListViewColumns();
         }
 
         void ExpandListViewColumns(bool byContent = true)
         {
-            foreach(var c in m_listView.Columns.Cast<ColumnHeader>())
-            {
-                if (byContent)
-                {
-                    c.AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
-                }
-
-                c.AutoResize(ColumnHeaderAutoResizeStyle.HeaderSize);
-            }
+            Utility.UIListView.ExpandColumns(m_listView, byContent);
         }
 
         void UpdateControls()
@@ -851,8 +828,8 @@ namespace MovieStore.UI
                 m_topUsersToolStripMenuItem.Enabled = isManagerMode && isAuthorized;
                 m_topUsersToolStripMenuItem.Visible = isManagerMode;
 
-                m_myBasketToolStripMenuItem.Enabled = !isManagerMode && isAuthorized;
-                m_myBasketToolStripMenuItem.Visible = !isManagerMode;
+                m_myBasketToolStripMenuItem.Enabled = isAuthorized && !isBasketEmpty;
+                m_myBasketToolStripMenuItem.Visible = true;
             }
 
             // Toolstrip buttons
@@ -879,7 +856,7 @@ namespace MovieStore.UI
                 m_addToBasketToolStripButton.Visible = (ViewMode == ViewMode.Movies) || (ViewMode == ViewMode.TopMovies);
 
                 m_basketToolStripButton.Enabled = isAuthorized && !isBasketEmpty;
-                m_basketToolStripButton.Visible = (ViewMode == ViewMode.Movies) || (ViewMode == ViewMode.TopMovies);
+                m_basketToolStripButton.Visible = true;
             }
         }
 
