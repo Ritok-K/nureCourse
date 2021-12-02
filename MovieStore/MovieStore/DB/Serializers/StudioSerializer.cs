@@ -26,6 +26,15 @@ namespace MovieStore.DB.Serializers
             return res;
         }
 
+        internal static void LoadAggregated(Data.Studio studio, DataRow row)
+        {
+            if (row.Table.Columns.Contains(MovieDB.c_IncomeColumn))
+            {
+                var v = row.Field<decimal?>(MovieDB.c_IncomeColumn);
+                studio.Income = v.HasValue ? (int)v.Value : null;
+            }
+        }
+
         internal static void Save(Data.Studio studio, DataRow row)
         {
             row[MovieDB.c_TitleColumn] = studio.Title;

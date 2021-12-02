@@ -21,6 +21,7 @@ namespace MovieStore.UI
 
         TopMovies,
         TopUsers,
+        TopStudio,
     }
 
     public partial class MainForm : Form
@@ -38,28 +39,28 @@ namespace MovieStore.UI
         ColumnHeader[] MovieModeListColumns => new ColumnHeader[] 
         {
             new ColumnHeader() { Text = "Title", Name = nameof(Data.Movie.Title) },
-            new ColumnHeader() { Text = "Year", Name = nameof(Data.Movie.Year)  },
-            new ColumnHeader() { Text = "Genre", Name = nameof(Data.Movie.Genre)  },
-            new ColumnHeader() { Text = "IMDB", Name = nameof(Data.Movie.Imdb)  },
-            new ColumnHeader() { Text = "Studio", Name = nameof(Data.Movie.Studio)  },
-            new ColumnHeader() { Text = "Country", Name = nameof(Data.Movie.Country)  },
-            new ColumnHeader() { Text = "Price", Name = nameof(Data.Movie.Price)  },
-            new ColumnHeader() { Text = "Actors", Name = nameof(Data.Movie.Actors)  },
+            new ColumnHeader() { Text = "Year", Name = nameof(Data.Movie.Year) },
+            new ColumnHeader() { Text = "Genre", Name = nameof(Data.Movie.Genre) },
+            new ColumnHeader() { Text = "IMDB", Name = nameof(Data.Movie.Imdb) },
+            new ColumnHeader() { Text = "Studio", Name = nameof(Data.Movie.Studio) },
+            new ColumnHeader() { Text = "Country", Name = nameof(Data.Movie.Country) },
+            new ColumnHeader() { Text = "Price", Name = nameof(Data.Movie.Price) },
+            new ColumnHeader() { Text = "Actors", Name = nameof(Data.Movie.Actors) },
         };
 
         ColumnHeader[] ManagerTopMovieModeListColumns => new ColumnHeader[]
         {
             new ColumnHeader() { Text = "Title", Name = nameof(Data.Movie.Title) },
-            new ColumnHeader() { Text = "Year", Name = nameof(Data.Movie.Year)  },
-            new ColumnHeader() { Text = "IMDB", Name = nameof(Data.Movie.Imdb)  },
+            new ColumnHeader() { Text = "Year", Name = nameof(Data.Movie.Year) },
+            new ColumnHeader() { Text = "IMDB", Name = nameof(Data.Movie.Imdb) },
             new ColumnHeader() { Text = "Income", Name = nameof(Data.Movie.Income) },
         };
 
         ColumnHeader[] CustomerTopMovieModeListColumns => new ColumnHeader[]
         {
             new ColumnHeader() { Text = "Title", Name = nameof(Data.Movie.Title) },
-            new ColumnHeader() { Text = "Year", Name = nameof(Data.Movie.Year)  },
-            new ColumnHeader() { Text = "IMDB", Name = nameof(Data.Movie.Imdb)  },
+            new ColumnHeader() { Text = "Year", Name = nameof(Data.Movie.Year) },
+            new ColumnHeader() { Text = "IMDB", Name = nameof(Data.Movie.Imdb) },
         };
 
         ColumnHeader[] ActorsModeListColumns => new ColumnHeader[]
@@ -72,10 +73,27 @@ namespace MovieStore.UI
 
         ColumnHeader[] StudiosModeListColumns => new ColumnHeader[]
         {
-            new ColumnHeader() { Text = "Title" },
-            new ColumnHeader() { Text = "Country" },
-            new ColumnHeader() { Text = "Foundation date" },
-            new ColumnHeader() { Text = "Production" },
+            new ColumnHeader() { Text = "Title", Name = nameof(Data.Studio.Title) },
+            new ColumnHeader() { Text = "Country", Name = nameof(Data.Studio.Country) },
+            new ColumnHeader() { Text = "Foundation date", Name = nameof(Data.Studio.FoundationDate) },
+            new ColumnHeader() { Text = "Production", Name = nameof(Data.Studio.Production) },
+        };
+
+        ColumnHeader[] ManagerTopStudiosModeListColumns => new ColumnHeader[]
+        {
+            new ColumnHeader() { Text = "Title", Name = nameof(Data.Studio.Title) },
+            new ColumnHeader() { Text = "Country", Name = nameof(Data.Studio.Country) },
+            new ColumnHeader() { Text = "Foundation date", Name = nameof(Data.Studio.FoundationDate) },
+            new ColumnHeader() { Text = "Production", Name = nameof(Data.Studio.Production) },
+            new ColumnHeader() { Text = "Income", Name = nameof(Data.Studio.Income) },
+        };
+
+        ColumnHeader[] CustomerTopStudiosModeListColumns => new ColumnHeader[]
+        {
+            new ColumnHeader() { Text = "Title", Name = nameof(Data.Studio.Title) },
+            new ColumnHeader() { Text = "Country", Name = nameof(Data.Studio.Country) },
+            new ColumnHeader() { Text = "Foundation date", Name = nameof(Data.Studio.FoundationDate) },
+            new ColumnHeader() { Text = "Production", Name = nameof(Data.Studio.Production) },
         };
 
         ColumnHeader[] OrdersModeListColumns => new ColumnHeader[]
@@ -154,6 +172,7 @@ namespace MovieStore.UI
                     break;
 
                 case ViewMode.Studio:
+                case ViewMode.TopStudio:
                     RefreshStudiosListView();
                     break;
 
@@ -186,36 +205,6 @@ namespace MovieStore.UI
                                           }).ToList();
 
             PopulateListView(movies, view);
-
-            //try
-            //{
-            //    var movies = Program.DB.GetMovies(ListViewLimit, ListViewOffset, loadActors: true);
-
-            //    m_listView.BeginUpdate();
-            //    m_listView.Items.Clear();
-
-            //    foreach(var m in movies)
-            //    {
-            //        m_listView.Items.Add(new ListViewItem(new string[]
-            //        {
-            //            m.Title,
-            //            Utility.UIPrimitiveFormatting.Format(m.Year,"yyyy"),
-            //            m.Genre,
-            //            Utility.UIPrimitiveFormatting.FormatImdb(m.Imdb),
-            //            m.Studio.Title,
-            //            m.Country,
-            //            Utility.UIPrimitiveFormatting.FormatPrice(m.Price),
-            //            Utility.UIPrimitiveFormatting.FormatActorsList(m.Actors),
-            //        })
-            //        { Tag = m });
-            //    }
-
-            //    ExpandListViewColumns();
-            //}
-            //finally
-            //{
-            //    m_listView.EndUpdate();
-            //}
         }
 
         void RefreshActorsListView()
@@ -249,31 +238,18 @@ namespace MovieStore.UI
 
         void RefreshStudiosListView()
         {
-            try
-            {
-                var studios = Program.DB.GetStudio(ListViewLimit, ListViewOffset);
+            var studio = (ViewMode == ViewMode.Studio) ? Program.DB.GetStudio(ListViewLimit, ListViewOffset) :
+                                                         Program.DB.GetTopStudio(ListViewLimit, ListViewOffset);
+            var view = studio.Select(s => new Dictionary<string, string>()
+                                          {
+                                              { nameof(Data.Studio.Title),          s.Title },
+                                              { nameof(Data.Studio.Country),        s.Country },
+                                              { nameof(Data.Studio.FoundationDate), Utility.UIPrimitiveFormatting.Format(s.FoundationDate,"yyyy") },
+                                              { nameof(Data.Studio.Production),     s.Production},
+                                              { nameof(Data.Movie.Income),          Utility.UIPrimitiveFormatting.FormatPrice(s.Income)}
+                                          }).ToList();
 
-                m_listView.BeginUpdate();
-                m_listView.Items.Clear();
-
-                foreach (var s in studios)
-                {
-                    m_listView.Items.Add(new ListViewItem(new string[]
-                    {
-                        s.Title,
-                        s.Country,
-                        Utility.UIPrimitiveFormatting.Format(s.FoundationDate,"yyyy"),
-                        s.Production,
-                    })
-                    { Tag = s });
-                }
-
-                ExpandListViewColumns();
-            }
-            finally
-            {
-                m_listView.EndUpdate();
-            }
+            PopulateListView(studio, view);
         }
 
         void RefreshOrdersListView()
@@ -688,6 +664,7 @@ namespace MovieStore.UI
                     break;
 
                 case ViewMode.Studio:
+                case ViewMode.TopStudio:
                     ReinitStudiosModeControls();
                     break;
 
@@ -724,7 +701,10 @@ namespace MovieStore.UI
 
         void ReinitStudiosModeControls()
         {
-            ReinitListView(StudiosModeListColumns);
+            var columns = (ViewMode == ViewMode.Studio) ? StudiosModeListColumns :
+                                                         (Program.DB.IsManagerMode ? ManagerTopStudiosModeListColumns : CustomerTopStudiosModeListColumns);
+
+            ReinitListView(columns);
         }
 
         void ReinitOrdersModeControls()
@@ -1021,6 +1001,18 @@ namespace MovieStore.UI
             try
             {
                 SetViewMode(ViewMode.TopUsers);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void OnTopStudioMode(object sender, EventArgs e)
+        {
+            try
+            {
+                SetViewMode(ViewMode.TopStudio);
             }
             catch (Exception ex)
             {

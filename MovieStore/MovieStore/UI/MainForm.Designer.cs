@@ -38,6 +38,7 @@ namespace MovieStore.UI
             this.m_studiosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.m_ordersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.m_usersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.m_myBasketToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.m_topsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.m_topMoviesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -52,7 +53,7 @@ namespace MovieStore.UI
             this.m_receiptToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.m_reportToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.tToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.m_topStudioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.m_menuStrip.SuspendLayout();
             this.m_toolStrip.SuspendLayout();
             this.SuspendLayout();
@@ -135,6 +136,11 @@ namespace MovieStore.UI
             this.m_usersToolStripMenuItem.Text = "Users";
             this.m_usersToolStripMenuItem.Click += new System.EventHandler(this.OnUsersMode);
             // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(221, 6);
+            // 
             // m_myBasketToolStripMenuItem
             // 
             this.m_myBasketToolStripMenuItem.Name = "m_myBasketToolStripMenuItem";
@@ -146,7 +152,8 @@ namespace MovieStore.UI
             // 
             this.m_topsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.m_topMoviesToolStripMenuItem,
-            this.m_topUsersToolStripMenuItem});
+            this.m_topUsersToolStripMenuItem,
+            this.m_topStudioToolStripMenuItem});
             this.m_topsToolStripMenuItem.Name = "m_topsToolStripMenuItem";
             this.m_topsToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.m_topsToolStripMenuItem.Text = "Tops";
@@ -261,10 +268,12 @@ namespace MovieStore.UI
             this.tToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.tToolStripMenuItem.Text = "T";
             // 
-            // toolStripSeparator1
+            // m_topStudioToolStripMenuItem
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(221, 6);
+            this.m_topStudioToolStripMenuItem.Name = "m_topStudioToolStripMenuItem";
+            this.m_topStudioToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.m_topStudioToolStripMenuItem.Text = "Top Studio";
+            this.m_topStudioToolStripMenuItem.Click += new System.EventHandler(this.OnTopStudioMode);
             // 
             // MainForm
             // 
@@ -314,6 +323,7 @@ namespace MovieStore.UI
         private System.Windows.Forms.ToolStripMenuItem m_topsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem tToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem m_topStudioToolStripMenuItem;
     }
 }
 

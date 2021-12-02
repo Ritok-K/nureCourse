@@ -398,6 +398,62 @@ namespace MovieStore.DB
 
             return res;
         }
+        
+        internal IList<Data.Studio> GetTopStudio(int? limit = null, int? offset = null, IDataFilter filter = null)
+        {
+            if (!IsAuthorized)
+            {
+                throw new NotAuthorizedDBException();
+            }
+
+            var res = new List<Data.Studio>();
+
+            // load movies
+            {
+                var sql = new QueryBuilders.SelectQueryBuilder()
+                                           .Select(new string[] {
+                                                    // User table fields
+                                                    BuildFieldName(c_StudioTable, "*"),
+                                                    // Aggregated fields,
+                                                    $"SUM({BuildFieldName(c_MoviesTable, c_PriceColumn)}) AS {c_IncomeColumn}",
+                                                  })
+                                           .From(c_StudioTable)
+                                           .JoinUsing(QueryBuilders.SQLJoin.Inner, c_MoviesTable, c_StudioIdColumn)
+                                           .JoinUsing(QueryBuilders.SQLJoin.Inner, c_MovieOrderTable, c_MovieIdColumn)
+                                           .GroupBy(BuildFieldName(c_StudioTable, c_StudioIdColumn))
+                                           .OrderBy(c_IncomeColumn, true)
+                                           .Pagging(limit, offset)
+                                           .AddFilter(filter)
+                                           .Make();
+
+                using (var connection = new MySqlConnection(ConnectionString))
+                using (var command = new MySqlCommand(sql, connection))
+                {
+                    filter?.AddCommandParameters(command);
+
+                    using (var adapter = new MySqlDataAdapter(command))
+                    {
+                        var ds = new DataSet();
+                        adapter.Fill(ds);
+                        Debug.Assert(ds.Tables.Count > 0);
+
+                        var table = ds.Tables[0];
+                        if (table.Rows.Count > 0)
+                        {
+                            foreach (var r in table.Rows.Cast<DataRow>())
+                            {
+                                var studio = Serializers.StudioSerializer.Load(r);
+                                Serializers.StudioSerializer.LoadAggregated(studio, r);
+                             
+                                res.Add(studio);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return res;
+        }
 
         internal IList<Data.Order> GetOrders(int? limit = null, int? offset = null, IDataFilter filter = null, bool loadMovies = false)
         {
