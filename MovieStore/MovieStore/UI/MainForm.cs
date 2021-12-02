@@ -191,15 +191,33 @@ namespace MovieStore.UI
                                                     .ToList();
             if (movieIds?.Any() ?? false)
             {
-                BasketList.AddRange(movieIds);
+                var tempList = new List<int>();
+                tempList.AddRange(BasketList);
+                tempList.AddRange(movieIds);
+                tempList = tempList.Distinct().ToList();
 
-                UpdateControls();
+                if (!BasketList.SequenceEqual(tempList))
+                {
+                    BasketList = tempList;
+
+                    UpdateControls();
+                }
             }
         }
 
         void MyBasket()
         {
+            using(var myBasketForm = new MyBasketForm() { BasketList = BasketList })
+            {
+                var resp = myBasketForm.ShowDialog(this);
+                if (resp == DialogResult.OK)
+                {
+                    BasketList.Clear();
 
+                    RefreshListView();
+                    UpdateControls();
+                }
+            }
         }
 
         void SetViewMode(ViewMode mode, bool forceUpdate = false)
