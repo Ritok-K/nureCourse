@@ -57,10 +57,10 @@ namespace MovieStore.UI
             this.m_nextToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.m_prevToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.m_refreshToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.m_searchToolStripTextBox = new System.Windows.Forms.ToolStripTextBox();
             this.m_receiptToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.m_reportToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.tToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.m_searchToolStripTextBox = new System.Windows.Forms.ToolStripTextBox();
             this.m_menuStrip.SuspendLayout();
             this.m_toolStrip.SuspendLayout();
             this.SuspendLayout();
@@ -335,6 +335,13 @@ namespace MovieStore.UI
             this.m_refreshToolStripButton.Text = "Refresh list";
             this.m_refreshToolStripButton.Click += new System.EventHandler(this.OnRefreshPage);
             // 
+            // m_searchToolStripTextBox
+            // 
+            this.m_searchToolStripTextBox.Name = "m_searchToolStripTextBox";
+            this.m_searchToolStripTextBox.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.m_searchToolStripTextBox.Size = new System.Drawing.Size(200, 27);
+            this.m_searchToolStripTextBox.ToolTipText = "Enter text to search";
+            // 
             // m_receiptToolStripButton
             // 
             this.m_receiptToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -360,11 +367,6 @@ namespace MovieStore.UI
             this.tToolStripMenuItem.Name = "tToolStripMenuItem";
             this.tToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.tToolStripMenuItem.Text = "T";
-            // 
-            // m_searchToolStripTextBox
-            // 
-            this.m_searchToolStripTextBox.Name = "m_searchToolStripTextBox";
-            this.m_searchToolStripTextBox.Size = new System.Drawing.Size(200, 27);
             // 
             // MainForm
             // 
