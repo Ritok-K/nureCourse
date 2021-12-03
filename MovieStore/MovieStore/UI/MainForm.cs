@@ -37,11 +37,16 @@ namespace MovieStore.UI
                                  (ViewMode == ViewMode.TopMovies) ||
                                  (ViewMode == ViewMode.AdvicedMovies);
 
-        bool IsViewModeEditable => ViewMode == ViewMode.Movies ||
-                                   ViewMode == ViewMode.Actors ||
-                                   ViewMode == ViewMode.Studio ||
-                                   ViewMode == ViewMode.Orders ||
-                                   ViewMode == ViewMode.Users;
+        bool IsUsersViewMode => (ViewMode == ViewMode.Users) ||
+                                (ViewMode == ViewMode.TopUsers);
+
+        bool IsActorsViewMode => (ViewMode == ViewMode.Actors);
+
+        bool IsViewModeEditable => (ViewMode == ViewMode.Movies) ||
+                                   (ViewMode == ViewMode.Actors) ||
+                                   (ViewMode == ViewMode.Studio) ||
+                                   (ViewMode == ViewMode.Orders) ||
+                                   (ViewMode == ViewMode.Users);
 
         List<int> BasketList { get; set; } = new List<int>();
 
@@ -357,7 +362,17 @@ namespace MovieStore.UI
 
         void RefreshActorsListView()
         {
-            var actors = Program.DB.GetActors(ListViewLimit, ListViewOffset);
+            var filter = default(DB.IDataFilter);
+            if (m_searchToolStripTextBox.Text.Length != 0)
+            {
+                var movieFilter = new DB.Filters.ActorFilter();
+                movieFilter.WithFirstNameLike(m_searchToolStripTextBox.Text);
+                movieFilter.WithSecondNameLike(m_searchToolStripTextBox.Text);
+
+                filter = movieFilter;
+            }
+
+            var actors = Program.DB.GetActors(ListViewLimit, ListViewOffset, filter);
             var view = actors.Select(a => new Dictionary<string, string>()
                                           {
                                               { nameof(Data.Actor.FirstName),   Utility.UIPrimitiveFormatting.FormatActorName(a) },
@@ -404,8 +419,18 @@ namespace MovieStore.UI
 
         void RefreshUsersListView()
         {
-            var users = (ViewMode == ViewMode.Users) ? Program.DB.GetUsers(ListViewLimit, ListViewOffset) :
-                                                       Program.DB.GetTopUsers(ListViewLimit, ListViewOffset);
+            var filter = default(DB.IDataFilter);
+            if (m_searchToolStripTextBox.Text.Length != 0)
+            {
+                var movieFilter = new DB.Filters.UserFilter();
+                movieFilter.WithFirstNameLike(m_searchToolStripTextBox.Text);
+                movieFilter.WithSecondNameLike(m_searchToolStripTextBox.Text);
+
+                filter = movieFilter;
+            }
+
+            var users = (ViewMode == ViewMode.Users) ? Program.DB.GetUsers(ListViewLimit, ListViewOffset, filter) :
+                                                       Program.DB.GetTopUsers(ListViewLimit, ListViewOffset, filter);
 
             var view = users.Select(u => new Dictionary<string, string>()
                                       {
@@ -897,8 +922,8 @@ namespace MovieStore.UI
                 m_nextToolStripButton.Enabled = isAuthorized && (m_listView.Items.Count >= ListViewLimit);
                 m_nextToolStripButton.Visible = true;
 
-                m_searchToolStripTextBox.Enabled = isAuthorized && IsMoviesViewMode;
-                m_searchToolStripTextBox.Visible = IsMoviesViewMode;
+                m_searchToolStripTextBox.Enabled = isAuthorized;
+                m_searchToolStripTextBox.Visible = IsMoviesViewMode || IsUsersViewMode || IsActorsViewMode;
 
                 m_refreshToolStripButton.Enabled = isAuthorized;
                 m_refreshToolStripButton.Visible = true;
