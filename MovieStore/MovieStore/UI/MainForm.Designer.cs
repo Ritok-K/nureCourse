@@ -57,6 +57,7 @@ namespace MovieStore.UI
             this.m_receiptToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.m_reportToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.tToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.m_refreshToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.m_menuStrip.SuspendLayout();
             this.m_toolStrip.SuspendLayout();
             this.SuspendLayout();
@@ -229,6 +230,7 @@ namespace MovieStore.UI
             this.m_addNewToolStripButton,
             this.m_nextToolStripButton,
             this.m_prevToolStripButton,
+            this.m_refreshToolStripButton,
             this.m_receiptToolStripButton,
             this.m_reportToolStripButton});
             this.m_toolStrip.Location = new System.Drawing.Point(0, 566);
@@ -285,6 +287,7 @@ namespace MovieStore.UI
             this.m_nextToolStripButton.Name = "m_nextToolStripButton";
             this.m_nextToolStripButton.Size = new System.Drawing.Size(29, 24);
             this.m_nextToolStripButton.Text = "Next";
+            this.m_nextToolStripButton.Click += new System.EventHandler(this.OnNextPage);
             // 
             // m_prevToolStripButton
             // 
@@ -294,6 +297,7 @@ namespace MovieStore.UI
             this.m_prevToolStripButton.Name = "m_prevToolStripButton";
             this.m_prevToolStripButton.Size = new System.Drawing.Size(29, 24);
             this.m_prevToolStripButton.Text = "Previous";
+            this.m_prevToolStripButton.Click += new System.EventHandler(this.OnPrevPage);
             // 
             // m_receiptToolStripButton
             // 
@@ -320,6 +324,16 @@ namespace MovieStore.UI
             this.tToolStripMenuItem.Name = "tToolStripMenuItem";
             this.tToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.tToolStripMenuItem.Text = "T";
+            // 
+            // m_refreshToolStripButton
+            // 
+            this.m_refreshToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.m_refreshToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("m_refreshToolStripButton.Image")));
+            this.m_refreshToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.m_refreshToolStripButton.Name = "m_refreshToolStripButton";
+            this.m_refreshToolStripButton.Size = new System.Drawing.Size(29, 24);
+            this.m_refreshToolStripButton.Text = "Refresh list";
+            this.m_refreshToolStripButton.Click += new System.EventHandler(this.OnRefreshPage);
             // 
             // MainForm
             // 
@@ -373,6 +387,7 @@ namespace MovieStore.UI
         private System.Windows.Forms.ToolStripMenuItem m_topOrdersToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton m_basketToolStripButton;
         private System.Windows.Forms.ToolStripButton m_addToBasketToolStripButton;
+        private System.Windows.Forms.ToolStripButton m_refreshToolStripButton;
     }
 }
 

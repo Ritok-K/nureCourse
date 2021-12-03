@@ -181,6 +181,42 @@ namespace MovieStore.UI
             BasketList.Clear();
         }
 
+        void NavigateListViewPage(bool next)
+        {
+            if (!Program.DB.IsAuthorized)
+            {
+                return;
+            }
+
+            bool refresh = false;
+
+            if (next)
+            {
+                if (m_listView.Items.Count >= ListViewLimit)
+                {
+                    var offset = ListViewOffset + ListViewLimit;
+
+                    ListViewOffset = offset;
+                    refresh = true;
+                }
+            }
+            else
+            {
+                var offset = Math.Max(0, ListViewOffset - ListViewLimit);
+                if (offset != ListViewOffset)
+                {
+                    ListViewOffset = offset;
+                    refresh = true;
+                }
+            }
+
+            if (refresh)
+            {
+                RefreshListView();
+                UpdateControls();
+            }
+        }
+
         void AddToBasket()
         {
             if (!Program.DB.IsAuthorized || ((ViewMode != ViewMode.Movies) && (ViewMode != ViewMode.TopMovies)))
@@ -846,6 +882,9 @@ namespace MovieStore.UI
                 m_nextToolStripButton.Enabled = isAuthorized && (m_listView.Items.Count >= ListViewLimit);
                 m_nextToolStripButton.Visible = true;
 
+                m_refreshToolStripButton.Enabled = isAuthorized;
+                m_refreshToolStripButton.Visible = true;
+
                 m_addNewToolStripButton.Enabled = isManagerMode && isAuthorized && IsViewModeEditable;
                 m_addNewToolStripButton.Visible = isManagerMode;
 
@@ -947,6 +986,43 @@ namespace MovieStore.UI
                 {
                     Close();
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void OnNextPage(object sender, EventArgs e)
+        {
+            try
+            {
+                NavigateListViewPage(true);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void OnPrevPage(object sender, EventArgs e)
+        {
+            try
+            {
+                NavigateListViewPage(false);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void OnRefreshPage(object sender, EventArgs e)
+        {
+            try
+            {
+                RefreshListView();
+                UpdateControls();
             }
             catch (Exception ex)
             {
@@ -1158,7 +1234,5 @@ namespace MovieStore.UI
                 MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
-        
     }
 }
