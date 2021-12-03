@@ -54,10 +54,10 @@ namespace MovieStore.UI
             this.m_addNewToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.m_nextToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.m_prevToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.m_refreshToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.m_receiptToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.m_reportToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.tToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.m_refreshToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.m_menuStrip.SuspendLayout();
             this.m_toolStrip.SuspendLayout();
             this.SuspendLayout();
@@ -112,7 +112,7 @@ namespace MovieStore.UI
             // 
             this.m_moviesToolStripMenuItem.BackColor = System.Drawing.Color.LemonChiffon;
             this.m_moviesToolStripMenuItem.Name = "m_moviesToolStripMenuItem";
-            this.m_moviesToolStripMenuItem.Size = new System.Drawing.Size(159, 26);
+            this.m_moviesToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.m_moviesToolStripMenuItem.Text = "Movies";
             this.m_moviesToolStripMenuItem.Click += new System.EventHandler(this.OnMoviesMode);
             // 
@@ -120,7 +120,7 @@ namespace MovieStore.UI
             // 
             this.m_actorsToolStripMenuItem.BackColor = System.Drawing.Color.LemonChiffon;
             this.m_actorsToolStripMenuItem.Name = "m_actorsToolStripMenuItem";
-            this.m_actorsToolStripMenuItem.Size = new System.Drawing.Size(159, 26);
+            this.m_actorsToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.m_actorsToolStripMenuItem.Text = "Actors";
             this.m_actorsToolStripMenuItem.Click += new System.EventHandler(this.OnActorsMode);
             // 
@@ -128,7 +128,7 @@ namespace MovieStore.UI
             // 
             this.m_studiosToolStripMenuItem.BackColor = System.Drawing.Color.LemonChiffon;
             this.m_studiosToolStripMenuItem.Name = "m_studiosToolStripMenuItem";
-            this.m_studiosToolStripMenuItem.Size = new System.Drawing.Size(159, 26);
+            this.m_studiosToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.m_studiosToolStripMenuItem.Text = "Studio";
             this.m_studiosToolStripMenuItem.Click += new System.EventHandler(this.OnStudioMode);
             // 
@@ -136,7 +136,7 @@ namespace MovieStore.UI
             // 
             this.m_ordersToolStripMenuItem.BackColor = System.Drawing.Color.LemonChiffon;
             this.m_ordersToolStripMenuItem.Name = "m_ordersToolStripMenuItem";
-            this.m_ordersToolStripMenuItem.Size = new System.Drawing.Size(159, 26);
+            this.m_ordersToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.m_ordersToolStripMenuItem.Text = "Orders";
             this.m_ordersToolStripMenuItem.Click += new System.EventHandler(this.OnOrdersMode);
             // 
@@ -144,7 +144,7 @@ namespace MovieStore.UI
             // 
             this.m_usersToolStripMenuItem.BackColor = System.Drawing.Color.LemonChiffon;
             this.m_usersToolStripMenuItem.Name = "m_usersToolStripMenuItem";
-            this.m_usersToolStripMenuItem.Size = new System.Drawing.Size(159, 26);
+            this.m_usersToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.m_usersToolStripMenuItem.Text = "Users";
             this.m_usersToolStripMenuItem.Click += new System.EventHandler(this.OnUsersMode);
             // 
@@ -153,13 +153,13 @@ namespace MovieStore.UI
             this.toolStripSeparator1.BackColor = System.Drawing.Color.DarkKhaki;
             this.toolStripSeparator1.ForeColor = System.Drawing.Color.DarkKhaki;
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(156, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(221, 6);
             // 
             // m_myBasketToolStripMenuItem
             // 
             this.m_myBasketToolStripMenuItem.BackColor = System.Drawing.Color.LemonChiffon;
             this.m_myBasketToolStripMenuItem.Name = "m_myBasketToolStripMenuItem";
-            this.m_myBasketToolStripMenuItem.Size = new System.Drawing.Size(159, 26);
+            this.m_myBasketToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.m_myBasketToolStripMenuItem.Text = "My basket";
             this.m_myBasketToolStripMenuItem.Click += new System.EventHandler(this.OnMyBasket);
             // 
@@ -172,34 +172,38 @@ namespace MovieStore.UI
             this.m_topUsersToolStripMenuItem,
             this.m_topOrdersToolStripMenuItem});
             this.m_topsToolStripMenuItem.Name = "m_topsToolStripMenuItem";
-            this.m_topsToolStripMenuItem.Size = new System.Drawing.Size(159, 26);
+            this.m_topsToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.m_topsToolStripMenuItem.Text = "Tops";
             // 
             // m_topMoviesToolStripMenuItem
             // 
+            this.m_topMoviesToolStripMenuItem.BackColor = System.Drawing.Color.LemonChiffon;
             this.m_topMoviesToolStripMenuItem.Name = "m_topMoviesToolStripMenuItem";
-            this.m_topMoviesToolStripMenuItem.Size = new System.Drawing.Size(168, 26);
+            this.m_topMoviesToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.m_topMoviesToolStripMenuItem.Text = "Top Movies";
             this.m_topMoviesToolStripMenuItem.Click += new System.EventHandler(this.OnTopMoviesMode);
             // 
             // m_topStudioToolStripMenuItem
             // 
+            this.m_topStudioToolStripMenuItem.BackColor = System.Drawing.Color.LemonChiffon;
             this.m_topStudioToolStripMenuItem.Name = "m_topStudioToolStripMenuItem";
-            this.m_topStudioToolStripMenuItem.Size = new System.Drawing.Size(168, 26);
+            this.m_topStudioToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.m_topStudioToolStripMenuItem.Text = "Top Studio";
             this.m_topStudioToolStripMenuItem.Click += new System.EventHandler(this.OnTopStudioMode);
             // 
             // m_topUsersToolStripMenuItem
             // 
+            this.m_topUsersToolStripMenuItem.BackColor = System.Drawing.Color.LemonChiffon;
             this.m_topUsersToolStripMenuItem.Name = "m_topUsersToolStripMenuItem";
-            this.m_topUsersToolStripMenuItem.Size = new System.Drawing.Size(168, 26);
+            this.m_topUsersToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.m_topUsersToolStripMenuItem.Text = "Top Users";
             this.m_topUsersToolStripMenuItem.Click += new System.EventHandler(this.OnTopUsersMode);
             // 
             // m_topOrdersToolStripMenuItem
             // 
+            this.m_topOrdersToolStripMenuItem.BackColor = System.Drawing.Color.LemonChiffon;
             this.m_topOrdersToolStripMenuItem.Name = "m_topOrdersToolStripMenuItem";
-            this.m_topOrdersToolStripMenuItem.Size = new System.Drawing.Size(168, 26);
+            this.m_topOrdersToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.m_topOrdersToolStripMenuItem.Text = "Top Orders";
             this.m_topOrdersToolStripMenuItem.Click += new System.EventHandler(this.OnTopOrdersMode);
             // 
@@ -299,6 +303,16 @@ namespace MovieStore.UI
             this.m_prevToolStripButton.Text = "Previous";
             this.m_prevToolStripButton.Click += new System.EventHandler(this.OnPrevPage);
             // 
+            // m_refreshToolStripButton
+            // 
+            this.m_refreshToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.m_refreshToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("m_refreshToolStripButton.Image")));
+            this.m_refreshToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.m_refreshToolStripButton.Name = "m_refreshToolStripButton";
+            this.m_refreshToolStripButton.Size = new System.Drawing.Size(29, 24);
+            this.m_refreshToolStripButton.Text = "Refresh list";
+            this.m_refreshToolStripButton.Click += new System.EventHandler(this.OnRefreshPage);
+            // 
             // m_receiptToolStripButton
             // 
             this.m_receiptToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -324,16 +338,6 @@ namespace MovieStore.UI
             this.tToolStripMenuItem.Name = "tToolStripMenuItem";
             this.tToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.tToolStripMenuItem.Text = "T";
-            // 
-            // m_refreshToolStripButton
-            // 
-            this.m_refreshToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.m_refreshToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("m_refreshToolStripButton.Image")));
-            this.m_refreshToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.m_refreshToolStripButton.Name = "m_refreshToolStripButton";
-            this.m_refreshToolStripButton.Size = new System.Drawing.Size(29, 24);
-            this.m_refreshToolStripButton.Text = "Refresh list";
-            this.m_refreshToolStripButton.Click += new System.EventHandler(this.OnRefreshPage);
             // 
             // MainForm
             // 
