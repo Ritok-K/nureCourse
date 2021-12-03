@@ -46,7 +46,7 @@ namespace MovieStore.UI
             // 
             // m_listView
             // 
-            this.m_listView.BackColor = System.Drawing.Color.AntiqueWhite;
+            this.m_listView.BackColor = System.Drawing.Color.LightGoldenrodYellow;
             this.m_listView.FullRowSelect = true;
             this.m_listView.GridLines = true;
             this.m_listView.HideSelection = false;
@@ -82,6 +82,7 @@ namespace MovieStore.UI
             this.AcceptButton = this.m_okButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.PaleGoldenrod;
             this.CancelButton = this.m_okButton;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.m_totalLabel);
