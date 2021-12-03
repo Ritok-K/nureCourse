@@ -309,6 +309,96 @@ namespace MovieStore.DB
             return res;
         }
 
+        internal IList<Data.Movie> GetAdviceMovies(int userdId, int? limit = null, int? offset = null, IDataFilter filter = null, bool loadActors = false)
+        {
+            if (!IsAuthorized)
+            {
+                throw new NotAuthorizedDBException();
+            }
+
+            var res = new List<Data.Movie>();
+
+            // load movies
+            {
+                var userIdParam = BuildParameterName(c_UserIdColumn);
+
+                var topUserGenre = $"SELECT {BuildFieldName(c_MoviesTable, c_GenreColumn)} FROM {c_MoviesTable}\n" + 
+                                   $"INNER JOIN {c_MovieOrderTable} USING ({c_MovieIdColumn})\n" + 
+                                   $"INNER JOIN {c_OrdersTable} using ({c_OrderIdColumn})\n" +
+                                   $"WHERE {c_UserIdColumn} = {userIdParam}\n" +
+                                   $"GROUP BY {c_GenreColumn}\n" +
+                                   $"ORDER BY COUNT({BuildFieldName(c_MoviesTable, c_GenreColumn)}) DESC";
+
+                var watchedMovies = $"SELECT {BuildFieldName(c_MoviesTable, c_MovieIdColumn)} FROM {c_MoviesTable}\n" + 
+                                    $"INNER JOIN {c_MovieOrderTable} USING ({c_MovieIdColumn})\n" +
+                                    $"INNER JOIN {c_OrdersTable} using ({c_OrderIdColumn})\n" +
+                                    $"WHERE {c_UserIdColumn} = {userIdParam}";
+
+                var whereClause = $"({c_GenreColumn} IN ({topUserGenre}))\nAND\n({c_MovieIdColumn} NOT IN ({watchedMovies}))";
+
+                var sql = new QueryBuilders.SelectQueryBuilder()
+                                           .Select(new string[] {
+                                                    // Movie table fields with aliases
+                                                    BuildFieldNameWithAliase(c_MoviesTable, c_MovieIdColumn),
+                                                    BuildFieldNameWithAliase(c_MoviesTable, c_TitleColumn),
+                                                    BuildFieldNameWithAliase(c_MoviesTable, c_MovieYearColumn),
+                                                    BuildFieldNameWithAliase(c_MoviesTable, c_GenreColumn),
+                                                    BuildFieldNameWithAliase(c_MoviesTable, c_DescriptionColumn),
+                                                    BuildFieldNameWithAliase(c_MoviesTable, c_ImdbColumn),
+                                                    BuildFieldNameWithAliase(c_MoviesTable, c_CountryColumn),
+                                                    BuildFieldNameWithAliase(c_MoviesTable, c_PriceColumn),
+                                                    BuildFieldNameWithAliase(c_MoviesTable, c_StudioIdColumn),
+                                                    // Studio table fields with aliases
+                                                    BuildFieldNameWithAliase(c_StudioTable, c_StudioIdColumn),
+                                                    BuildFieldNameWithAliase(c_StudioTable, c_TitleColumn),
+                                                    BuildFieldNameWithAliase(c_StudioTable, c_CountryColumn),
+                                                    BuildFieldNameWithAliase(c_StudioTable, c_FoundationDateColumn),
+                                                    BuildFieldNameWithAliase(c_StudioTable, c_ProductionColumn),
+                                                  })
+                                           .From(c_MoviesTable)
+                                           .JoinUsing(QueryBuilders.SQLJoin.Left, c_StudioTable, c_StudioIdColumn)
+                                           .Where(whereClause)
+                                           .Pagging(limit, offset)
+                                           .AddFilter(filter)
+                                           .Make();
+
+                using (var connection = new MySqlConnection(ConnectionString))
+                using (var command = new MySqlCommand(sql, connection))
+                {
+                    command.Parameters.AddWithValue(userIdParam, userdId);
+                    filter?.AddCommandParameters(command);
+
+                    using (var adapter = new MySqlDataAdapter(command))
+                    {
+                        var ds = new DataSet();
+                        adapter.Fill(ds);
+                        Debug.Assert(ds.Tables.Count > 0);
+
+                        var table = ds.Tables[0];
+                        if (table.Rows.Count > 0)
+                        {
+                            foreach (var r in table.Rows.Cast<DataRow>())
+                            {
+                                var movie = Serializers.MovieSerializer.Load(r, BuildFiledPrefix(c_MoviesTable));
+                                var studio = Serializers.StudioSerializer.Load(r, BuildFiledPrefix(c_StudioTable));
+                                movie.Studio = studio;
+
+                                res.Add(movie);
+                            }
+                        }
+                    }
+                }
+            }
+
+            // load actors
+            if (loadActors)
+            {
+                ExpandActors(res);
+            }
+
+            return res;
+        }
+
         internal IList<Data.Actor> GetActors(int? limit = null, int? offset = null, IDataFilter filter = null)
         {
             if (!IsAuthorized)

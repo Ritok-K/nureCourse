@@ -23,6 +23,8 @@ namespace MovieStore.UI
         TopUsers,
         TopOrders,
         TopStudio,
+
+        AdvicedMovies,
     }
 
     public partial class MainForm : Form
@@ -30,6 +32,10 @@ namespace MovieStore.UI
         #region Properties
 
         ViewMode ViewMode { get; set; } = ViewMode.Movies;
+
+        bool IsMovieMode => (ViewMode == ViewMode.Movies) ||
+                            (ViewMode == ViewMode.TopMovies) ||
+                            (ViewMode == ViewMode.AdvicedMovies);
 
         bool IsViewModeEditable => ViewMode == ViewMode.Movies ||
                                    ViewMode == ViewMode.Actors ||
@@ -219,7 +225,7 @@ namespace MovieStore.UI
 
         void AddToBasket()
         {
-            if (!Program.DB.IsAuthorized || ((ViewMode != ViewMode.Movies) && (ViewMode != ViewMode.TopMovies)))
+            if (!Program.DB.IsAuthorized || !IsMovieMode)
             {
                 return;
             }
@@ -292,6 +298,7 @@ namespace MovieStore.UI
             {
                 case ViewMode.Movies:
                 case ViewMode.TopMovies:
+                case ViewMode.AdvicedMovies:
                     RefreshMoviesListView();
                     break;
 
@@ -319,7 +326,8 @@ namespace MovieStore.UI
         void RefreshMoviesListView()
         {
             var movies = (ViewMode == ViewMode.Movies) ? Program.DB.GetMovies(ListViewLimit, ListViewOffset, loadActors: true) :
-                                                         Program.DB.GetTopMovies(ListViewLimit, ListViewOffset, loadActors: false);
+                         ((ViewMode == ViewMode.TopMovies) ? Program.DB.GetTopMovies(ListViewLimit, ListViewOffset, loadActors: false) :
+                                                             Program.DB.GetAdviceMovies(Program.DB.CurrentUser.Id, ListViewLimit, ListViewOffset, loadActors: true));
             var view = movies.Select(m => new Dictionary<string, string>()
                                           {
                                               { nameof(Data.Movie.Title),     m.Title },
@@ -429,6 +437,10 @@ namespace MovieStore.UI
                     break;
 
                 case ViewMode.TopMovies:
+                case ViewMode.TopOrders:
+                case ViewMode.TopStudio:
+                case ViewMode.TopUsers:
+                case ViewMode.AdvicedMovies:
                     // do nothing
                     break;
 
@@ -606,6 +618,10 @@ namespace MovieStore.UI
                     break;
 
                 case ViewMode.TopMovies:
+                case ViewMode.TopOrders:
+                case ViewMode.TopStudio:
+                case ViewMode.TopUsers:
+                case ViewMode.AdvicedMovies:
                     // do nothing
                     break;
 
@@ -730,6 +746,7 @@ namespace MovieStore.UI
             {
                 case ViewMode.Movies:
                 case ViewMode.TopMovies:
+                case ViewMode.AdvicedMovies:
                     ReinitMoviesModeControls();
                     break;
 
@@ -758,7 +775,7 @@ namespace MovieStore.UI
 
         void ReinitMoviesModeControls()
         {
-            var columns = (ViewMode == ViewMode.Movies) ? MovieModeListColumns : 
+            var columns = (ViewMode == ViewMode.Movies || ViewMode == ViewMode.AdvicedMovies) ? MovieModeListColumns : 
                                                          (Program.DB.IsManagerMode ? ManagerTopMovieModeListColumns : CustomerTopMovieModeListColumns);
             ReinitListView(columns);
         }
@@ -879,7 +896,7 @@ namespace MovieStore.UI
                 m_deleteToolStripButton.Visible = isManagerMode;
 
                 m_addToBasketToolStripButton.Enabled = isAuthorized && hasSelection;
-                m_addToBasketToolStripButton.Visible = (ViewMode == ViewMode.Movies) || (ViewMode == ViewMode.TopMovies);
+                m_addToBasketToolStripButton.Visible = IsMovieMode;
 
                 m_basketToolStripButton.Enabled = isAuthorized && !isBasketEmpty;
                 m_basketToolStripButton.Visible = true;
@@ -1125,6 +1142,18 @@ namespace MovieStore.UI
             }
         }
 
+        private void OnAdvicedMoviesMode(object sender, EventArgs e)
+        {
+            try
+            {
+                SetViewMode(ViewMode.AdvicedMovies);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
         private void OnAddToBasket(object sender, EventArgs e)
         {
             try
@@ -1221,5 +1250,6 @@ namespace MovieStore.UI
                 MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
     }
 }
