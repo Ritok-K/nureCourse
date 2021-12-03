@@ -691,26 +691,13 @@ namespace MovieStore.UI
             var selectedItem = m_listView.SelectedItems.Cast<ListViewItem>()?.FirstOrDefault()?.Tag as Data.Order;
             if (createNewItem || (selectedItem != null))
             {
-#if DEBUG
-                if (createNewItem)
+                using (var orderForm = new OrderForm())
                 {
-                    var o = new Data.Order()
-                    {
-                        Date = new DateTime(1976, 1, 1),
-                        User = Program.DB.CurrentUser
-                    };
+                    var isManagerMode = Program.DB.IsManagerMode;
+                    orderForm.SetMode(selectedItem);
 
-                    Program.DB.AddOrders(new Data.Order[] { o });
-                    res = true;
+                    res = orderForm.ShowDialog(this) == DialogResult.OK;
                 }
-                else
-                {
-                    var o = selectedItem;
-                    o.Date = DateTime.Now;
-                    Program.DB.UpdateOrders(new Data.Order[] { o });
-                    res = true;
-                }
-#endif
             }
 
             return res;
