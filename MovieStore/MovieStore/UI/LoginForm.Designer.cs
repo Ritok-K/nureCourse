@@ -60,6 +60,7 @@ namespace MovieStore.UI
             // 
             this.m_loginTextBox.Location = new System.Drawing.Point(154, 15);
             this.m_loginTextBox.Name = "m_loginTextBox";
+            this.m_loginTextBox.PlaceholderText = "enter your e-mail please";
             this.m_loginTextBox.Size = new System.Drawing.Size(287, 27);
             this.m_loginTextBox.TabIndex = 1;
             // 
@@ -68,6 +69,7 @@ namespace MovieStore.UI
             this.m_passwordTextBox.Location = new System.Drawing.Point(154, 57);
             this.m_passwordTextBox.Name = "m_passwordTextBox";
             this.m_passwordTextBox.PasswordChar = '*';
+            this.m_passwordTextBox.PlaceholderText = "enter your password";
             this.m_passwordTextBox.Size = new System.Drawing.Size(287, 27);
             this.m_passwordTextBox.TabIndex = 2;
             // 
