@@ -33,9 +33,9 @@ namespace MovieStore.UI
 
         ViewMode ViewMode { get; set; } = ViewMode.Movies;
 
-        bool IsMovieMode => (ViewMode == ViewMode.Movies) ||
-                            (ViewMode == ViewMode.TopMovies) ||
-                            (ViewMode == ViewMode.AdvicedMovies);
+        bool IsMoviesViewMode => (ViewMode == ViewMode.Movies) ||
+                                 (ViewMode == ViewMode.TopMovies) ||
+                                 (ViewMode == ViewMode.AdvicedMovies);
 
         bool IsViewModeEditable => ViewMode == ViewMode.Movies ||
                                    ViewMode == ViewMode.Actors ||
@@ -225,7 +225,7 @@ namespace MovieStore.UI
 
         void AddToBasket()
         {
-            if (!Program.DB.IsAuthorized || !IsMovieMode)
+            if (!Program.DB.IsAuthorized || !IsMoviesViewMode)
             {
                 return;
             }
@@ -280,6 +280,7 @@ namespace MovieStore.UI
             if (mode != ViewMode || forceUpdate)
             {
                 ViewMode = mode;
+                m_searchToolStripTextBox.Text = string.Empty;
 
                 ReinitControls();
                 RefreshListView();
@@ -325,9 +326,19 @@ namespace MovieStore.UI
 
         void RefreshMoviesListView()
         {
-            var movies = (ViewMode == ViewMode.Movies) ? Program.DB.GetMovies(ListViewLimit, ListViewOffset, loadActors: true) :
-                         ((ViewMode == ViewMode.TopMovies) ? Program.DB.GetTopMovies(ListViewLimit, ListViewOffset, loadActors: false) :
-                                                             Program.DB.GetAdviceMovies(Program.DB.CurrentUser.Id, ListViewLimit, ListViewOffset, loadActors: true));
+            var filter = default(DB.IDataFilter);
+            if (m_searchToolStripTextBox.Text.Length != 0)
+            {
+                var movieFilter = new DB.Filters.MovieFilter();
+                movieFilter.WithTitleLike(m_searchToolStripTextBox.Text);
+                movieFilter.WithStudioLike(m_searchToolStripTextBox.Text);
+
+                filter = movieFilter;
+            }
+
+            var movies = (ViewMode == ViewMode.Movies) ? Program.DB.GetMovies(ListViewLimit, ListViewOffset, filter, loadActors: true) :
+                         ((ViewMode == ViewMode.TopMovies) ? Program.DB.GetTopMovies(ListViewLimit, ListViewOffset, filter, loadActors: false) :
+                                                             Program.DB.GetAdviceMovies(Program.DB.CurrentUser.Id, ListViewLimit, ListViewOffset, filter, loadActors: true));
             var view = movies.Select(m => new Dictionary<string, string>()
                                           {
                                               { nameof(Data.Movie.Title),     m.Title },
@@ -886,6 +897,9 @@ namespace MovieStore.UI
                 m_nextToolStripButton.Enabled = isAuthorized && (m_listView.Items.Count >= ListViewLimit);
                 m_nextToolStripButton.Visible = true;
 
+                m_searchToolStripTextBox.Enabled = isAuthorized && IsMoviesViewMode;
+                m_searchToolStripTextBox.Visible = IsMoviesViewMode;
+
                 m_refreshToolStripButton.Enabled = isAuthorized;
                 m_refreshToolStripButton.Visible = true;
 
@@ -896,7 +910,7 @@ namespace MovieStore.UI
                 m_deleteToolStripButton.Visible = isManagerMode;
 
                 m_addToBasketToolStripButton.Enabled = isAuthorized && hasSelection;
-                m_addToBasketToolStripButton.Visible = IsMovieMode;
+                m_addToBasketToolStripButton.Visible = IsMoviesViewMode;
 
                 m_basketToolStripButton.Enabled = isAuthorized && !isBasketEmpty;
                 m_basketToolStripButton.Visible = true;
