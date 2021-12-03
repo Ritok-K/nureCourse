@@ -31,6 +31,8 @@ namespace MovieStore.Utility
 
         static internal void ExpandColumns(ListView listView, bool byContent = true)
         {
+            listView.BeginUpdate();
+
             foreach (var c in listView.Columns.Cast<ColumnHeader>())
             {
                 if (byContent)
@@ -40,6 +42,8 @@ namespace MovieStore.Utility
 
                 c.AutoResize(ColumnHeaderAutoResizeStyle.HeaderSize);
             }
+
+            listView.EndUpdate();
         }
 
         static internal void PopulateItems<T>(ListView listView, IList<T> model, IList<Dictionary<string, string>> view, bool clearItem = true) where T : class

@@ -517,7 +517,7 @@ namespace MovieStore.DB
             // load actors
             if (loadMovies)
             {
-                ExpandMoviews(res);
+                ExpandMovies(res);
             }
 
             return res;
@@ -593,7 +593,7 @@ namespace MovieStore.DB
             // load actors
             if (loadMovies)
             {
-                ExpandMoviews(res);
+                ExpandMovies(res);
             }
 
             return res;
@@ -957,7 +957,7 @@ namespace MovieStore.DB
             }
         }
 
-        internal void AddOrders(IEnumerable<Data.Order> order)
+        internal void AddOrders(IEnumerable<Data.Order> orders)
         {
             if (!IsAuthorized)
             {
@@ -978,20 +978,48 @@ namespace MovieStore.DB
                     using (var adapter = new MySqlDataAdapter(command))
                     {
                         var table = new DataTable(c_OrdersTable);
-                        Serializers.OrderSerializer.AddColumns(table);
+                        Serializers.OrderSerializer.AddColumns(table, true);
 
-                        foreach (var o in order)
+                        var kvp = new Dictionary<DataRow, Data.Order>();
+                        foreach (var o in orders)
                         {
                             var r = table.NewRow();
                             Serializers.OrderSerializer.Save(o, r);
+
+                            kvp.Add(r, o);
                             table.Rows.Add(r);
                         }
 
                         var commandBuilder = new MySqlCommandBuilder(adapter);
+
+                        adapter.RowUpdated += (o, e) => 
+                        {
+                            if (e.StatementType == StatementType.Insert)
+                            {
+                                var id = (int)e.Command.LastInsertedId;
+
+                                e.Row[c_OrderIdColumn] = id;
+                                kvp[e.Row].Id = id;
+                            }
+                        };
+
                         adapter.Update(table);
                     }
                 }
             }
+
+            // updating movies
+            {
+                foreach(var o in orders)
+                {
+                    UpdateMovies(o);
+                }
+            }
+        }
+
+        private void Adapter_RowUpdated(object sender, MySqlRowUpdatedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         internal void AddUsers(IEnumerable<Data.User> users)
@@ -1257,6 +1285,14 @@ namespace MovieStore.DB
                     }
                 }
             }
+
+            // updating movies
+            {
+                foreach (var o in orders)
+                {
+                    UpdateMovies(o);
+                }
+            }
         }
 
         internal void UpdateUsers(IEnumerable<Data.User> users)
@@ -1388,7 +1424,7 @@ namespace MovieStore.DB
             }
         }
 
-        void ExpandMoviews(IList<Data.Order> orders)
+        void ExpandMovies(IList<Data.Order> orders)
         {
             using (var connection = new MySqlConnection(ConnectionString))
             {
@@ -1424,6 +1460,67 @@ namespace MovieStore.DB
                             }
                         }
                     }
+                }
+            }
+        }
+
+        void UpdateMovies(Data.Order order)
+        {
+            if (order.Movies == null)
+            {
+                return;
+            }
+
+            var sql = new QueryBuilders.SelectQueryBuilder()
+                                           .SelectAll()
+                                           .From(c_MovieOrderTable)
+                                           .Where($"{BuildFieldName(c_MovieOrderTable, c_OrderIdColumn)} = {BuildParameterName(c_MovieOrderTable, c_OrderIdColumn)}")
+                                           .Make();
+
+            using (var connection = new MySqlConnection(ConnectionString))
+            using (var command = new MySqlCommand(sql, connection))
+            {
+                command.Parameters.AddWithValue(BuildParameterName(c_MovieOrderTable, c_OrderIdColumn), order.Id);
+
+                using (var adapter = new MySqlDataAdapter(command))
+                {
+
+                    var ds = new DataSet();
+                    adapter.Fill(ds);
+                    Debug.Assert(ds.Tables.Count > 0);
+
+                    var table = ds.Tables[0];
+
+                    // search rows to delete
+                    foreach (var r in table.Rows.Cast<DataRow>())
+                    {
+                        var movieId = r.Field<int>(c_MovieIdColumn);
+
+                        var hasMovieInOrder = order.Movies.Any(m => m.Id == movieId);
+                        if (!hasMovieInOrder)
+                        {
+                            r.Delete();
+                        }
+                    }
+
+                    // insert new rows
+                    foreach(var m in order.Movies)
+                    {
+                        var movieId = m.Id;
+
+                        var hasMovieInRows = table.Rows.Cast<DataRow>().Any(r => r.Field<int>(c_MovieIdColumn) == movieId);
+                        if (!hasMovieInRows)
+                        {
+                            var r = table.NewRow();
+                            r[c_MovieIdColumn] = movieId;
+                            r[c_OrderIdColumn] = order.Id;
+
+                            table.Rows.Add(r);
+                        }
+                    }
+
+                    var commandBuilder = new MySqlCommandBuilder(adapter);
+                    adapter.Update(table);
                 }
             }
         }

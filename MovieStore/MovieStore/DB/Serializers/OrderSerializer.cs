@@ -32,6 +32,11 @@ namespace MovieStore.DB.Serializers
             }
         }
 
+        internal static void LoadId(Data.Order order, DataRow row)
+        {
+            order.Id = row.Field<int>(MovieDB.c_OrderIdColumn);
+        }
+
         internal static void Save(Data.Order order, DataRow row)
         {
             if (order.User == null)
@@ -43,8 +48,13 @@ namespace MovieStore.DB.Serializers
             row[MovieDB.c_UserIdColumn] = order.User.Id;
         }
 
-        internal static void AddColumns(DataTable table)
+        internal static void AddColumns(DataTable table, bool withPk)
         {
+            if (withPk)
+            {
+                table.Columns.Add(new DataColumn(MovieDB.c_OrderIdColumn, typeof(int)) { AllowDBNull = true, Unique = true });
+            }
+
             table.Columns.Add(MovieDB.c_DateColumn, typeof(DateTime));
             table.Columns.Add(MovieDB.c_UserIdColumn, typeof(string));
         }
