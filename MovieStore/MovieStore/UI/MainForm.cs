@@ -186,7 +186,7 @@ namespace MovieStore.UI
         SortColumn TopUsersModeListSortColumnDefault = new SortColumn() { ColumnName = nameof(Data.User.Income), Order = SortOrder.Descending };
 
         int ListViewOffset { get; set; } = 0;
-        int ListViewLimit => 10;
+        int ListViewLimit => 20;
         SortColumn ListViewSortColumn { get; set; } = new SortColumn();
 
         #endregion
