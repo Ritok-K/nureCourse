@@ -1,6 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace MovieStore.DB
     {
         #region Properties
 
-        internal string ConnectionString => @"server=192.168.1.43;user id=rita;password=morganalifrey;persistsecurityinfo=True;database=movie";
+        internal string ConnectionString => ConfigurationManager.AppSettings.Get("DBConnection");
         internal Data.User CurrentUser { get; set; }
         internal bool IsManagerMode => CurrentUser?.Role == Data.UserRole.Manager;
         internal bool IsAuthorized => CurrentUser != null;
