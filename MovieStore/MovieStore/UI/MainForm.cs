@@ -29,6 +29,19 @@ namespace MovieStore.UI
 
     public partial class MainForm : Form
     {
+        #region Nested classes
+
+        class SortColumn
+        {
+            internal string ColumnName { get; set; } = string.Empty;
+            internal SortOrder Order { get; set; } = SortOrder.Ascending;
+
+            internal bool IsEmpty => string.IsNullOrEmpty(ColumnName) || Order == SortOrder.None;
+            internal bool IsAscending => Order == SortOrder.Ascending;
+        }
+
+        #endregion
+
         #region Properties
 
         ViewMode ViewMode { get; set; } = ViewMode.Movies;
@@ -52,103 +65,128 @@ namespace MovieStore.UI
 
         ColumnHeader[] MovieModeListColumns => new ColumnHeader[] 
         {
-            new ColumnHeader() { Text = "Title", Name = nameof(Data.Movie.Title) },
-            new ColumnHeader() { Text = "Year", Name = nameof(Data.Movie.Year) },
-            new ColumnHeader() { Text = "Genre", Name = nameof(Data.Movie.Genre) },
-            new ColumnHeader() { Text = "IMDB", Name = nameof(Data.Movie.Imdb) },
-            new ColumnHeader() { Text = "Studio", Name = nameof(Data.Movie.Studio) },
-            new ColumnHeader() { Text = "Country", Name = nameof(Data.Movie.Country) },
-            new ColumnHeader() { Text = "Price", Name = nameof(Data.Movie.Price) },
+            new ColumnHeader() { Text = "Title", Name = nameof(Data.Movie.Title), Tag = typeof(Data.Movie) },
+            new ColumnHeader() { Text = "Year", Name = nameof(Data.Movie.Year), Tag = typeof(Data.Movie) },
+            new ColumnHeader() { Text = "Genre", Name = nameof(Data.Movie.Genre), Tag = typeof(Data.Movie) },
+            new ColumnHeader() { Text = "IMDB", Name = nameof(Data.Movie.Imdb), Tag = typeof(Data.Movie) },
+            new ColumnHeader() { Text = "Studio", Name = nameof(Data.Movie.Studio), Tag = typeof(Data.Movie) },
+            new ColumnHeader() { Text = "Country", Name = nameof(Data.Movie.Country), Tag = typeof(Data.Movie) },
+            new ColumnHeader() { Text = "Price", Name = nameof(Data.Movie.Price), Tag = typeof(Data.Movie) },
             new ColumnHeader() { Text = "Actors", Name = nameof(Data.Movie.Actors) },
         };
 
+        SortColumn MovieModeListSortColumnDefault = new SortColumn() { ColumnName = nameof(Data.Movie.Title), Order = SortOrder.Ascending };
+
         ColumnHeader[] ManagerTopMovieModeListColumns => new ColumnHeader[]
         {
-            new ColumnHeader() { Text = "Title", Name = nameof(Data.Movie.Title) },
-            new ColumnHeader() { Text = "Year", Name = nameof(Data.Movie.Year) },
-            new ColumnHeader() { Text = "IMDB", Name = nameof(Data.Movie.Imdb) },
-            new ColumnHeader() { Text = "Income", Name = nameof(Data.Movie.Income) },
+            new ColumnHeader() { Text = "Title", Name = nameof(Data.Movie.Title), Tag = typeof(Data.Movie) },
+            new ColumnHeader() { Text = "Year", Name = nameof(Data.Movie.Year), Tag = typeof(Data.Movie) },
+            new ColumnHeader() { Text = "IMDB", Name = nameof(Data.Movie.Imdb), Tag = typeof(Data.Movie) },
+            new ColumnHeader() { Text = "Income", Name = nameof(Data.Movie.Income), Tag = typeof(Data.Movie) },
         };
+
+        SortColumn ManagerTopMovieModeListSortColumnDefault = new SortColumn() { ColumnName = nameof(Data.Movie.Income), Order = SortOrder.Descending };
 
         ColumnHeader[] CustomerTopMovieModeListColumns => new ColumnHeader[]
         {
-            new ColumnHeader() { Text = "Title", Name = nameof(Data.Movie.Title) },
-            new ColumnHeader() { Text = "Year", Name = nameof(Data.Movie.Year) },
-            new ColumnHeader() { Text = "IMDB", Name = nameof(Data.Movie.Imdb) },
+            new ColumnHeader() { Text = "Title", Name = nameof(Data.Movie.Title), Tag = typeof(Data.Movie) },
+            new ColumnHeader() { Text = "Year", Name = nameof(Data.Movie.Year), Tag = typeof(Data.Movie) },
+            new ColumnHeader() { Text = "IMDB", Name = nameof(Data.Movie.Imdb), Tag = typeof(Data.Movie) },
         };
+
+        SortColumn CustomerTopMovieModeListSortColumnDefault = new SortColumn() { ColumnName = nameof(Data.Movie.Imdb), Order = SortOrder.Descending };
 
         ColumnHeader[] ActorsModeListColumns => new ColumnHeader[]
         {
-            new ColumnHeader() { Text = "Name", Name = nameof(Data.Actor.FirstName) },
-            new ColumnHeader() { Text = "Birth date", Name = nameof(Data.Actor.BirthDate) },
-            new ColumnHeader() { Text = "Country", Name = nameof(Data.Actor.Country) },
-            new ColumnHeader() { Text = "Family status", Name = nameof(Data.Actor.FamilyStatus) },
+            new ColumnHeader() { Text = "Name", Name = nameof(Data.Actor.FirstName), Tag = typeof(Data.Actor) },
+            new ColumnHeader() { Text = "Birth date", Name = nameof(Data.Actor.BirthDate), Tag = typeof(Data.Actor) },
+            new ColumnHeader() { Text = "Country", Name = nameof(Data.Actor.Country), Tag = typeof(Data.Actor) },
+            new ColumnHeader() { Text = "Family status", Name = nameof(Data.Actor.FamilyStatus), Tag = typeof(Data.Actor) },
         };
+        
+        SortColumn ActorsModeListSortColumnDefault = new SortColumn() { ColumnName = nameof(Data.Actor.FirstName), Order = SortOrder.Ascending };
 
         ColumnHeader[] StudiosModeListColumns => new ColumnHeader[]
         {
-            new ColumnHeader() { Text = "Title", Name = nameof(Data.Studio.Title) },
-            new ColumnHeader() { Text = "Country", Name = nameof(Data.Studio.Country) },
-            new ColumnHeader() { Text = "Foundation date", Name = nameof(Data.Studio.FoundationDate) },
-            new ColumnHeader() { Text = "Production", Name = nameof(Data.Studio.Production) },
+            new ColumnHeader() { Text = "Title", Name = nameof(Data.Studio.Title), Tag = typeof(Data.Studio) },
+            new ColumnHeader() { Text = "Country", Name = nameof(Data.Studio.Country), Tag = typeof(Data.Studio) },
+            new ColumnHeader() { Text = "Foundation date", Name = nameof(Data.Studio.FoundationDate), Tag = typeof(Data.Studio) },
+            new ColumnHeader() { Text = "Production", Name = nameof(Data.Studio.Production), Tag = typeof(Data.Studio) },
         };
+        
+        SortColumn StudiosModeListSortColumnDefault = new SortColumn() { ColumnName = nameof(Data.Studio.Title), Order = SortOrder.Ascending };
 
         ColumnHeader[] ManagerTopStudiosModeListColumns => new ColumnHeader[]
         {
-            new ColumnHeader() { Text = "Title", Name = nameof(Data.Studio.Title) },
-            new ColumnHeader() { Text = "Country", Name = nameof(Data.Studio.Country) },
-            new ColumnHeader() { Text = "Foundation date", Name = nameof(Data.Studio.FoundationDate) },
-            new ColumnHeader() { Text = "Production", Name = nameof(Data.Studio.Production) },
-            new ColumnHeader() { Text = "Income", Name = nameof(Data.Studio.Income) },
+            new ColumnHeader() { Text = "Title", Name = nameof(Data.Studio.Title), Tag = typeof(Data.Studio) },
+            new ColumnHeader() { Text = "Country", Name = nameof(Data.Studio.Country), Tag = typeof(Data.Studio) },
+            new ColumnHeader() { Text = "Foundation date", Name = nameof(Data.Studio.FoundationDate), Tag = typeof(Data.Studio) },
+            new ColumnHeader() { Text = "Production", Name = nameof(Data.Studio.Production), Tag = typeof(Data.Studio) },
+            new ColumnHeader() { Text = "Income", Name = nameof(Data.Studio.Income), Tag = typeof(Data.Studio) },
         };
+        
+        SortColumn ManagerTopStudiosModeListSortColumnDefault = new SortColumn() { ColumnName = nameof(Data.Studio.Income), Order = SortOrder.Descending };
 
         ColumnHeader[] CustomerTopStudiosModeListColumns => new ColumnHeader[]
         {
-            new ColumnHeader() { Text = "Title", Name = nameof(Data.Studio.Title) },
-            new ColumnHeader() { Text = "Country", Name = nameof(Data.Studio.Country) },
-            new ColumnHeader() { Text = "Foundation date", Name = nameof(Data.Studio.FoundationDate) },
-            new ColumnHeader() { Text = "Production", Name = nameof(Data.Studio.Production) },
+            new ColumnHeader() { Text = "Title", Name = nameof(Data.Studio.Title), Tag = typeof(Data.Studio) },
+            new ColumnHeader() { Text = "Country", Name = nameof(Data.Studio.Country), Tag = typeof(Data.Studio) },
+            new ColumnHeader() { Text = "Foundation date", Name = nameof(Data.Studio.FoundationDate), Tag = typeof(Data.Studio) },
+            new ColumnHeader() { Text = "Production", Name = nameof(Data.Studio.Production), Tag = typeof(Data.Studio) },
         };
+        
+        SortColumn CustomerTopStudiosModeListSortColumnDefault = new SortColumn() { ColumnName = nameof(Data.Studio.Title), Order = SortOrder.Ascending };
 
         ColumnHeader[] OrdersModeListColumns => new ColumnHeader[]
         {
-            new ColumnHeader() { Text = "#", Name = nameof(Data.Order.Id) },
-            new ColumnHeader() { Text = "Date", Name = nameof(Data.Order.Date) },
-            new ColumnHeader() { Text = "Customer", Name = nameof(Data.Order.User) },
+            new ColumnHeader() { Text = "#", Name = nameof(Data.Order.Id), Tag = typeof(Data.Order) },
+            new ColumnHeader() { Text = "Date", Name = nameof(Data.Order.Date), Tag = typeof(Data.Order) },
+            new ColumnHeader() { Text = "Customer", Name = nameof(Data.Order.User), Tag = typeof(Data.Order) },
             new ColumnHeader() { Text = "Movies", Name = nameof(Data.Order.Movies) },
         };
 
+        SortColumn OrdersModeListSortColumnDefault = new SortColumn() { ColumnName = nameof(Data.Order.Id), Order = SortOrder.Ascending };
+
         ColumnHeader[] ManagerTopOrdersModeListColumns => new ColumnHeader[]
         {
-            new ColumnHeader() { Text = "#", Name = nameof(Data.Order.Id) },
-            new ColumnHeader() { Text = "Date", Name = nameof(Data.Order.Date) },
-            new ColumnHeader() { Text = "Customer", Name = nameof(Data.Order.User) },
-            new ColumnHeader() { Text = "Income", Name = nameof(Data.Order.Income) },
+            new ColumnHeader() { Text = "#", Name = nameof(Data.Order.Id), Tag = typeof(Data.Order) },
+            new ColumnHeader() { Text = "Date", Name = nameof(Data.Order.Date), Tag = typeof(Data.Order) },
+            new ColumnHeader() { Text = "Customer", Name = nameof(Data.Order.User), Tag = typeof(Data.Order) },
+            new ColumnHeader() { Text = "Income", Name = nameof(Data.Order.Income), Tag = typeof(Data.Order) },
         };
+
+        SortColumn ManagerTopOrdersModeListSortColumnDefault = new SortColumn() { ColumnName = nameof(Data.Order.Income), Order = SortOrder.Descending };
 
         ColumnHeader[] CustomerTopOrdersModeListColumns => new ColumnHeader[]
         {
-            new ColumnHeader() { Text = "#", Name = nameof(Data.Order.Id) },
-            new ColumnHeader() { Text = "Date", Name = nameof(Data.Order.Date) },
-            new ColumnHeader() { Text = "Income", Name = nameof(Data.Order.Income) },
+            new ColumnHeader() { Text = "#", Name = nameof(Data.Order.Id), Tag = typeof(Data.Order) },
+            new ColumnHeader() { Text = "Date", Name = nameof(Data.Order.Date), Tag = typeof(Data.Order) },
+            new ColumnHeader() { Text = "Income", Name = nameof(Data.Order.Income), Tag = typeof(Data.Order) },
         };
+        
+        SortColumn CustomerTopOrdersModeListSortColumnDefault = new SortColumn() { ColumnName = nameof(Data.Order.Income), Order = SortOrder.Descending };
 
         ColumnHeader[] UsersModeListColumns => new ColumnHeader[]
         {
-            new ColumnHeader() { Text = "Name", Name = nameof(Data.User.FirstName) },
-            new ColumnHeader() { Text = "E-mail", Name = nameof(Data.User.EMail) },
-            new ColumnHeader() { Text = "Role", Name = nameof(Data.User.Role) },
+            new ColumnHeader() { Text = "Name", Name = nameof(Data.User.FirstName), Tag = typeof(Data.User) },
+            new ColumnHeader() { Text = "E-mail", Name = nameof(Data.User.EMail), Tag = typeof(Data.User) },
+            new ColumnHeader() { Text = "Role", Name = nameof(Data.User.Role), Tag = typeof(Data.User) },
         };
+        
+        SortColumn UsersModeListSortColumnDefault = new SortColumn() { ColumnName = nameof(Data.User.FirstName), Order = SortOrder.Ascending };
 
         ColumnHeader[] TopUsersModeListColumns => new ColumnHeader[]
         {
-            new ColumnHeader() { Text = "Name", Name = nameof(Data.User.FirstName) },
-            new ColumnHeader() { Text = "E-mail", Name = nameof(Data.User.EMail) },
-            new ColumnHeader() { Text = "Income", Name = nameof(Data.User.Income) },
+            new ColumnHeader() { Text = "Name", Name = nameof(Data.User.FirstName), Tag = typeof(Data.User) },
+            new ColumnHeader() { Text = "E-mail", Name = nameof(Data.User.EMail), Tag = typeof(Data.User) },
+            new ColumnHeader() { Text = "Income", Name = nameof(Data.User.Income), Tag = typeof(Data.User) },
         };
+        
+        SortColumn TopUsersModeListSortColumnDefault = new SortColumn() { ColumnName = nameof(Data.User.Income), Order = SortOrder.Descending };
 
         int ListViewOffset { get; set; } = 0;
         int ListViewLimit => 10;
+        SortColumn ListViewSortColumn { get; set; } = new SortColumn();
 
         #endregion
 
@@ -156,6 +194,8 @@ namespace MovieStore.UI
         {
             InitializeComponent();
         }
+
+        #region Methods
 
         bool CanClose()
         {
@@ -293,6 +333,22 @@ namespace MovieStore.UI
             }
         }
 
+        void SetupSortFilter(DB.Filters.SortFilter filter)
+        {
+            if (!ListViewSortColumn.IsEmpty)
+            {
+                var index = m_listView.Columns.IndexOfKey(ListViewSortColumn.ColumnName);
+                var column = (index >= 0) ? m_listView.Columns[index] : null;
+                if (column?.Tag != null && !string.IsNullOrEmpty(column.Name))
+                {
+                    var modelType = column.Tag as Type;
+                    var modelName = column.Name;
+
+                    filter.Build(modelType, modelName, !ListViewSortColumn.IsAscending);
+                }
+            }
+        }
+
         void RefreshListView()
         {
             if (!Program.DB.IsAuthorized)
@@ -331,7 +387,7 @@ namespace MovieStore.UI
 
         void RefreshMoviesListView()
         {
-            var filter = default(DB.IDataFilter);
+            var filter = new DB.Filters.SortFilter();
             if (m_searchToolStripTextBox.Text.Length != 0)
             {
                 var movieFilter = new DB.Filters.MovieFilter();
@@ -340,6 +396,8 @@ namespace MovieStore.UI
 
                 filter = movieFilter;
             }
+
+            SetupSortFilter(filter);
 
             var movies = (ViewMode == ViewMode.Movies) ? Program.DB.GetMovies(ListViewLimit, ListViewOffset, filter, loadActors: true) :
                          ((ViewMode == ViewMode.TopMovies) ? Program.DB.GetTopMovies(ListViewLimit, ListViewOffset, filter, loadActors: false) :
@@ -362,7 +420,7 @@ namespace MovieStore.UI
 
         void RefreshActorsListView()
         {
-            var filter = default(DB.IDataFilter);
+            var filter = new DB.Filters.SortFilter();
             if (m_searchToolStripTextBox.Text.Length != 0)
             {
                 var movieFilter = new DB.Filters.ActorFilter();
@@ -371,6 +429,8 @@ namespace MovieStore.UI
 
                 filter = movieFilter;
             }
+
+            SetupSortFilter(filter);
 
             var actors = Program.DB.GetActors(ListViewLimit, ListViewOffset, filter);
             var view = actors.Select(a => new Dictionary<string, string>()
@@ -386,8 +446,11 @@ namespace MovieStore.UI
 
         void RefreshStudiosListView()
         {
-            var studio = (ViewMode == ViewMode.Studio) ? Program.DB.GetStudio(ListViewLimit, ListViewOffset) :
-                                                         Program.DB.GetTopStudio(ListViewLimit, ListViewOffset);
+            var filter = new DB.Filters.SortFilter();
+            SetupSortFilter(filter);
+
+            var studio = (ViewMode == ViewMode.Studio) ? Program.DB.GetStudio(ListViewLimit, ListViewOffset, filter) :
+                                                         Program.DB.GetTopStudio(ListViewLimit, ListViewOffset, filter);
             var view = studio.Select(s => new Dictionary<string, string>()
                                           {
                                               { nameof(Data.Studio.Title),          s.Title },
@@ -402,7 +465,10 @@ namespace MovieStore.UI
 
         void RefreshOrdersListView()
         {
-            var filter = Program.DB.IsManagerMode ? null : new DB.Filters.CurrentUserOrderList();
+            var filter = Program.DB.IsManagerMode ? new DB.Filters.SortFilter() :
+                                                    new DB.Filters.CurrentUserOrderList();
+            SetupSortFilter(filter);
+
             var orders = (ViewMode == ViewMode.Orders) ? Program.DB.GetOrders(ListViewLimit, ListViewOffset, filter, loadMovies: true) :
                                                          Program.DB.GetTopOrders(ListViewLimit, ListViewOffset, filter, loadMovies: false);
             var view = orders.Select(o => new Dictionary<string, string>()
@@ -419,7 +485,7 @@ namespace MovieStore.UI
 
         void RefreshUsersListView()
         {
-            var filter = default(DB.IDataFilter);
+            var filter = new DB.Filters.SortFilter();
             if (m_searchToolStripTextBox.Text.Length != 0)
             {
                 var movieFilter = new DB.Filters.UserFilter();
@@ -428,6 +494,8 @@ namespace MovieStore.UI
 
                 filter = movieFilter;
             }
+
+            SetupSortFilter(filter);
 
             var users = (ViewMode == ViewMode.Users) ? Program.DB.GetUsers(ListViewLimit, ListViewOffset, filter) :
                                                        Program.DB.GetTopUsers(ListViewLimit, ListViewOffset, filter);
@@ -813,18 +881,21 @@ namespace MovieStore.UI
         {
             var columns = (ViewMode == ViewMode.Movies || ViewMode == ViewMode.AdvicedMovies) ? MovieModeListColumns : 
                                                          (Program.DB.IsManagerMode ? ManagerTopMovieModeListColumns : CustomerTopMovieModeListColumns);
-            ReinitListView(columns);
+            var sortColumnt = (ViewMode == ViewMode.Movies || ViewMode == ViewMode.AdvicedMovies) ? MovieModeListSortColumnDefault :
+                                                         (Program.DB.IsManagerMode ? ManagerTopMovieModeListSortColumnDefault : CustomerTopMovieModeListSortColumnDefault);
+            ReinitListView(columns, sortColumnt);
         }
 
         void ReinitActorsModeControls()
         {
-            ReinitListView(ActorsModeListColumns);
+            ReinitListView(ActorsModeListColumns, ActorsModeListSortColumnDefault);
         }
 
         void ReinitUsersModeControls()
         {
             var columns = (ViewMode == ViewMode.Users) ? UsersModeListColumns : TopUsersModeListColumns;
-            ReinitListView(columns);
+            var sortColumnt = (ViewMode == ViewMode.Users) ? UsersModeListSortColumnDefault : TopUsersModeListSortColumnDefault;
+            ReinitListView(columns, sortColumnt);
         }
 
         void ReinitStudiosModeControls()
@@ -832,7 +903,10 @@ namespace MovieStore.UI
             var columns = (ViewMode == ViewMode.Studio) ? StudiosModeListColumns :
                                                          (Program.DB.IsManagerMode ? ManagerTopStudiosModeListColumns : CustomerTopStudiosModeListColumns);
 
-            ReinitListView(columns);
+            var sortColumn = (ViewMode == ViewMode.Studio) ? StudiosModeListSortColumnDefault :
+                                                         (Program.DB.IsManagerMode ? ManagerTopStudiosModeListSortColumnDefault : CustomerTopStudiosModeListSortColumnDefault);
+
+            ReinitListView(columns, sortColumn);
         }
 
         void ReinitOrdersModeControls()
@@ -840,28 +914,28 @@ namespace MovieStore.UI
             var columns = (ViewMode == ViewMode.Orders) ? OrdersModeListColumns : 
                                                          (Program.DB.IsManagerMode ? ManagerTopOrdersModeListColumns : CustomerTopOrdersModeListColumns);
 
-            ReinitListView(columns);
+            var sortColumn = (ViewMode == ViewMode.Orders) ? OrdersModeListSortColumnDefault :
+                                                           (Program.DB.IsManagerMode ? ManagerTopOrdersModeListSortColumnDefault : CustomerTopOrdersModeListSortColumnDefault);
+
+            ReinitListView(columns, sortColumn);
         }
 
-        void ReinitListView(ColumnHeader[] columns)
+        void ReinitListView(ColumnHeader[] columns, SortColumn sortColumn)
         {
-            try
-            {
-                ListViewOffset = 0;
+            ListViewOffset = 0;
+            ListViewSortColumn = sortColumn;
 
-                Utility.UIListView.InitColumns(m_listView, columns);
+            Utility.UIListView.InitColumns(m_listView, columns);
 
-                ExpandListViewColumns(false);
-            }
-            finally
-            {
-                m_listView.EndUpdate();
-            }
+            ExpandListViewColumns(false);
         }
 
         void PopulateListView<T>(IList<T> model, IList<Dictionary<string, string>> view) where T : class
         {
             Utility.UIListView.PopulateItems(m_listView, model, view);
+            
+            var sortColumnIndex = m_listView.Columns.IndexOfKey(ListViewSortColumn.ColumnName);
+            Utility.UIListView.SetSortIcon(m_listView, sortColumnIndex, ListViewSortColumn.Order);
 
             ExpandListViewColumns();
         }
@@ -973,6 +1047,10 @@ namespace MovieStore.UI
                 reportForm.ShowDialog(this);
             }
         }
+
+        #endregion
+
+        #region Event handlers
 
         private void OnLoad(object sender, EventArgs e)
         {
@@ -1266,6 +1344,32 @@ namespace MovieStore.UI
             UpdateControls();
         }
 
+        private void OnColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            try
+            {
+                var column = (e.Column >= 0 && e.Column < m_listView.Columns.Count) ? m_listView.Columns[e.Column] : null;
+                if (column?.Tag != null)
+                {
+                    if (column.Name.Equals(ListViewSortColumn.ColumnName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        ListViewSortColumn.Order = ListViewSortColumn.IsAscending ? SortOrder.Descending : SortOrder.Ascending;
+                    }
+                    else
+                    {
+                        ListViewSortColumn = new SortColumn() { ColumnName = column.Name };
+                    }
+
+                    RefreshListView();
+                    UpdateControls();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
         private void OnBuildReceipt(object sender, EventArgs e)
         {
             try
@@ -1290,5 +1394,6 @@ namespace MovieStore.UI
             }
         }
 
+        #endregion
     }
 }

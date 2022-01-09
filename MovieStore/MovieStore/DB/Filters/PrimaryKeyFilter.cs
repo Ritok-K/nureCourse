@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace MovieStore.DB.Filters
 {
-    class PrimaryKeyFilter : EmptyFilter
+    class PrimaryKeyFilter : SortFilter
     {
         internal string Table { get; init; }
         internal string PkColumn { get; init; }

@@ -78,6 +78,7 @@ namespace MovieStore.UI
             this.m_listView.TabIndex = 1;
             this.m_listView.UseCompatibleStateImageBehavior = false;
             this.m_listView.View = System.Windows.Forms.View.Details;
+            this.m_listView.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.OnColumnClick);
             this.m_listView.ItemActivate += new System.EventHandler(this.OnItemActivated);
             this.m_listView.SelectedIndexChanged += new System.EventHandler(this.OnListViewSelectionChanged);
             // 

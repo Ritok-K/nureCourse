@@ -241,7 +241,7 @@ namespace MovieStore.DB
 
             // load movies
             {
-                var sql = new QueryBuilders.SelectQueryBuilder()
+                var sqlBuilder = new QueryBuilders.SelectQueryBuilder()
                                            .Select(new string[] {
                                                     // Movie table fields with aliases
                                                     BuildFieldNameWithAliase(c_MoviesTable, c_MovieIdColumn),
@@ -266,10 +266,15 @@ namespace MovieStore.DB
                                            .JoinUsing(QueryBuilders.SQLJoin.Left, c_StudioTable, c_StudioIdColumn)
                                            .JoinUsing(QueryBuilders.SQLJoin.Inner, c_MovieOrderTable, c_MovieIdColumn)
                                            .GroupBy(BuildFieldName(c_MoviesTable, c_MovieIdColumn))
-                                           .OrderBy(c_IncomeColumn, true)
                                            .Pagging(limit, offset)
-                                           .AddFilter(filter)
-                                           .Make();
+                                           .AddFilter(filter);
+
+                if (!filter?.GetOrderClauses()?.Any() ?? true)
+                {
+                    sqlBuilder.OrderBy(c_IncomeColumn, true);
+                }
+
+                var sql = sqlBuilder.Make();
 
                 using (var connection = new MySqlConnection(ConnectionString))
                 using (var command = new MySqlCommand(sql, connection))
@@ -500,7 +505,7 @@ namespace MovieStore.DB
 
             // load movies
             {
-                var sql = new QueryBuilders.SelectQueryBuilder()
+                var sqlBuilder = new QueryBuilders.SelectQueryBuilder()
                                            .Select(new string[] {
                                                     // User table fields
                                                     BuildFieldName(c_StudioTable, "*"),
@@ -511,10 +516,15 @@ namespace MovieStore.DB
                                            .JoinUsing(QueryBuilders.SQLJoin.Inner, c_MoviesTable, c_StudioIdColumn)
                                            .JoinUsing(QueryBuilders.SQLJoin.Inner, c_MovieOrderTable, c_MovieIdColumn)
                                            .GroupBy(BuildFieldName(c_StudioTable, c_StudioIdColumn))
-                                           .OrderBy(c_IncomeColumn, true)
                                            .Pagging(limit, offset)
-                                           .AddFilter(filter)
-                                           .Make();
+                                           .AddFilter(filter);
+                
+                if (!filter?.GetOrderClauses()?.Any() ?? true)
+                {
+                    sqlBuilder.OrderBy(c_IncomeColumn, true);
+                }
+
+                var sql = sqlBuilder.Make();
 
                 using (var connection = new MySqlConnection(ConnectionString))
                 using (var command = new MySqlCommand(sql, connection))
@@ -624,7 +634,7 @@ namespace MovieStore.DB
 
             // load movies
             {
-                var sql = new QueryBuilders.SelectQueryBuilder()
+                var sqlBuilder = new QueryBuilders.SelectQueryBuilder()
                                            .Select(new string[] {
                                                     // Order table fields with aliases
                                                     BuildFieldNameWithAliase(c_OrdersTable, c_OrderIdColumn),
@@ -646,10 +656,15 @@ namespace MovieStore.DB
                                            .JoinUsing(QueryBuilders.SQLJoin.Inner, c_MovieOrderTable, c_OrderIdColumn)
                                            .JoinUsing(QueryBuilders.SQLJoin.Inner, c_MoviesTable, c_MovieIdColumn)
                                            .GroupBy(BuildFieldName(c_OrdersTable, c_OrderIdColumn))
-                                           .OrderBy(c_IncomeColumn, true)
                                            .Pagging(limit, offset)
-                                           .AddFilter(filter)
-                                           .Make();
+                                           .AddFilter(filter);
+
+                if (!filter?.GetOrderClauses()?.Any() ?? true)
+                {
+                    sqlBuilder.OrderBy(c_IncomeColumn, true);
+                }
+
+                var sql = sqlBuilder.Make();
 
                 using (var connection = new MySqlConnection(ConnectionString))
                 using (var command = new MySqlCommand(sql, connection))
@@ -745,7 +760,7 @@ namespace MovieStore.DB
 
             // load movies
             {
-                var sql = new QueryBuilders.SelectQueryBuilder()
+                var sqlBuilder = new QueryBuilders.SelectQueryBuilder()
                                            .Select(new string[] {
                                                     // User table fields
                                                     BuildFieldName(c_UsersTable, "*"),
@@ -757,11 +772,15 @@ namespace MovieStore.DB
                                            .JoinUsing(QueryBuilders.SQLJoin.Inner, c_MoviesTable, c_MovieIdColumn)
                                            .From(c_UsersTable)
                                            .GroupBy(BuildFieldName(c_UsersTable, c_UserIdColumn))
-                                           .OrderBy(c_IncomeColumn, true)
                                            .Pagging(limit, offset)
-                                           .AddFilter(filter)
-                                           .Make();
+                                           .AddFilter(filter);
 
+                if (!filter?.GetOrderClauses()?.Any() ?? true)
+                {
+                    sqlBuilder.OrderBy(c_IncomeColumn, true);
+                }
+
+                var sql = sqlBuilder.Make();
                 using (var connection = new MySqlConnection(ConnectionString))
                 using (var command = new MySqlCommand(sql, connection))
                 {

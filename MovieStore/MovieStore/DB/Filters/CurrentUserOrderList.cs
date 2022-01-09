@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MovieStore.DB.Filters
 {
-    class CurrentUserOrderList : EmptyFilter
+    class CurrentUserOrderList : SortFilter
     {
         string Field => MovieDB.BuildFieldName(MovieDB.c_OrdersTable, MovieDB.c_UserIdColumn);
         string Parameter => MovieDB.BuildParameterName(MovieDB.c_OrdersTable, MovieDB.c_UserIdColumn);
