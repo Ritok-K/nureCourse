@@ -61,6 +61,7 @@ namespace MovieStore.DB
 
         // virtual columns
         internal const string c_IncomeColumn = "income";
+        internal const string c_LastOrderColumn = "lastOrder";
 
         // enums
         internal const string c_RoleUserValue = "user";
@@ -329,7 +330,7 @@ namespace MovieStore.DB
 
                 var topUserGenre = $"SELECT {BuildFieldName(c_MoviesTable, c_GenreColumn)} FROM {c_MoviesTable}\n" + 
                                    $"INNER JOIN {c_MovieOrderTable} USING ({c_MovieIdColumn})\n" + 
-                                   $"INNER JOIN {c_OrdersTable} using ({c_OrderIdColumn})\n" +
+                                   $"INNER JOIN {c_OrdersTable} USING ({c_OrderIdColumn})\n" +
                                    $"WHERE {c_UserIdColumn} = {userIdParam}\n" +
                                    $"GROUP BY {c_GenreColumn}\n" +
                                    $"ORDER BY COUNT({BuildFieldName(c_MoviesTable, c_GenreColumn)}) DESC";
@@ -766,6 +767,7 @@ namespace MovieStore.DB
                                                     BuildFieldName(c_UsersTable, "*"),
                                                     // Aggregated fields,
                                                     $"SUM({BuildFieldName(c_MoviesTable, c_PriceColumn)}) AS {c_IncomeColumn}",
+                                                    $"MAX({BuildFieldName(c_OrdersTable, c_DateColumn)}) AS {c_LastOrderColumn}",
                                                   })
                                            .JoinUsing(QueryBuilders.SQLJoin.Inner, c_OrdersTable, c_UserIdColumn)
                                            .JoinUsing(QueryBuilders.SQLJoin.Inner, c_MovieOrderTable, c_OrderIdColumn)

@@ -33,6 +33,12 @@ namespace MovieStore.DB.Serializers
                 var v = row.Field<decimal?>(MovieDB.c_IncomeColumn);
                 user.Income = v.HasValue ? (int)v.Value : null;
             }
+
+            if (row.Table.Columns.Contains(MovieDB.c_LastOrderColumn))
+            {
+                var v = row.Field<DateTime?>(MovieDB.c_LastOrderColumn);
+                user.LastOrder = v;
+            }
         }
 
         internal static void LoadId(Data.User user, DataRow row)

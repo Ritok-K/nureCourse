@@ -30,6 +30,7 @@ namespace MovieStore.Data
         #region Aggregated properties
 
         public int? Income { get; set; }              // can be null
+        public DateTime? LastOrder { get; set; }      // can be null
 
         #endregion
 

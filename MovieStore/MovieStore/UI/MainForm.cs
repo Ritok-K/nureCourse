@@ -180,6 +180,7 @@ namespace MovieStore.UI
             new ColumnHeader() { Text = "Name", Name = nameof(Data.User.FirstName), Tag = typeof(Data.User) },
             new ColumnHeader() { Text = "E-mail", Name = nameof(Data.User.EMail), Tag = typeof(Data.User) },
             new ColumnHeader() { Text = "Income", Name = nameof(Data.User.Income), Tag = typeof(Data.User) },
+            new ColumnHeader() { Text = "Last Order Date", Name = nameof(Data.User.LastOrder), Tag = typeof(Data.User) },
         };
         
         SortColumn TopUsersModeListSortColumnDefault = new SortColumn() { ColumnName = nameof(Data.User.Income), Order = SortOrder.Descending };
@@ -502,10 +503,11 @@ namespace MovieStore.UI
 
             var view = users.Select(u => new Dictionary<string, string>()
                                       {
-                                          { nameof(Data.User.FirstName),Utility.UIPrimitiveFormatting.FormatUserName(u) },
-                                          { nameof(Data.User.EMail),    u.EMail },
-                                          { nameof(Data.User.Role),     Utility.UIPrimitiveFormatting.Format(u.Role) },
-                                          { nameof(Data.User.Income),   Utility.UIPrimitiveFormatting.FormatPrice(u.Income)}
+                                          { nameof(Data.User.FirstName), Utility.UIPrimitiveFormatting.FormatUserName(u) },
+                                          { nameof(Data.User.EMail),     u.EMail },
+                                          { nameof(Data.User.Role),      Utility.UIPrimitiveFormatting.Format(u.Role) },
+                                          { nameof(Data.User.Income),    Utility.UIPrimitiveFormatting.FormatPrice(u.Income)},
+                                          { nameof(Data.User.LastOrder), Utility.UIPrimitiveFormatting.Format(u.LastOrder,"g")}
                                       }).ToList();
 
             PopulateListView(users, view);

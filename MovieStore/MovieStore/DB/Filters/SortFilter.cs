@@ -46,7 +46,7 @@ namespace MovieStore.DB.Filters
                         sortList.Add(MovieDB.BuildFieldName(MovieDB.c_MoviesTable, MovieDB.c_PriceColumn));
                         break;
                     case nameof(Data.Movie.Income):
-                        sortList.Add(MovieDB.c_IncomeColumn); // aggregated fileds don't have table prefix
+                        sortList.Add(MovieDB.c_IncomeColumn); // aggregated fields don't have table prefix
                         break;
                 }
             }
@@ -90,7 +90,7 @@ namespace MovieStore.DB.Filters
                         sortList.Add(MovieDB.BuildFieldName(MovieDB.c_StudioTable, MovieDB.c_ProductionColumn));
                         break;
                     case nameof(Data.Studio.Income):
-                        sortList.Add(MovieDB.c_IncomeColumn); // aggregated fileds don't have table prefix
+                        sortList.Add(MovieDB.c_IncomeColumn); // aggregated fields don't have table prefix
                         break;
                 }
             }
@@ -109,7 +109,7 @@ namespace MovieStore.DB.Filters
                         sortList.Add(MovieDB.BuildFieldName(MovieDB.c_UsersTable, MovieDB.c_SecondNameColumn));
                         break;
                     case nameof(Data.Order.Income):
-                        sortList.Add(MovieDB.c_IncomeColumn); // aggregated fileds don't have table prefix
+                        sortList.Add(MovieDB.c_IncomeColumn); // aggregated fields don't have table prefix
                         break;
                 }
             }
@@ -132,7 +132,10 @@ namespace MovieStore.DB.Filters
                         sortList.Add(MovieDB.BuildFieldName(MovieDB.c_UsersTable, MovieDB.c_RoleColumn));
                         break;
                     case nameof(Data.User.Income):
-                        sortList.Add(MovieDB.c_IncomeColumn); // aggregated fileds don't have table prefix
+                        sortList.Add(MovieDB.c_IncomeColumn); // aggregated fields don't have table prefix
+                        break;
+                    case nameof(Data.User.LastOrder):
+                        sortList.Add(MovieDB.c_LastOrderColumn); // aggregated fields don't have table prefix
                         break;
                 }
             }
